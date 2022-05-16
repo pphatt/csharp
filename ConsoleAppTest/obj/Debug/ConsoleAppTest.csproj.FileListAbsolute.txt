@@ -1,8 +1,0 @@
-D:\Dev\School\ConsoleAppTest\bin\Debug\ConsoleAppTest.exe.config
-D:\Dev\School\ConsoleAppTest\bin\Debug\ConsoleAppTest.exe
-D:\Dev\School\ConsoleAppTest\bin\Debug\ConsoleAppTest.pdb
-D:\Dev\School\ConsoleAppTest\obj\Debug\ConsoleAppTest.csproj.AssemblyReference.cache
-D:\Dev\School\ConsoleAppTest\obj\Debug\ConsoleAppTest.csproj.SuggestedBindingRedirects.cache
-D:\Dev\School\ConsoleAppTest\obj\Debug\ConsoleAppTest.csproj.CoreCompileInputs.cache
-D:\Dev\School\ConsoleAppTest\obj\Debug\ConsoleAppTest.exe
-D:\Dev\School\ConsoleAppTest\obj\Debug\ConsoleAppTest.pdb

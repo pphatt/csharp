@@ -10,7 +10,18 @@ namespace ConsoleAppTest
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello world");
+            int a = 5;
+            int b = 5;
+            if (a == b)
+            {
+                a = 1;
+                b = 0;
+                Console.WriteLine(a + b);
+            } else
+            {
+                a = 5;
+                b = 5;
+            }
         }
     }
 }

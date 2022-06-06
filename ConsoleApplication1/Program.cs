@@ -124,10 +124,11 @@ namespace ConsoleApplication1
                         currentStudentData.Add(History_grade);
 
                         int tmpTotalGrade = Int32.Parse(Math_grade) + Int32.Parse(Physics_grade) +
-                                        Int32.Parse(Chemistry_grade) + Int32.Parse(Literature_grade) + Int32.Parse(History_grade) + Int32.Parse(English_grade);
+                                            Int32.Parse(Chemistry_grade) + Int32.Parse(Literature_grade) +
+                                            Int32.Parse(History_grade) + Int32.Parse(English_grade);
 
                         tmpTotalGrade = tmpTotalGrade / 6;
-                        
+
                         string totalGrade = $"{tmpTotalGrade}";
                         currentStudentData.Add(totalGrade);
 
@@ -167,41 +168,49 @@ namespace ConsoleApplication1
                                 Console.WriteLine($"There are {data[number1 - 1].Count} students in the class");
                             }
 
+                            Console.WriteLine(
+                                "--------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                            Console.WriteLine(
+                                "|{0,-4}|{1, -20} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|{10, -12}|{11, -18}|",
+                                "IDs",
+                                "Name", "Age",
+                                "Class", "Math Grade", "Physics Grade", "Chemistry Grade", "Literature Grade",
+                                "English Grade",
+                                "History Grade", "Total Grade", "Status");
+                            Console.WriteLine(
+                                "--------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+
                             for (int i = 0; i < data[number1 - 1].Count; i++)
                             {
-                                Console.WriteLine("-----------------------------");
-                                Console.WriteLine($"**Student No.{(i + 1):D2}");
-                                Console.WriteLine($"-> IDs: {data[number1 - 1][i][0]}");
-                                Console.WriteLine($"-> Name: {data[number1 - 1][i][1]}");
-                                Console.WriteLine($"-> Age: {data[number1 - 1][i][2]}");
-                                Console.WriteLine($"-> Class: {data[number1 - 1][i][3]}");
-                                Console.WriteLine($"-> Math grade: {data[number1 - 1][i][4]}");
-                                Console.WriteLine($"-> Physics grade: {data[number1 - 1][i][5]}");
-                                Console.WriteLine($"-> Chemistry grade: {data[number1 - 1][i][6]}");
-                                Console.WriteLine($"-> Literature grade: {data[number1 - 1][i][7]}");
-                                Console.WriteLine($"-> English grade: {data[number1 - 1][i][8]}");
-                                Console.WriteLine($"-> History grade: {data[number1 - 1][i][9]}");
-                                Console.WriteLine($"-> Total grade: {data[number1 - 1][i][10]}");
-                                // Console.WriteLine("-----------------------------");
-                                
-                                if (Int32.Parse(data[number1 - 1][i][10]) >= 5 && Int32.Parse(data[number1 - 1][i][10]) <= 7)
+                                string getStatus = "";
+                                if (Int32.Parse(data[number1 - 1][i][10]) >= 5 &&
+                                    Int32.Parse(data[number1 - 1][i][10]) <= 7)
                                 {
-                                    Console.WriteLine($"Pass with the score: {data[number1 - 1][i][10]} -> (P)");
+                                    getStatus = "(P)";
                                 }
-                                else if (Int32.Parse(data[number1 - 1][i][10]) > 7 && Int32.Parse(data[number1 - 1][i][10]) <= 8.5)
+                                else if (Int32.Parse(data[number1 - 1][i][10]) > 7 &&
+                                         Int32.Parse(data[number1 - 1][i][10]) <= 8.5)
                                 {
-                                    Console.WriteLine($"Pass with the score: {data[number1 - 1][i][10]} -> (M)");
+                                    getStatus = "(P) => (M)";
                                 }
                                 else if (Int32.Parse(data[number1 - 1][i][10]) > 8.5)
                                 {
-                                    Console.WriteLine($"Pass with the score: {data[number1 - 1][i][10]} -> (D)");
+                                    getStatus = "(P) => (M) => (D)";
                                 }
                                 else
                                 {
-                                    Console.WriteLine($"Failed with the score: {data[number1 - 1][i][10]} -> (F)");
+                                    getStatus = "(F)";
                                 }
+                                
+                                Console.WriteLine(
+                                    "|{0,-4}|{1, -20} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|{10, -12}|{11, -18}|",
+                                    data[number1 - 1][i][0], data[number1 - 1][i][1], data[number1 - 1][i][2],
+                                    data[number1 - 1][i][3], data[number1 - 1][i][4], data[number1 - 1][i][5],
+                                    data[number1 - 1][i][6], data[number1 - 1][i][7], data[number1 - 1][i][8],
+                                    data[number1 - 1][i][9], data[number1 - 1][i][10], getStatus);
 
-                                Console.WriteLine("-----------------------------");
+                                Console.WriteLine(
+                                    "--------------------------------------------------------------------------------------------------------------------------------------------------------------------");
                             }
 
                             Console.ReadKey();
@@ -241,46 +250,54 @@ namespace ConsoleApplication1
                                 Console.WriteLine($"There are {data[number1 - 1].Count} students in the class");
                             }
 
+                            Console.WriteLine(
+                                "--------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                            Console.WriteLine(
+                                "|{0,-4}|{1, -20} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|{10, -12}|{11, -18}|",
+                                "IDs",
+                                "Name", "Age",
+                                "Class", "Math Grade", "Physics Grade", "Chemistry Grade", "Literature Grade",
+                                "English Grade",
+                                "History Grade", "Total Grade", "Status");
+                            Console.WriteLine(
+                                "--------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+
                             for (int i = 0; i < data[number1 - 1].Count; i++)
                             {
-                                Console.WriteLine("-----------------------------");
-                                Console.WriteLine($"**Student No.{(i + 1):D2}");
-                                Console.WriteLine($"-> IDs: {data[number1 - 1][i][0]}");
-                                Console.WriteLine($"-> Name: {data[number1 - 1][i][1]}");
-                                Console.WriteLine($"-> Age: {data[number1 - 1][i][2]}");
-                                Console.WriteLine($"-> Class: {data[number1 - 1][i][3]}");
-                                Console.WriteLine($"-> Math grade: {data[number1 - 1][i][4]}");
-                                Console.WriteLine($"-> Physics grade: {data[number1 - 1][i][5]}");
-                                Console.WriteLine($"-> Chemistry grade: {data[number1 - 1][i][6]}");
-                                Console.WriteLine($"-> Literature grade: {data[number1 - 1][i][7]}");
-                                Console.WriteLine($"-> English grade: {data[number1 - 1][i][8]}");
-                                Console.WriteLine($"-> History grade: {data[number1 - 1][i][9]}");
-                                Console.WriteLine($"-> Total grade: {data[number1 - 1][i][10]}");
-                                // Console.WriteLine("-----------------------------");
-                                
-                                if (Int32.Parse(data[number1 - 1][i][10]) >= 5 && Int32.Parse(data[number1 - 1][i][10]) <= 7)
+                                string getStatus = "";
+                                if (Int32.Parse(data[number1 - 1][i][10]) >= 5 &&
+                                    Int32.Parse(data[number1 - 1][i][10]) <= 7)
                                 {
-                                    Console.WriteLine($"Pass with the score: {data[number1 - 1][i][10]} -> (P)");
+                                    getStatus = "(P)";
                                 }
-                                else if (Int32.Parse(data[number1 - 1][i][10]) > 7 && Int32.Parse(data[number1 - 1][i][10]) <= 8.5)
+                                else if (Int32.Parse(data[number1 - 1][i][10]) > 7 &&
+                                         Int32.Parse(data[number1 - 1][i][10]) <= 8.5)
                                 {
-                                    Console.WriteLine($"Pass with the score: {data[number1 - 1][i][10]} -> (M)");
+                                    getStatus = "(P) => (M)";
                                 }
                                 else if (Int32.Parse(data[number1 - 1][i][10]) > 8.5)
                                 {
-                                    Console.WriteLine($"Pass with the score: {data[number1 - 1][i][10]} -> (D)");
+                                    getStatus = "(P) => (M) => (D)";
                                 }
                                 else
                                 {
-                                    Console.WriteLine($"Failed with the score: {data[number1 - 1][i][10]} -> (F)");
+                                    getStatus = "(F)";
                                 }
+                                
+                                Console.WriteLine(
+                                    "|{0,-4}|{1, -20} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|{10, -12}|{11, -18}|",
+                                    data[number1 - 1][i][0], data[number1 - 1][i][1], data[number1 - 1][i][2],
+                                    data[number1 - 1][i][3], data[number1 - 1][i][4], data[number1 - 1][i][5],
+                                    data[number1 - 1][i][6], data[number1 - 1][i][7], data[number1 - 1][i][8],
+                                    data[number1 - 1][i][9], data[number1 - 1][i][10], getStatus);
 
-                                Console.WriteLine("-----------------------------");
+                                Console.WriteLine(
+                                    "--------------------------------------------------------------------------------------------------------------------------------------------------------------------");
                             }
 
                             Console.Write("Input to remove: ");
                             int index = int.Parse(Console.ReadLine());
-                            
+
                             if (index > 0 && index <= data[number1 - 1].Count)
                             {
                                 data[number1 - 1].RemoveAt(index - 1);
@@ -291,13 +308,13 @@ namespace ConsoleApplication1
                             {
                                 Console.WriteLine("Invalid Number");
                             }
-                            
+
                             break;
                         }
 
                         Console.WriteLine("Invalid Number");
                         break;
-                    } 
+                    }
                     else if (number == 4)
                     {
                         Console.WriteLine("-----------------------------");
@@ -326,6 +343,7 @@ namespace ConsoleApplication1
                         {
                             Console.WriteLine("Invalid Number");
                         }
+
                         break;
                     }
                     else if (number == 5)
@@ -333,7 +351,7 @@ namespace ConsoleApplication1
                         checkEd = 5;
                         break;
                     }
-                    
+
                     Console.WriteLine("Invalid number");
                 }
 
@@ -342,6 +360,27 @@ namespace ConsoleApplication1
                     break;
                 }
             }
+
+            // Console.WriteLine("--------------------");
+            // Console.WriteLine("|{0,-20} |{1, 5}", "Name", "Hours");
+            // Console.WriteLine(
+            //     "------------------------------------------------------------------------------------------------------------------------------------");
+            // Console.WriteLine("|{0,-4}|{1, -20} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|", "IDs",
+            //     "Name", "Age",
+            //     "Class", "Math Grade", "Physics Grade", "Chemistry Grade", "Literature Grade", "English Grade",
+            //     "History Grade");
+            // Console.WriteLine(
+            //     "------------------------------------------------------------------------------------------------------------------------------------");
+            // Console.WriteLine("|{0,-4}|{1, -20} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|", "1",
+            //     "Bobs", "12", "A1", "1", "2", "3", "4", "5", "6");
+            // Console.WriteLine(
+            //     "------------------------------------------------------------------------------------------------------------------------------------");
+            // Console.WriteLine("|{0,-4}|{1, -20} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|", "1",
+            //     "Bobs", "12", "A1", "1", "2", "3", "4", "5", "6");
+            // Console.WriteLine(
+            //     "------------------------------------------------------------------------------------------------------------------------------------");
+            // Console.WriteLine("|{0,-4}|{1, -20} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|", "1",
+            //     "Bobs", "12", "A1", "1", "2", "3", "4", "5", "6");
         }
     }
 }

@@ -17,7 +17,8 @@ namespace ConsoleApplication1
                 Console.WriteLine("*1. Input Student           *");
                 Console.WriteLine("*2. Show Students           *");
                 Console.WriteLine("*3. Remove Students         *");
-                Console.WriteLine("*4. Exit                    *");
+                Console.WriteLine("*4. Remove Class            *");
+                Console.WriteLine("*5. Exit                    *");
                 Console.WriteLine("*****************************");
                 while (true)
                 {
@@ -279,9 +280,17 @@ namespace ConsoleApplication1
 
                             Console.Write("Input to remove: ");
                             int index = int.Parse(Console.ReadLine());
-                            data[number1 - 1].RemoveAt(index - 1);
-                            Console.WriteLine("Remove Successfully");
-                            Console.WriteLine("-----------------------------");
+                            
+                            if (index > 0 && index <= data[number1 - 1].Count)
+                            {
+                                data[number1 - 1].RemoveAt(index - 1);
+                                Console.WriteLine("Remove Successfully");
+                                Console.WriteLine("-----------------------------");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid Number");
+                            }
                             
                             break;
                         }
@@ -291,14 +300,44 @@ namespace ConsoleApplication1
                     } 
                     else if (number == 4)
                     {
-                        checkEd = 4;
+                        Console.WriteLine("-----------------------------");
+                        if (data.Count == 0)
+                        {
+                            Console.WriteLine("There are no data currently");
+                            Console.WriteLine("-----------------------------");
+                            break;
+                        }
+
+                        for (int i = 0; i < data.Count; i++)
+                        {
+                            Console.WriteLine($"-> {i + 1}. {data[i][0][3]}");
+                        }
+
+                        Console.Write("Input to use: ");
+                        int number1 = int.Parse(Console.ReadLine());
+
+                        if (number1 >= 1 && number1 <= data.Count)
+                        {
+                            data.RemoveAt(number1 - 1);
+                            Console.WriteLine("Remove Successfully");
+                            Console.WriteLine("-----------------------------");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid Number");
+                        }
                         break;
                     }
-
+                    else if (number == 5)
+                    {
+                        checkEd = 5;
+                        break;
+                    }
+                    
                     Console.WriteLine("Invalid number");
                 }
 
-                if (checkEd == 4)
+                if (checkEd == 5)
                 {
                     break;
                 }

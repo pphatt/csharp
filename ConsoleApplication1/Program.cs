@@ -298,7 +298,15 @@ namespace ConsoleApplication1
 
                             if (index > 0 && index <= data[number1 - 1].Count)
                             {
-                                data[number1 - 1].RemoveAt(index - 1);
+                                if (index == data[number1 - 1].Count && data[number1 - 1].Count == 1)
+                                {
+                                    data.RemoveAt(index - 1);
+                                }
+                                else
+                                {
+                                    data[number1 - 1].RemoveAt(index - 1);
+                                }
+
                                 Console.WriteLine("Remove Successfully");
                                 Console.WriteLine("-----------------------------");
                             }
@@ -446,78 +454,109 @@ namespace ConsoleApplication1
                                     Console.WriteLine("->11. Exit");
                                     Console.Write("Input to use: ");
                                     int numberEdit = int.Parse(Console.ReadLine());
-                                    
-                                    if (numberEdit > 0 && numberEdit <= 10)
+
+                                    if (numberEdit == 11)
                                     {
-                                        Console.Write($"The data of {titleInfo[numberEdit - 1]} was {data[number1 - 1][index - 1][numberEdit - 1]} -> ");
-                                        
-                                        string newData = Console.ReadLine();
+                                        break;
+                                    }
 
-                                        if (numberEdit == 1)
+                                    Console.Write(
+                                        $"The data of {titleInfo[numberEdit - 1]} was {data[number1 - 1][index - 1][numberEdit - 1]} -> ");
+
+                                    string newData = Console.ReadLine();
+
+                                    if (numberEdit == 2)
+                                    {
+                                        string[] name1 = newData.Split(' ');
+                                        name1 = name1.Where(x => x != "").ToArray();
+                                        for (int i = 0; i < name1.Length; i++)
                                         {
-                                            string[] name1 = newData.Split(' ');
-                                            name1 = name1.Where(x => x != "").ToArray();
-                                            for (int i = 0; i < name1.Length; i++)
-                                            {
-                                                name1[i] = name1[i].First().ToString().ToUpper() + name1[i].Substring(1);
-                                            }
-
-                                            newData = string.Join(" ", name1);
-                                            data[number1 - 1][index - 1][numberEdit - 1] = newData;
+                                            name1[i] = name1[i].First().ToString().ToUpper() +
+                                                       name1[i].Substring(1);
                                         }
 
-                                        if (numberEdit == 4)
-                                        {
-                                            bool check = false;
-                                            
-                                            currentStudentData.Add(data[number1 - 1][index - 1][0]);
-                                            currentStudentData.Add(data[number1 - 1][index - 1][1]);
-                                            currentStudentData.Add(data[number1 - 1][index - 1][2]);
-                                            currentStudentData.Add(newData);
-                                            currentStudentData.Add(data[number1 - 1][index - 1][4]);
-                                            currentStudentData.Add(data[number1 - 1][index - 1][5]);
-                                            currentStudentData.Add(data[number1 - 1][index - 1][6]);
-                                            currentStudentData.Add(data[number1 - 1][index - 1][7]);
-                                            currentStudentData.Add(data[number1 - 1][index - 1][8]);
-                                            currentStudentData.Add(data[number1 - 1][index - 1][9]);
-                                                    
-                                            int tmpTotalGrade = Int32.Parse(data[number1 - 1][index - 1][4]) + Int32.Parse(data[number1 - 1][index - 1][5]) +
-                                                                Int32.Parse(data[number1 - 1][index - 1][6]) + Int32.Parse(data[number1 - 1][index - 1][7]) +
-                                                                Int32.Parse(data[number1 - 1][index - 1][8]) + Int32.Parse(data[number1 - 1][index - 1][9]);
-
-                                            tmpTotalGrade = tmpTotalGrade / 6;
-
-                                            string totalGrade = $"{tmpTotalGrade}";
-                                            currentStudentData.Add(totalGrade);
-
-                                            for (int i = 0; i < data.Count; i++)
-                                            {
-                                                if (newData == data[i][0][3])
-                                                {
-                                                    data[i].Add(currentStudentData);
-                                                    check = true;
-                                                    break;
-                                                }
-                                            }
-
-                                            if (check == false)
-                                            {
-                                                currentClass.Add(currentStudentData);
-                                                data.Add(currentClass);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            data[number1 - 1][index - 1][numberEdit - 1] = newData;
-                                        }
-                                        
+                                        newData = string.Join(" ", name1);
+                                        data[number1 - 1][index - 1][numberEdit - 1] = newData;
                                         Console.WriteLine("-----------------------------");
                                         Console.WriteLine("---- Update Successfully ----");
                                         Console.WriteLine("-----------------------------");
                                     }
-                                    else if (numberEdit == 11)
+                                    else if (numberEdit == 4)
                                     {
+                                        bool check = false;
+
+                                        currentStudentData.Add(data[number1 - 1][index - 1][0]);
+                                        currentStudentData.Add(data[number1 - 1][index - 1][1]);
+                                        currentStudentData.Add(data[number1 - 1][index - 1][2]);
+                                        currentStudentData.Add(newData);
+                                        currentStudentData.Add(data[number1 - 1][index - 1][4]);
+                                        currentStudentData.Add(data[number1 - 1][index - 1][5]);
+                                        currentStudentData.Add(data[number1 - 1][index - 1][6]);
+                                        currentStudentData.Add(data[number1 - 1][index - 1][7]);
+                                        currentStudentData.Add(data[number1 - 1][index - 1][8]);
+                                        currentStudentData.Add(data[number1 - 1][index - 1][9]);
+
+                                        int tmpTotalGrade =
+                                            Int32.Parse(data[number1 - 1][index - 1][4]) +
+                                            Int32.Parse(data[number1 - 1][index - 1][5]) +
+                                            Int32.Parse(data[number1 - 1][index - 1][6]) +
+                                            Int32.Parse(data[number1 - 1][index - 1][7]) +
+                                            Int32.Parse(data[number1 - 1][index - 1][8]) +
+                                            Int32.Parse(data[number1 - 1][index - 1][9]);
+
+                                        tmpTotalGrade = tmpTotalGrade / 6;
+
+                                        string totalGrade = $"{tmpTotalGrade}";
+                                        currentStudentData.Add(totalGrade);
+
+                                        for (int i = 0; i < data.Count; i++)
+                                        {
+                                            if (newData == data[i][0][3])
+                                            {
+                                                data[i].Add(currentStudentData);
+                                                check = true;
+                                                break;
+                                            }
+                                        }
+
+                                        if (check == false)
+                                        {
+                                            currentClass.Add(currentStudentData);
+                                            data.Add(currentClass);
+                                        }
+
+                                        data.RemoveAt(number1 - 1);
+                                        Console.WriteLine("-----------------------------");
+                                        Console.WriteLine("---- Update Successfully ----");
+                                        Console.WriteLine("-----------------------------");
                                         break;
+                                    }
+                                    else if (numberEdit >= 5 && numberEdit <= 10)
+                                    {
+                                        data[number1 - 1][index - 1][numberEdit - 1] = newData;
+
+                                        int tmpTotalGrade =
+                                            Int32.Parse(data[number1 - 1][index - 1][4]) +
+                                            Int32.Parse(data[number1 - 1][index - 1][5]) +
+                                            Int32.Parse(data[number1 - 1][index - 1][6]) +
+                                            Int32.Parse(data[number1 - 1][index - 1][7]) +
+                                            Int32.Parse(data[number1 - 1][index - 1][8]) +
+                                            Int32.Parse(data[number1 - 1][index - 1][9]);
+
+                                        tmpTotalGrade = tmpTotalGrade / 6;
+
+                                        string totalGrade = $"{tmpTotalGrade}";
+                                        data[number1 - 1][index - 1][10] = totalGrade;
+                                        Console.WriteLine("-----------------------------");
+                                        Console.WriteLine("---- Update Successfully ----");
+                                        Console.WriteLine("-----------------------------");
+                                    }
+                                    else if (numberEdit == 1 || numberEdit == 3)
+                                    {
+                                        data[number1 - 1][index - 1][numberEdit - 1] = newData;
+                                        Console.WriteLine("-----------------------------");
+                                        Console.WriteLine("---- Update Successfully ----");
+                                        Console.WriteLine("-----------------------------");
                                     }
                                     else
                                     {
@@ -529,9 +568,8 @@ namespace ConsoleApplication1
                             else
                             {
                                 Console.WriteLine("Invalid Number");
+                                break;
                             }
-
-                            break;
                         }
 
                         break;

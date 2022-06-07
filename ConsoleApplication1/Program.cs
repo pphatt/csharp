@@ -18,7 +18,8 @@ namespace ConsoleApplication1
                 Console.WriteLine("*2. Show Students           *");
                 Console.WriteLine("*3. Remove Students         *");
                 Console.WriteLine("*4. Remove Class            *");
-                Console.WriteLine("*5. Exit                    *");
+                Console.WriteLine("*5. Edit Student Info       *");
+                Console.WriteLine("*6. Exit                    *");
                 Console.WriteLine("*****************************");
                 while (true)
                 {
@@ -89,9 +90,6 @@ namespace ConsoleApplication1
                             {
                                 currentStudentData.Add(classroom);
                                 data[i].Add(currentStudentData);
-                                // Console.WriteLine("-----------------------------");
-                                // Console.WriteLine("---- Update Successfully ----");
-                                // Console.WriteLine("-----------------------------");
                                 check = true;
                                 break;
                             }
@@ -201,7 +199,7 @@ namespace ConsoleApplication1
                                 {
                                     getStatus = "(F)";
                                 }
-                                
+
                                 Console.WriteLine(
                                     "|{0,-4}|{1, -20} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|{10, -12}|{11, -18}|",
                                     data[number1 - 1][i][0], data[number1 - 1][i][1], data[number1 - 1][i][2],
@@ -283,7 +281,7 @@ namespace ConsoleApplication1
                                 {
                                     getStatus = "(F)";
                                 }
-                                
+
                                 Console.WriteLine(
                                     "|{0,-4}|{1, -20} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|{10, -12}|{11, -18}|",
                                     data[number1 - 1][i][0], data[number1 - 1][i][1], data[number1 - 1][i][2],
@@ -348,39 +346,210 @@ namespace ConsoleApplication1
                     }
                     else if (number == 5)
                     {
-                        checkEd = 5;
+                        Console.WriteLine("-----------------------------");
+                        if (data.Count == 0)
+                        {
+                            Console.WriteLine("There are no data currently");
+                            Console.WriteLine("-----------------------------");
+                            break;
+                        }
+
+                        for (int i = 0; i < data.Count; i++)
+                        {
+                            Console.WriteLine($"-> {i + 1}. {data[i][0][3]}");
+                        }
+
+                        Console.Write("Input to use: ");
+                        int number1 = int.Parse(Console.ReadLine());
+
+                        if (number1 >= 1 && number1 <= data.Count)
+                        {
+                            Console.WriteLine("-----------------------------");
+                            if (data[number1 - 1].Count == 1)
+                            {
+                                Console.WriteLine("There is only one student in the class");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"There are {data[number1 - 1].Count} students in the class");
+                            }
+
+                            Console.WriteLine(
+                                "--------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                            Console.WriteLine(
+                                "|{0,-4}|{1, -20} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|{10, -12}|{11, -18}|",
+                                "IDs",
+                                "Name", "Age",
+                                "Class", "Math Grade", "Physics Grade", "Chemistry Grade", "Literature Grade",
+                                "English Grade",
+                                "History Grade", "Total Grade", "Status");
+                            Console.WriteLine(
+                                "--------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+
+                            for (int i = 0; i < data[number1 - 1].Count; i++)
+                            {
+                                string getStatus = "";
+                                if (Int32.Parse(data[number1 - 1][i][10]) >= 5 &&
+                                    Int32.Parse(data[number1 - 1][i][10]) <= 7)
+                                {
+                                    getStatus = "(P)";
+                                }
+                                else if (Int32.Parse(data[number1 - 1][i][10]) > 7 &&
+                                         Int32.Parse(data[number1 - 1][i][10]) <= 8.5)
+                                {
+                                    getStatus = "(P) => (M)";
+                                }
+                                else if (Int32.Parse(data[number1 - 1][i][10]) > 8.5)
+                                {
+                                    getStatus = "(P) => (M) => (D)";
+                                }
+                                else
+                                {
+                                    getStatus = "(F)";
+                                }
+
+                                Console.WriteLine(
+                                    "|{0,-4}|{1, -20} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|{10, -12}|{11, -18}|",
+                                    data[number1 - 1][i][0], data[number1 - 1][i][1], data[number1 - 1][i][2],
+                                    data[number1 - 1][i][3], data[number1 - 1][i][4], data[number1 - 1][i][5],
+                                    data[number1 - 1][i][6], data[number1 - 1][i][7], data[number1 - 1][i][8],
+                                    data[number1 - 1][i][9], data[number1 - 1][i][10], getStatus);
+
+                                Console.WriteLine(
+                                    "--------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                            }
+
+                            Console.Write("Input to edit: ");
+                            int index = int.Parse(Console.ReadLine());
+
+                            string[] titleInfo =
+                            {
+                                "IDs", "Name", "Age", "Class", "Math Grade", "Physics Grade", "Chemistry Grade",
+                                "Literature Grade", "English Grade", "History grade"
+                            };
+
+                            if (index > 0 && index <= data[number1 - 1].Count)
+                            {
+                                while (true)
+                                {
+                                    Console.WriteLine($"--- Editing Student IDs {data[number1 - 1][index - 1][0]} ---");
+                                    Console.WriteLine("->1. IDs");
+                                    Console.WriteLine("->2. Name");
+                                    Console.WriteLine("->3. Age");
+                                    Console.WriteLine("->4. Class");
+                                    Console.WriteLine("->5. Math Grade");
+                                    Console.WriteLine("->6. Physics Grade");
+                                    Console.WriteLine("->7. Chemistry Grade");
+                                    Console.WriteLine("->8. Literature Grade");
+                                    Console.WriteLine("->9. English Grade");
+                                    Console.WriteLine("->10. History Grade");
+                                    Console.WriteLine("->11. Exit");
+                                    Console.Write("Input to use: ");
+                                    int numberEdit = int.Parse(Console.ReadLine());
+                                    
+                                    if (numberEdit > 0 && numberEdit <= 10)
+                                    {
+                                        Console.Write($"The data of {titleInfo[numberEdit - 1]} was {data[number1 - 1][index - 1][numberEdit - 1]} -> ");
+                                        
+                                        string newData = Console.ReadLine();
+
+                                        if (numberEdit == 1)
+                                        {
+                                            string[] name1 = newData.Split(' ');
+                                            name1 = name1.Where(x => x != "").ToArray();
+                                            for (int i = 0; i < name1.Length; i++)
+                                            {
+                                                name1[i] = name1[i].First().ToString().ToUpper() + name1[i].Substring(1);
+                                            }
+
+                                            newData = string.Join(" ", name1);
+                                            data[number1 - 1][index - 1][numberEdit - 1] = newData;
+                                        }
+
+                                        if (numberEdit == 4)
+                                        {
+                                            bool check = false;
+                                            
+                                            currentStudentData.Add(data[number1 - 1][index - 1][0]);
+                                            currentStudentData.Add(data[number1 - 1][index - 1][1]);
+                                            currentStudentData.Add(data[number1 - 1][index - 1][2]);
+                                            currentStudentData.Add(newData);
+                                            currentStudentData.Add(data[number1 - 1][index - 1][4]);
+                                            currentStudentData.Add(data[number1 - 1][index - 1][5]);
+                                            currentStudentData.Add(data[number1 - 1][index - 1][6]);
+                                            currentStudentData.Add(data[number1 - 1][index - 1][7]);
+                                            currentStudentData.Add(data[number1 - 1][index - 1][8]);
+                                            currentStudentData.Add(data[number1 - 1][index - 1][9]);
+                                                    
+                                            int tmpTotalGrade = Int32.Parse(data[number1 - 1][index - 1][4]) + Int32.Parse(data[number1 - 1][index - 1][5]) +
+                                                                Int32.Parse(data[number1 - 1][index - 1][6]) + Int32.Parse(data[number1 - 1][index - 1][7]) +
+                                                                Int32.Parse(data[number1 - 1][index - 1][8]) + Int32.Parse(data[number1 - 1][index - 1][9]);
+
+                                            tmpTotalGrade = tmpTotalGrade / 6;
+
+                                            string totalGrade = $"{tmpTotalGrade}";
+                                            currentStudentData.Add(totalGrade);
+
+                                            for (int i = 0; i < data.Count; i++)
+                                            {
+                                                if (newData == data[i][0][3])
+                                                {
+                                                    data[i].Add(currentStudentData);
+                                                    check = true;
+                                                    break;
+                                                }
+                                            }
+
+                                            if (check == false)
+                                            {
+                                                currentClass.Add(currentStudentData);
+                                                data.Add(currentClass);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            data[number1 - 1][index - 1][numberEdit - 1] = newData;
+                                        }
+                                        
+                                        Console.WriteLine("-----------------------------");
+                                        Console.WriteLine("---- Update Successfully ----");
+                                        Console.WriteLine("-----------------------------");
+                                    }
+                                    else if (numberEdit == 11)
+                                    {
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Invalid number");
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid Number");
+                            }
+
+                            break;
+                        }
+
+                        break;
+                    }
+                    else if (number == 6)
+                    {
+                        checkEd = 6;
                         break;
                     }
 
                     Console.WriteLine("Invalid number");
                 }
 
-                if (checkEd == 5)
+                if (checkEd == 6)
                 {
                     break;
                 }
             }
-
-            // Console.WriteLine("--------------------");
-            // Console.WriteLine("|{0,-20} |{1, 5}", "Name", "Hours");
-            // Console.WriteLine(
-            //     "------------------------------------------------------------------------------------------------------------------------------------");
-            // Console.WriteLine("|{0,-4}|{1, -20} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|", "IDs",
-            //     "Name", "Age",
-            //     "Class", "Math Grade", "Physics Grade", "Chemistry Grade", "Literature Grade", "English Grade",
-            //     "History Grade");
-            // Console.WriteLine(
-            //     "------------------------------------------------------------------------------------------------------------------------------------");
-            // Console.WriteLine("|{0,-4}|{1, -20} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|", "1",
-            //     "Bobs", "12", "A1", "1", "2", "3", "4", "5", "6");
-            // Console.WriteLine(
-            //     "------------------------------------------------------------------------------------------------------------------------------------");
-            // Console.WriteLine("|{0,-4}|{1, -20} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|", "1",
-            //     "Bobs", "12", "A1", "1", "2", "3", "4", "5", "6");
-            // Console.WriteLine(
-            //     "------------------------------------------------------------------------------------------------------------------------------------");
-            // Console.WriteLine("|{0,-4}|{1, -20} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|", "1",
-            //     "Bobs", "12", "A1", "1", "2", "3", "4", "5", "6");
         }
     }
 }

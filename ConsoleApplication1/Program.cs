@@ -121,13 +121,13 @@ namespace ConsoleApplication1
                         string History_grade = Console.ReadLine();
                         currentStudentData.Add(History_grade);
 
-                        int tmpTotalGrade = Int32.Parse(Math_grade) + Int32.Parse(Physics_grade) +
-                                            Int32.Parse(Chemistry_grade) + Int32.Parse(Literature_grade) +
-                                            Int32.Parse(History_grade) + Int32.Parse(English_grade);
+                        Double tmpTotalGrade = Double.Parse(Math_grade) + Double.Parse(Physics_grade) +
+                                               Double.Parse(Chemistry_grade) + Double.Parse(Literature_grade) +
+                                               Double.Parse(History_grade) + Double.Parse(English_grade);
 
                         tmpTotalGrade = tmpTotalGrade / 6;
 
-                        string totalGrade = $"{tmpTotalGrade}";
+                        string totalGrade = $"{tmpTotalGrade:F1}";
                         currentStudentData.Add(totalGrade);
 
                         Console.WriteLine("-----------------------------");
@@ -167,31 +167,31 @@ namespace ConsoleApplication1
                             }
 
                             Console.WriteLine(
-                                "--------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                                "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
                             Console.WriteLine(
-                                "|{0,-4}|{1, -20} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|{10, -12}|{11, -18}|",
+                                "|{0,-4}|{1, -30} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|{10, -12}|{11, -18}|",
                                 "IDs",
                                 "Name", "Age",
                                 "Class", "Math Grade", "Physics Grade", "Chemistry Grade", "Literature Grade",
                                 "English Grade",
                                 "History Grade", "Total Grade", "Status");
                             Console.WriteLine(
-                                "--------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                                "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
                             for (int i = 0; i < data[number1 - 1].Count; i++)
                             {
                                 string getStatus = "";
-                                if (Int32.Parse(data[number1 - 1][i][10]) >= 5 &&
-                                    Int32.Parse(data[number1 - 1][i][10]) <= 7)
+                                if (Double.Parse(data[number1 - 1][i][10]) >= 5 &&
+                                    Double.Parse(data[number1 - 1][i][10]) <= 7)
                                 {
                                     getStatus = "(P)";
                                 }
-                                else if (Int32.Parse(data[number1 - 1][i][10]) > 7 &&
-                                         Int32.Parse(data[number1 - 1][i][10]) <= 8.5)
+                                else if (Double.Parse(data[number1 - 1][i][10]) > 7 &&
+                                         Double.Parse(data[number1 - 1][i][10]) <= 8.5)
                                 {
                                     getStatus = "(P) => (M)";
                                 }
-                                else if (Int32.Parse(data[number1 - 1][i][10]) > 8.5)
+                                else if (Double.Parse(data[number1 - 1][i][10]) > 8.5)
                                 {
                                     getStatus = "(P) => (M) => (D)";
                                 }
@@ -201,14 +201,14 @@ namespace ConsoleApplication1
                                 }
 
                                 Console.WriteLine(
-                                    "|{0,-4}|{1, -20} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|{10, -12}|{11, -18}|",
+                                    "|{0,-4}|{1, -30} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|{10, -12}|{11, -18}|",
                                     data[number1 - 1][i][0], data[number1 - 1][i][1], data[number1 - 1][i][2],
                                     data[number1 - 1][i][3], data[number1 - 1][i][4], data[number1 - 1][i][5],
                                     data[number1 - 1][i][6], data[number1 - 1][i][7], data[number1 - 1][i][8],
                                     data[number1 - 1][i][9], data[number1 - 1][i][10], getStatus);
 
                                 Console.WriteLine(
-                                    "--------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                                    "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
                             }
 
                             Console.ReadKey();
@@ -249,31 +249,31 @@ namespace ConsoleApplication1
                             }
 
                             Console.WriteLine(
-                                "--------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                                "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
                             Console.WriteLine(
-                                "|{0,-4}|{1, -20} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|{10, -12}|{11, -18}|",
+                                "|{0,-4}|{1, -30} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|{10, -12}|{11, -18}|",
                                 "IDs",
                                 "Name", "Age",
                                 "Class", "Math Grade", "Physics Grade", "Chemistry Grade", "Literature Grade",
                                 "English Grade",
                                 "History Grade", "Total Grade", "Status");
                             Console.WriteLine(
-                                "--------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                                "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
                             for (int i = 0; i < data[number1 - 1].Count; i++)
                             {
                                 string getStatus = "";
-                                if (Int32.Parse(data[number1 - 1][i][10]) >= 5 &&
-                                    Int32.Parse(data[number1 - 1][i][10]) <= 7)
+                                if (Double.Parse(data[number1 - 1][i][10]) >= 5 &&
+                                    Double.Parse(data[number1 - 1][i][10]) <= 7)
                                 {
                                     getStatus = "(P)";
                                 }
-                                else if (Int32.Parse(data[number1 - 1][i][10]) > 7 &&
-                                         Int32.Parse(data[number1 - 1][i][10]) <= 8.5)
+                                else if (Double.Parse(data[number1 - 1][i][10]) > 7 &&
+                                         Double.Parse(data[number1 - 1][i][10]) <= 8.5)
                                 {
                                     getStatus = "(P) => (M)";
                                 }
-                                else if (Int32.Parse(data[number1 - 1][i][10]) > 8.5)
+                                else if (Double.Parse(data[number1 - 1][i][10]) > 8.5)
                                 {
                                     getStatus = "(P) => (M) => (D)";
                                 }
@@ -283,14 +283,14 @@ namespace ConsoleApplication1
                                 }
 
                                 Console.WriteLine(
-                                    "|{0,-4}|{1, -20} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|{10, -12}|{11, -18}|",
+                                    "|{0,-4}|{1, -30} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|{10, -12}|{11, -18}|",
                                     data[number1 - 1][i][0], data[number1 - 1][i][1], data[number1 - 1][i][2],
                                     data[number1 - 1][i][3], data[number1 - 1][i][4], data[number1 - 1][i][5],
                                     data[number1 - 1][i][6], data[number1 - 1][i][7], data[number1 - 1][i][8],
                                     data[number1 - 1][i][9], data[number1 - 1][i][10], getStatus);
 
                                 Console.WriteLine(
-                                    "--------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                                    "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
                             }
 
                             Console.Write("Input to remove: ");
@@ -383,31 +383,31 @@ namespace ConsoleApplication1
                             }
 
                             Console.WriteLine(
-                                "--------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                                "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
                             Console.WriteLine(
-                                "|{0,-4}|{1, -20} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|{10, -12}|{11, -18}|",
+                                "|{0,-4}|{1, -30} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|{10, -12}|{11, -18}|",
                                 "IDs",
                                 "Name", "Age",
                                 "Class", "Math Grade", "Physics Grade", "Chemistry Grade", "Literature Grade",
                                 "English Grade",
                                 "History Grade", "Total Grade", "Status");
                             Console.WriteLine(
-                                "--------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                                "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
                             for (int i = 0; i < data[number1 - 1].Count; i++)
                             {
                                 string getStatus = "";
-                                if (Int32.Parse(data[number1 - 1][i][10]) >= 5 &&
-                                    Int32.Parse(data[number1 - 1][i][10]) <= 7)
+                                if (Double.Parse(data[number1 - 1][i][10]) >= 5 &&
+                                    Double.Parse(data[number1 - 1][i][10]) <= 7)
                                 {
                                     getStatus = "(P)";
                                 }
-                                else if (Int32.Parse(data[number1 - 1][i][10]) > 7 &&
-                                         Int32.Parse(data[number1 - 1][i][10]) <= 8.5)
+                                else if (Double.Parse(data[number1 - 1][i][10]) > 7 &&
+                                         Double.Parse(data[number1 - 1][i][10]) <= 8.5)
                                 {
                                     getStatus = "(P) => (M)";
                                 }
-                                else if (Int32.Parse(data[number1 - 1][i][10]) > 8.5)
+                                else if (Double.Parse(data[number1 - 1][i][10]) > 8.5)
                                 {
                                     getStatus = "(P) => (M) => (D)";
                                 }
@@ -417,14 +417,14 @@ namespace ConsoleApplication1
                                 }
 
                                 Console.WriteLine(
-                                    "|{0,-4}|{1, -20} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|{10, -12}|{11, -18}|",
+                                    "|{0,-4}|{1, -30} |{2,-3}|{3,-6}|{4,-11}|{5,-15}|{6,-16}|{7,-17}|{8,-14}|{9,-14}|{10, -12}|{11, -18}|",
                                     data[number1 - 1][i][0], data[number1 - 1][i][1], data[number1 - 1][i][2],
                                     data[number1 - 1][i][3], data[number1 - 1][i][4], data[number1 - 1][i][5],
                                     data[number1 - 1][i][6], data[number1 - 1][i][7], data[number1 - 1][i][8],
                                     data[number1 - 1][i][9], data[number1 - 1][i][10], getStatus);
 
                                 Console.WriteLine(
-                                    "--------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                                    "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
                             }
 
                             Console.Write("Input to edit: ");
@@ -496,17 +496,17 @@ namespace ConsoleApplication1
                                         currentStudentData.Add(data[number1 - 1][index - 1][8]);
                                         currentStudentData.Add(data[number1 - 1][index - 1][9]);
 
-                                        int tmpTotalGrade =
-                                            Int32.Parse(data[number1 - 1][index - 1][4]) +
-                                            Int32.Parse(data[number1 - 1][index - 1][5]) +
-                                            Int32.Parse(data[number1 - 1][index - 1][6]) +
-                                            Int32.Parse(data[number1 - 1][index - 1][7]) +
-                                            Int32.Parse(data[number1 - 1][index - 1][8]) +
-                                            Int32.Parse(data[number1 - 1][index - 1][9]);
+                                        Double tmpTotalGrade =
+                                            Double.Parse(data[number1 - 1][index - 1][4]) +
+                                            Double.Parse(data[number1 - 1][index - 1][5]) +
+                                            Double.Parse(data[number1 - 1][index - 1][6]) +
+                                            Double.Parse(data[number1 - 1][index - 1][7]) +
+                                            Double.Parse(data[number1 - 1][index - 1][8]) +
+                                            Double.Parse(data[number1 - 1][index - 1][9]);
 
                                         tmpTotalGrade = tmpTotalGrade / 6;
 
-                                        string totalGrade = $"{tmpTotalGrade}";
+                                        string totalGrade = $"{tmpTotalGrade:F1}";
                                         currentStudentData.Add(totalGrade);
 
                                         for (int i = 0; i < data.Count; i++)
@@ -535,17 +535,17 @@ namespace ConsoleApplication1
                                     {
                                         data[number1 - 1][index - 1][numberEdit - 1] = newData;
 
-                                        int tmpTotalGrade =
-                                            Int32.Parse(data[number1 - 1][index - 1][4]) +
-                                            Int32.Parse(data[number1 - 1][index - 1][5]) +
-                                            Int32.Parse(data[number1 - 1][index - 1][6]) +
-                                            Int32.Parse(data[number1 - 1][index - 1][7]) +
-                                            Int32.Parse(data[number1 - 1][index - 1][8]) +
-                                            Int32.Parse(data[number1 - 1][index - 1][9]);
+                                        Double tmpTotalGrade =
+                                            Double.Parse(data[number1 - 1][index - 1][4]) +
+                                            Double.Parse(data[number1 - 1][index - 1][5]) +
+                                            Double.Parse(data[number1 - 1][index - 1][6]) +
+                                            Double.Parse(data[number1 - 1][index - 1][7]) +
+                                            Double.Parse(data[number1 - 1][index - 1][8]) +
+                                            Double.Parse(data[number1 - 1][index - 1][9]);
 
                                         tmpTotalGrade = tmpTotalGrade / 6;
 
-                                        string totalGrade = $"{tmpTotalGrade}";
+                                        string totalGrade = $"{tmpTotalGrade:F1}";
                                         data[number1 - 1][index - 1][10] = totalGrade;
                                         Console.WriteLine("-----------------------------");
                                         Console.WriteLine("---- Update Successfully ----");
@@ -568,7 +568,6 @@ namespace ConsoleApplication1
                             else
                             {
                                 Console.WriteLine("Invalid Number");
-                                break;
                             }
                         }
 

@@ -21,8 +21,6 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/dc94e429cd794112b2092f5dda57956045d000/25/40e82396/Number.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/dc94e429cd794112b2092f5dda57956045d000/96/57a8e6d1/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/dc94e429cd794112b2092f5dda57956045d000/ae/222f3aaa/List`1.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://D:/Dev/School/ConsoleApplication1/Program.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://D:/Dev/School/ConsoleApplication1/Program.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -88,7 +86,10 @@
       <workItem from="1654443475492" duration="19603000" />
       <workItem from="1654527624175" duration="2790000" />
       <workItem from="1654585869681" duration="285000" />
-      <workItem from="1654604764641" duration="6794000" />
+      <workItem from="1654604764641" duration="8843000" />
+      <workItem from="1654616072474" duration="112000" />
+      <workItem from="1654616244354" duration="33000" />
+      <workItem from="1654784258449" duration="2332000" />
     </task>
     <servers />
   </component>

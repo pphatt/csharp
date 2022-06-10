@@ -7,10 +7,6 @@
     <list default="true" id="d32c1d5e-7a4d-42e8-9d37-89df97fd37c5" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ConsoleApplication1/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ConsoleApplication1/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/ConsoleApplication1.exe" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/ConsoleApplication1.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/ConsoleApplication1.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/ConsoleApplication1.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/ConsoleApplication1.exe" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/ConsoleApplication1.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/ConsoleApplication1.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/ConsoleApplication1.pdb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,7 +85,9 @@
       <workItem from="1654604764641" duration="8843000" />
       <workItem from="1654616072474" duration="112000" />
       <workItem from="1654616244354" duration="33000" />
-      <workItem from="1654784258449" duration="2332000" />
+      <workItem from="1654784258449" duration="2487000" />
+      <workItem from="1654862263374" duration="1580000" />
+      <workItem from="1654864036326" duration="3240000" />
     </task>
     <servers />
   </component>

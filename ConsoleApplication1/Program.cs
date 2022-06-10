@@ -343,7 +343,7 @@ namespace ConsoleApplication1
                             {
                                 if (index == data[number1 - 1].Count && data[number1 - 1].Count == 1) // (1)
                                 {
-                                    data.RemoveAt(index - 1);
+                                    data.RemoveAt(number1 - 1);
                                 }
                                 else
                                 {

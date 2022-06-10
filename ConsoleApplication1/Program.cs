@@ -196,14 +196,10 @@ namespace ConsoleApplication1
                         if (number1 >= 1 && number1 <= data.Count)
                         {
                             Console.WriteLine("-----------------------------");
-                            if (data[number1 - 1].Count == 1)
-                            {
-                                Console.WriteLine("There is only one student in the class");
-                            }
-                            else
-                            {
-                                Console.WriteLine($"There are {data[number1 - 1].Count} students in the class");
-                            }
+                            // So in here I am using ternary operator to reduce the length of the code and make the code more readable.
+                            var condition = data[number1 - 1].Count == 1;
+                            var e = condition ? "There is only one student in the class" : $"There are {data[number1 - 1].Count} students in the class";
+                            Console.WriteLine(e);
                             
                             // So the way to draw table in the console is not that hard. We just need to use the string.format output by microsoft.
                             Console.WriteLine(
@@ -281,14 +277,9 @@ namespace ConsoleApplication1
                         if (number1 >= 1 && number1 <= data.Count)
                         {
                             Console.WriteLine("-----------------------------");
-                            if (data[number1 - 1].Count == 1)
-                            {
-                                Console.WriteLine("There is only one student in the class");
-                            }
-                            else
-                            {
-                                Console.WriteLine($"There are {data[number1 - 1].Count} students in the class");
-                            }
+                            var condition = data[number1 - 1].Count == 1;
+                            var e = condition ? "There is only one student in the class" : $"There are {data[number1 - 1].Count} students in the class";
+                            Console.WriteLine(e);
 
                             Console.WriteLine(
                                 "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
@@ -420,14 +411,9 @@ namespace ConsoleApplication1
                         if (number1 >= 1 && number1 <= data.Count)
                         {
                             Console.WriteLine("-----------------------------");
-                            if (data[number1 - 1].Count == 1)
-                            {
-                                Console.WriteLine("There is only one student in the class");
-                            }
-                            else
-                            {
-                                Console.WriteLine($"There are {data[number1 - 1].Count} students in the class");
-                            }
+                            var condition = data[number1 - 1].Count == 1;
+                            var e = condition ? "There is only one student in the class" : $"There are {data[number1 - 1].Count} students in the class";
+                            Console.WriteLine(e);
 
                             Console.WriteLine(
                                 "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");

@@ -1,0 +1,7 @@
+D:\Dev\School\Library Management System\obj\Debug\Library Management System.csproj.AssemblyReference.cache
+D:\Dev\School\Library Management System\obj\Debug\Library Management System.csproj.SuggestedBindingRedirects.cache
+D:\Dev\School\Library Management System\obj\Debug\Library Management System.csproj.CoreCompileInputs.cache
+D:\Dev\School\Library Management System\bin\Debug\Library_Management_System.exe
+D:\Dev\School\Library Management System\bin\Debug\Library_Management_System.pdb
+D:\Dev\School\Library Management System\obj\Debug\Library_Management_System.exe
+D:\Dev\School\Library Management System\obj\Debug\Library_Management_System.pdb

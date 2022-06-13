@@ -32,8 +32,7 @@ namespace Library_Management_System
                     Console.ReadKey();
                 } else if (number == 2)
                 {
-                    // book.Show();
-                    // Console.ReadKey();
+                    
                 } else if (number == 5)
                 {
                     book.Show();

@@ -30,6 +30,8 @@ namespace Library_Management_System
             //     Console.WriteLine(test1[i]);
             // }
             //
+            // string date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+            // Console.WriteLine(date);
         }
     }
 }

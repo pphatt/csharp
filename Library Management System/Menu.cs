@@ -176,6 +176,42 @@ namespace Library_Management_System
                             Console.WriteLine("Invalid number");
                             break;
                     }
+                } else if (number == 4)
+                {
+                    string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\MyTest.txt");
+                    book.Show();
+                    Console.Write("Input to use: ");
+                    int number1 = int.Parse(Console.ReadLine());
+                    if (number1 > 0 && number1 <= data.Length)
+                    {
+                        Console.WriteLine($"\t\t\t\t\t\t          EDITING THE BOOK NO.{number1:D2} \t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t****************** MENU ******************\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t** 1. EDIT TITLE                        **\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t** 2. EDIT AUTHOR                       **\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t** 3. EDIT CATEGORY                     **\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t******************************************\t\t\t\t\t");
+                        Console.Write("Input to edit: ");
+                        int number2 = int.Parse(Console.ReadLine());
+
+                        if (number2 > 0 && number2 <= 3)
+                        {
+                            string[] output = data[number1 - 1].Split(',');
+                            Console.Write($"Changing {output[number2 - 1]} to: ");
+                            string newText = Console.ReadLine();
+                            output[number2 - 1] = newText;
+                            File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", output);
+                            Console.WriteLine("\t\t\t\t\t\t*********** UPDATE SUCCESSFULLY **********\t\t\t\t\t");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid number");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid number");
+                    }
+
                 }
                 else if (number == 5)
                 {

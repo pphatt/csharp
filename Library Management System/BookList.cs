@@ -35,16 +35,16 @@ namespace Library_Management_System
         {
             try
             {
-                string[] lines = File.ReadAllLines(@"D:\Dev\School\Library Management System\MyTest.txt");
+                string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\MyTest.txt");
                 Console.WriteLine(
                     "------------------------------------------------------------------------------------------------------------------------------------------------------");
                 Console.WriteLine($"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Date",-20}|");
                 Console.WriteLine(
                     "------------------------------------------------------------------------------------------------------------------------------------------------------");
 
-                for (int i = 0; i < lines.Length; i++)
+                for (int i = 0; i < data.Length; i++)
                 {
-                    string[] output = lines[i].Split(',');
+                    string[] output = data[i].Split(',');
                     Console.WriteLine(
                         $"|{i + 1,-4}|{output[0],-60}|{output[1],-40}|{output[2],-20}|{output[3],-20}|");
                     Console.WriteLine(

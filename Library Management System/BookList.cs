@@ -71,11 +71,12 @@ namespace Library_Management_System
             string date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
             _bookList.Add(new Book(bookName, author, subject, date));
 
-            string test =
+            string output =
                 $"{_bookList[0].getName()},{_bookList[0].getAuthor()},{_bookList[0].getCategory()},{status},{_bookList[0].getDate()}";
+            
             using (StreamWriter sw = new StreamWriter(path, true))
             {
-                sw.WriteLine(test);
+                sw.WriteLine(output);
             }
 
             _bookList = new List<Book>();

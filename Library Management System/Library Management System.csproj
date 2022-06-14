@@ -41,6 +41,8 @@
     <ItemGroup>
         <Compile Include="Book.cs" />
         <Compile Include="BookList.cs" />
+        <Compile Include="Customer.cs" />
+        <Compile Include="CustomerData.cs" />
         <Compile Include="Menu.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />

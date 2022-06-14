@@ -21,6 +21,7 @@ namespace Library_Management_System
                 if (output1[index] == option)
                 {
                     check = true;
+                    break;
                 }
             }
 

@@ -57,7 +57,12 @@ namespace Library_Management_System
                     customer.AddCustomer();
                     Console.WriteLine("\t\t\t\t\t\t*********** ADDED SUCCESSFULLY ***********\t\t\t\t\t");
                     Console.ReadKey();
-                } else if (number == 10)
+                } else if (number == 7)
+                {
+                    customer.SearchCustomer();
+                    Console.ReadKey();
+                }
+                else if (number == 10)
                 {
                     customer.ShowCustomer();
                     Console.ReadKey();

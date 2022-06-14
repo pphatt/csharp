@@ -1,2 +1,1 @@
-RT76Y0,Mark,20,male,090xxxxxxxxx,Nothing
-TRY123,Ikea,20,female,000000000,Nothing
+UIT1011P,Jack The Fruit,78,male,999910000,n

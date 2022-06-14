@@ -133,7 +133,7 @@ namespace Library_Management_System
                     case 3:
                         bool check = false;
                         
-                        Console.WriteLine("Input age to search: ");
+                        Console.Write("Input age to search: ");
                         int age = int.Parse(Console.ReadLine());
                         
                         for (int i = 0; i < data.Length; i++)
@@ -203,7 +203,7 @@ namespace Library_Management_System
                     case 5:
                         bool check1 = false;
                         
-                        Console.WriteLine("Input age to search: ");
+                        Console.Write("Input phone number to search: ");
                         string phone = Console.ReadLine();
                         
                         for (int i = 0; i < data.Length; i++)
@@ -256,6 +256,84 @@ namespace Library_Management_System
             catch (IOException)
             {
                 Console.WriteLine("There are no data currently");
+            }
+        }
+
+        public void DeleteCustomer()
+        {
+            string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt");
+            if (data.Length == 0)
+            {
+                Console.WriteLine("There are no data currently");
+                return;
+            }
+            
+            Console.WriteLine("\t\t\t\t\t\t****************** MENU ******************\t\t\t\t\t");
+            Console.WriteLine("\t\t\t\t\t\t** 1. DELETE BY ID                      **\t\t\t\t\t");
+            Console.WriteLine("\t\t\t\t\t\t** 2. DELETE BY NAME                    **\t\t\t\t\t");
+            Console.WriteLine("\t\t\t\t\t\t******************************************\t\t\t\t\t");
+            Console.Write("Input to use: ");
+            int number1 = int.Parse(Console.ReadLine());
+
+            switch (number1)
+            {
+                case 1:
+                    bool check = false;
+                    Console.Write("Input IDs to delete: ");
+                    string ids = Console.ReadLine();
+                    List<string> output1 = new List<string>(data);
+
+                    for (int i = 0; i < output1.Count; i++)
+                    {
+                        string[] output2 = output1[i].Split(',');
+                        if (output2[0] == ids)
+                        {
+                            output1.RemoveAt(i);
+                            check = true;
+                            break;
+                        }
+                    }
+
+                    if (check == false)
+                    {
+                        Console.WriteLine($"There is no {ids} in IDs section in the database");
+                        return;
+                    }
+
+                    File.WriteAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt", output1.ToArray());
+                    Console.WriteLine("\t\t\t\t\t\t*********** DELETE SUCCESSFULLY **********\t\t\t\t\t");
+
+                    break;
+                case 2:
+                    bool check1 = false;
+                    Console.Write("Input Name to delete: ");
+                    string name = Console.ReadLine();
+                    List<string> output3 = new List<string>(data);
+
+                    for (int i = 0; i < output3.Count; i++)
+                    {
+                        string[] output2 = output3[i].Split(',');
+                        if (output2[1] == name)
+                        {
+                            output3.RemoveAt(i);
+                            check1 = true;
+                            break;
+                        }
+                    }
+
+                    if (check1 == false)
+                    {
+                        Console.WriteLine($"There is no {name} in Name section in the database");
+                        return;
+                    }
+
+                    File.WriteAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt", output3.ToArray());
+                    Console.WriteLine("\t\t\t\t\t\t*********** DELETE SUCCESSFULLY **********\t\t\t\t\t");
+
+                    break;
+                default:
+                    Console.WriteLine("Invalid number");
+                    break;
             }
         }
     }

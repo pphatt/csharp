@@ -51,6 +51,24 @@ namespace Library_Management_System
             //             "------------------------------------------------------------------------------------------------------------------------------------------------------");
             //     }
             // }
+            // List<string> test = new List<string>();
+            // test.Add("1");
+            // test.Add("2");
+            // test.Add("2");
+            // test.Add("4");
+            // for (int i = 0; i < test.Count; i++)
+            // {
+            //     if (test[i] == "2")
+            //     {
+            //         test.RemoveAt(i);
+            //         i--;
+            //     }
+            // }
+            //
+            // foreach (string test1 in test)
+            // {
+            //     Console.WriteLine(test1);
+            // }
         }
     }
 }

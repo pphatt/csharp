@@ -8,6 +8,48 @@ namespace Library_Management_System
     {
         List<Book> _bookList = new List<Book>();
 
+        private void CustomOutput(string option, string[] data, string name, int index)
+        {
+            int j = 0;
+            bool check = false;
+            Console.Write($"Input {name} to search: ");
+            option = Console.ReadLine();
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                string[] output1 = data[i].Split(',');
+                if (output1[index] == option)
+                {
+                    check = true;
+                }
+            }
+
+            if (check == false)
+            {
+                Console.WriteLine($"\t\t\t\t\t     There is no {option} in {name} section in the database\t\t\t\t\t\t");
+                return;
+            }
+
+            Console.WriteLine(
+                "------------------------------------------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine($"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Date",-20}|");
+            Console.WriteLine(
+                "------------------------------------------------------------------------------------------------------------------------------------------------------");
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                string[] output1 = data[i].Split(',');
+                if (output1[index] == option)
+                {
+                    Console.WriteLine(
+                        $"|{j + 1,-4}|{output1[0],-60}|{output1[1],-40}|{output1[2],-20}|{output1[3],-20}|");
+                    Console.WriteLine(
+                        "------------------------------------------------------------------------------------------------------------------------------------------------------");
+                    j++;
+                }
+            }
+        }
+
         public void Add()
         {
             string path = @"D:\Dev\School\Library Management System\MyTest.txt";
@@ -36,6 +78,12 @@ namespace Library_Management_System
             try
             {
                 string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\MyTest.txt");
+                if (data.Length == 0)
+                {
+                    Console.WriteLine("There are no data currently");
+                    return;
+                }
+                
                 Console.WriteLine(
                     "------------------------------------------------------------------------------------------------------------------------------------------------------");
                 Console.WriteLine($"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Date",-20}|");
@@ -53,7 +101,180 @@ namespace Library_Management_System
             }
             catch (IOException)
             {
-                Console.WriteLine("There is no data");
+                Console.WriteLine("There are no data currently");
+            }
+        }
+
+        public void Search()
+        {
+            try
+            {
+                string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\MyTest.txt");
+                if (data.Length == 0)
+                {
+                    Console.WriteLine("There are no data currently");
+                    return;
+                }
+                
+                Console.WriteLine("\t\t\t\t\t\t****************** MENU ******************\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 1. SEARCH BY ID                      **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 2. SEARCH BY TITLE                   **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 3. SEARCH BY AUTHOR                  **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 4. SEARCH BY CATEGORY                **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 5. SEARCH BY DATE                    **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 6. EXIT                              **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t******************************************\t\t\t\t\t");
+                Console.Write("Input to use: ");
+                int number1 = int.Parse(Console.ReadLine());
+
+                switch (number1)
+                {
+                    case 1:
+                        Console.Write("Input ID to search: ");
+                        int number2 = int.Parse(Console.ReadLine());
+                        
+                        if (number2 < 0 || number2 > data.Length)
+                        {
+                            Console.WriteLine("Invalid ID");
+                            return;
+                        }
+
+                        string[] output = data[number2 - 1].Split(',');
+                        Console.WriteLine(
+                            "------------------------------------------------------------------------------------------------------------------------------------------------------");
+                        Console.WriteLine($"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Date",-20}|");
+                        Console.WriteLine(
+                            "------------------------------------------------------------------------------------------------------------------------------------------------------");
+                        Console.WriteLine(
+                            $"|{number2,-4}|{output[0],-60}|{output[1],-40}|{output[2],-20}|{output[3],-20}|");
+                        Console.WriteLine(
+                            "------------------------------------------------------------------------------------------------------------------------------------------------------");
+                        break;
+                    case 2:
+                        CustomOutput("title", data, "title", 0);
+                        break;
+                    case 3:
+                        CustomOutput("author", data, "author", 1);
+                        break;
+                    case 4:
+                        CustomOutput("category", data, "category", 2);
+                        break;
+                    case 5:
+                        CustomOutput("date", data, "date", 3);
+                        break;
+                    case 6:
+                        break;
+                    default:
+                        Console.WriteLine("Invalid number");
+                        break;
+                }
+            }
+            catch (IOException)
+            {
+                Console.WriteLine("There are no data currently");
+            }
+        }
+
+        public void Delete()
+        {
+            string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\MyTest.txt");
+            if (data.Length == 0)
+            {
+                Console.WriteLine("There are no data currently");
+                return;
+            }
+            
+            Console.WriteLine("\t\t\t\t\t\t****************** MENU ******************\t\t\t\t\t");
+            Console.WriteLine("\t\t\t\t\t\t** 1. DELETE BY ID                      **\t\t\t\t\t");
+            Console.WriteLine("\t\t\t\t\t\t** 2. DELETE BY NAME                    **\t\t\t\t\t");
+            Console.WriteLine("\t\t\t\t\t\t******************************************\t\t\t\t\t");
+            Console.Write("Input to use: ");
+            int number1 = int.Parse(Console.ReadLine());
+
+            switch (number1)
+            {
+                case 1:
+                    Console.Write("Input ID to delete: ");
+                    int number2 = int.Parse(Console.ReadLine());
+
+                    if (number2 < 0 || number2 > data.Length)
+                    {
+                        Console.WriteLine("Invalid ID");
+                        return;
+                    }
+                    
+                    List<string> output = new List<string>(data);
+                    output.RemoveAt(number2 - 1);
+                    File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", output.ToArray());
+                    Console.WriteLine("\t\t\t\t\t\t*********** DELETE SUCCESSFULLY **********\t\t\t\t\t");
+
+                    break;
+                case 2:
+                    Console.Write("Input Name to delete: ");
+                    string name = Console.ReadLine();
+                    List<string> output1 = new List<string>(data);
+
+                    for (int i = 0; i < output1.Count; i++)
+                    {
+                        string[] output2 = output1[i].Split(',');
+                        if (output2[0] == name)
+                        {
+                            output1.RemoveAt(i);
+                            i--;
+                        }
+                    }
+
+                    File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", output1.ToArray());
+                    Console.WriteLine("\t\t\t\t\t\t*********** DELETE SUCCESSFULLY **********\t\t\t\t\t");
+
+                    break;
+                default:
+                    Console.WriteLine("Invalid number");
+                    break;
+            }
+        }
+
+        public void Edit()
+        {
+            string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\MyTest.txt");
+            if (data.Length == 0)
+            {
+                Console.WriteLine("There are no data currently");
+                return;
+            }
+            
+            Show();
+            Console.Write("Input to use: ");
+            int number1 = int.Parse(Console.ReadLine());
+            if (number1 > 0 && number1 <= data.Length)
+            {
+                Console.WriteLine($"\t\t\t\t\t\t          EDITING THE BOOK NO.{number1:D2} \t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t****************** MENU ******************\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 1. EDIT TITLE                        **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 2. EDIT AUTHOR                       **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 3. EDIT CATEGORY                     **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t******************************************\t\t\t\t\t");
+                Console.Write("Input to edit: ");
+                int number2 = int.Parse(Console.ReadLine());
+
+                if (number2 > 0 && number2 <= 3)
+                {
+                    string[] output = data[number1 - 1].Split(',');
+                    Console.Write($"Changing {output[number2 - 1]} to: ");
+                    string newText = Console.ReadLine();
+                    output[number2 - 1] = newText;
+                    data[number1 - 1] = string.Join(",", output);
+                    File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", data);
+                    Console.WriteLine("\t\t\t\t\t\t*********** UPDATE SUCCESSFULLY **********\t\t\t\t\t");
+                }
+                else
+                {
+                    Console.WriteLine("Invalid number");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid number");
             }
         }
     }

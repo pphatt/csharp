@@ -135,8 +135,9 @@ namespace Library_Management_System
                 Console.WriteLine("\t\t\t\t\t\t** 2. SEARCH BY TITLE                   **\t\t\t\t\t");
                 Console.WriteLine("\t\t\t\t\t\t** 3. SEARCH BY AUTHOR                  **\t\t\t\t\t");
                 Console.WriteLine("\t\t\t\t\t\t** 4. SEARCH BY CATEGORY                **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 5. SEARCH BY DATE                    **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 6. EXIT                              **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 5. SEARCH BY STATUS                  **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 6. SEARCH BY DATE                    **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 7. EXIT                              **\t\t\t\t\t");
                 Console.WriteLine("\t\t\t\t\t\t******************************************\t\t\t\t\t");
                 Console.Write("Input to use: ");
                 int number1 = int.Parse(Console.ReadLine());
@@ -181,9 +182,70 @@ namespace Library_Management_System
                         CustomOutput("category", data, "category", 2);
                         break;
                     case 5:
-                        CustomOutput("date", data, "date", 4);
+                        Console.WriteLine("\t\t\t\t\t\t****************** MENU ******************\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t** 1. AVAILABLE                         **\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t** 2. BORROWED                          **\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t******************************************\t\t\t\t\t");
+                        Console.Write("Input to use: ");
+                        int number3 = int.Parse(Console.ReadLine());
+                        if (number3 == 1)
+                        {
+                            if (data.Length == 0)
+                            {
+                                Console.WriteLine("There are no data currently");
+                                return;
+                            }
+                            
+                            Console.WriteLine(
+                                "-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                            Console.WriteLine($"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Status",-10}|{"Date",-20}|");
+                            Console.WriteLine(
+                                "-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                            for (int i = 0; i < data.Length; i++)
+                            {
+                                string[] output1 = data[i].Split(',');
+                                if (output1[3] == "False")
+                                {
+                                    Console.WriteLine(
+                                        $"|{i + 1,-4}|{output1[0],-60}|{output1[1],-40}|{output1[2],-20}|{"AVAILABLE",-10}|{output1[4],-20}|");
+                                    Console.WriteLine(
+                                        "-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                                }
+                            }
+                        } else if (number3 == 2)
+                        {
+                            if (data.Length == 0)
+                            {
+                                Console.WriteLine("There are no data currently");
+                                return;
+                            }
+                            
+                            Console.WriteLine(
+                                "-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                            Console.WriteLine($"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Status",-10}|{"Date",-20}|");
+                            Console.WriteLine(
+                                "-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                            for (int i = 0; i < data.Length; i++)
+                            {
+                                string[] output1 = data[i].Split(',');
+                                if (output1[3] == "True")
+                                {
+                                    Console.WriteLine(
+                                        $"|{i + 1,-4}|{output1[0],-60}|{output1[1],-40}|{output1[2],-20}|{"BORROWED",-10}|{output1[4],-20}|");
+                                    Console.WriteLine(
+                                        "-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid number");
+                        }
                         break;
                     case 6:
+                        CustomOutput("date", data, "date", 4);
+                        break;
+                    case 7:
                         break;
                     default:
                         Console.WriteLine("Invalid number");
@@ -274,6 +336,7 @@ namespace Library_Management_System
                 Console.WriteLine("\t\t\t\t\t\t** 1. EDIT TITLE                        **\t\t\t\t\t");
                 Console.WriteLine("\t\t\t\t\t\t** 2. EDIT AUTHOR                       **\t\t\t\t\t");
                 Console.WriteLine("\t\t\t\t\t\t** 3. EDIT CATEGORY                     **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 4. EDIT STATUS                       **\t\t\t\t\t");
                 Console.WriteLine("\t\t\t\t\t\t******************************************\t\t\t\t\t");
                 Console.Write("Input to edit: ");
                 int number2 = int.Parse(Console.ReadLine());
@@ -284,6 +347,29 @@ namespace Library_Management_System
                     Console.Write($"Changing {output[number2 - 1]} to: ");
                     string newText = Console.ReadLine();
                     output[number2 - 1] = newText;
+                    data[number1 - 1] = string.Join(",", output);
+                    File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", data);
+                    Console.WriteLine("\t\t\t\t\t\t*********** UPDATE SUCCESSFULLY **********\t\t\t\t\t");
+                } else if (number2 == 4)
+                {
+                    string[] output = data[number1 - 1].Split(',');
+                    string status = "AVAILABLE";
+                    if (output[number2 - 1] != "False")
+                    {
+                        status = "BORROWED";
+                    }
+                    
+                    Console.Write($"Changing {status} to: ");
+                    string newText = Console.ReadLine().ToLower();
+                    
+                    if (newText == "borrowed" || newText == "taken")
+                    {
+                        output[number2 - 1] = "True";
+                    } else if (newText == "available")
+                    {
+                        output[number2 - 1] = "False";
+                    }
+
                     data[number1 - 1] = string.Join(",", output);
                     File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", data);
                     Console.WriteLine("\t\t\t\t\t\t*********** UPDATE SUCCESSFULLY **********\t\t\t\t\t");

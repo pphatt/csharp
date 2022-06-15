@@ -65,6 +65,10 @@ namespace Library_Management_System
                 {
                     customer.DeleteCustomer();
                     Console.ReadKey();
+                } else if (number == 9)
+                {
+                    customer.EditCustomer();
+                    Console.ReadKey();
                 }
                 else if (number == 10)
                 {

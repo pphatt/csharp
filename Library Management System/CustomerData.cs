@@ -13,11 +13,11 @@ namespace Library_Management_System
             string section = name;
             Console.Write($"Input {name} to search: ");
             name = Console.ReadLine();
-            
+
             for (int i = 0; i < data.Length; i++)
             {
                 string[] output = data[i].Split(',');
-                
+
                 if (output[index] == $"{name}")
                 {
                     Console.WriteLine(
@@ -33,6 +33,7 @@ namespace Library_Management_System
                     return;
                 }
             }
+
             Console.WriteLine($"There is no {name} in {section} section in the database");
         }
 
@@ -132,10 +133,10 @@ namespace Library_Management_System
                         break;
                     case 3:
                         bool check = false;
-                        
+
                         Console.Write("Input age to search: ");
                         int age = int.Parse(Console.ReadLine());
-                        
+
                         for (int i = 0; i < data.Length; i++)
                         {
                             string[] output1 = data[i].Split(',');
@@ -155,7 +156,8 @@ namespace Library_Management_System
 
                         Console.WriteLine(
                             "--------------------------------------------------------------------------------------------------------------------------------");
-                        Console.WriteLine($"|{"ID",-10}|{"Name",-60}|{"Age",-5}|{"Sex",-6}|{"Phone Number",-15}|{"Status",-25}|");
+                        Console.WriteLine(
+                            $"|{"ID",-10}|{"Name",-60}|{"Age",-5}|{"Sex",-6}|{"Phone Number",-15}|{"Status",-25}|");
                         Console.WriteLine(
                             "--------------------------------------------------------------------------------------------------------------------------------");
 
@@ -181,7 +183,8 @@ namespace Library_Management_System
                         {
                             Console.WriteLine(
                                 "--------------------------------------------------------------------------------------------------------------------------------");
-                            Console.WriteLine($"|{"ID",-10}|{"Name",-60}|{"Age",-5}|{"Sex",-6}|{"Phone Number",-15}|{"Status",-25}|");
+                            Console.WriteLine(
+                                $"|{"ID",-10}|{"Name",-60}|{"Age",-5}|{"Sex",-6}|{"Phone Number",-15}|{"Status",-25}|");
                             Console.WriteLine(
                                 "--------------------------------------------------------------------------------------------------------------------------------");
 
@@ -198,14 +201,14 @@ namespace Library_Management_System
                                 }
                             }
                         }
-                        
+
                         break;
                     case 5:
                         bool check1 = false;
-                        
+
                         Console.Write("Input phone number to search: ");
                         string phone = Console.ReadLine();
-                        
+
                         for (int i = 0; i < data.Length; i++)
                         {
                             string[] output1 = data[i].Split(',');
@@ -225,7 +228,8 @@ namespace Library_Management_System
 
                         Console.WriteLine(
                             "--------------------------------------------------------------------------------------------------------------------------------");
-                        Console.WriteLine($"|{"ID",-10}|{"Name",-60}|{"Age",-5}|{"Sex",-6}|{"Phone Number",-15}|{"Status",-25}|");
+                        Console.WriteLine(
+                            $"|{"ID",-10}|{"Name",-60}|{"Age",-5}|{"Sex",-6}|{"Phone Number",-15}|{"Status",-25}|");
                         Console.WriteLine(
                             "--------------------------------------------------------------------------------------------------------------------------------");
 
@@ -267,7 +271,7 @@ namespace Library_Management_System
                 Console.WriteLine("There are no data currently");
                 return;
             }
-            
+
             Console.WriteLine("\t\t\t\t\t\t****************** MENU ******************\t\t\t\t\t");
             Console.WriteLine("\t\t\t\t\t\t** 1. DELETE BY ID                      **\t\t\t\t\t");
             Console.WriteLine("\t\t\t\t\t\t** 2. DELETE BY NAME                    **\t\t\t\t\t");
@@ -335,6 +339,58 @@ namespace Library_Management_System
                     Console.WriteLine("Invalid number");
                     break;
             }
+        }
+
+        public void EditCustomer()
+        {
+            string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt");
+            if (data.Length == 0)
+            {
+                Console.WriteLine("There are no data currently");
+                return;
+            }
+
+            ShowCustomer();
+            Console.Write("Input IDs to edit: ");
+            string ids = Console.ReadLine();
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                string[] output = data[i].Split(',');
+                if (output[0] == ids)
+                {
+                    Console.WriteLine($"\t\t\t\t\t\t          EDITING THE BOOK NO.{ids} \t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t****************** MENU ******************\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t** 1. EDIT TITLE                        **\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t** 2. EDIT AUTHOR                       **\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t** 3. EDIT CATEGORY                     **\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t** 4. EDIT STATUS                       **\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t** 5. EXIT                              **\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t******************************************\t\t\t\t\t");
+                    Console.Write("Input to edit: ");
+                    int number2 = int.Parse(Console.ReadLine());
+
+                    if (number2 > 0 && number2 <= 4)
+                    {
+                        Console.Write($"Changing {output[number2 - 1]} to: ");
+                        string newText = Console.ReadLine();
+                        output[number2 - 1] = newText;
+                        data[i] = string.Join(",", output);
+                        File.WriteAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt", data);
+                        Console.WriteLine("\t\t\t\t\t\t*********** UPDATE SUCCESSFULLY **********\t\t\t\t\t");
+                    } else if (number2 == 5)
+                    {
+                        
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid number");
+                    }
+
+                    return;
+                }
+            }
+            Console.WriteLine($"There is no {ids} in IDs section in database!");
         }
     }
 }

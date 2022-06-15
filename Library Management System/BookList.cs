@@ -38,26 +38,40 @@ namespace Library_Management_System
                 return;
             }
 
-            Console.WriteLine($"{Repeat("-", 172)}");
+            Console.WriteLine($"{Repeat("-", 177)}");
             Console.WriteLine(
-                $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Amount",-10}|{"Status",-10}|{"Date",-20}|");
-            Console.WriteLine($"{Repeat("-", 172)}");
+                $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Amount",-10}|{"Status",-15}|{"Date",-20}|");
+            Console.WriteLine($"{Repeat("-", 177)}");
 
             for (int i = 0; i < data.Length; i++)
             {
                 string[] output1 = data[i].Split(',');
 
-                string statusOutput = "AVAILABLE";
-                if (output1[3] != "False")
+                string[] getAmount = output1[4].Split(' ');
+                string[] getAmount1 = output1[5].Split(' ');
+
+                string statusOutput = $"AVAILABLE ({getAmount[1]})";
+                    
+                if (int.Parse(getAmount[1]) == 0)
                 {
-                    statusOutput = "BORROWED";
+                    statusOutput = $"BORROWED  ({getAmount1[1]})";
+                } else if (int.Parse(getAmount1[1]) == 0)
+                {
+                    statusOutput = $"AVAILABLE ({getAmount[1]})";
                 }
 
                 if (output1[index].Contains(option))
                 {
                     Console.WriteLine(
-                        $"|{j + 1,-4}|{output1[0],-60}|{output1[1],-40}|{output1[2],-20}|{output1[3],-10}|{statusOutput,-10}|{output1[5],-20}|");
-                    Console.WriteLine($"{Repeat("-", 172)}");
+                        $"|{j + 1,-4}|{output1[0],-60}|{output1[1],-40}|{output1[2],-20}|{output1[3],-10}|{statusOutput,-15}|{output1[6],-20}|");
+
+                    if (int.Parse(getAmount1[1]) > 0 && int.Parse(getAmount[1]) > 0)
+                    {
+                        statusOutput = $"BORROWED  ({getAmount1[1]})";
+                        Console.WriteLine($"{Repeat(" ", 139)}|{statusOutput,-15}|");
+                    }
+                    
+                    Console.WriteLine($"{Repeat("-", 177)}");
                     j++;
                 }
             }
@@ -80,7 +94,7 @@ namespace Library_Management_System
             _bookList.Add(new Book(bookName, author, subject, amount, date));
 
             string output =
-                $"{_bookList[0].getName()},{_bookList[0].getAuthor()},{_bookList[0].getCategory()},{_bookList[0].getAmount()},{status},{_bookList[0].getDate()}";
+                $"{_bookList[0].getName()},{_bookList[0].getAuthor()},{_bookList[0].getCategory()},{_bookList[0].getAmount()},{status} {_bookList[0].getAmount()},{!status} 0,{_bookList[0].getDate()}";
 
             using (StreamWriter sw = new StreamWriter(path, true))
             {
@@ -101,23 +115,36 @@ namespace Library_Management_System
                     return;
                 }
 
-                Console.WriteLine($"{Repeat("-", 172)}");
+                Console.WriteLine($"{Repeat("-", 177)}");
                 Console.WriteLine(
-                    $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Amount",-10}|{"Status",-10}|{"Date",-20}|");
-                Console.WriteLine($"{Repeat("-", 172)}");
+                    $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Amount",-10}|{"Status",-15}|{"Date",-20}|");
+                Console.WriteLine($"{Repeat("-", 177)}");
 
                 for (int i = 0; i < data.Length; i++)
                 {
                     string[] output = data[i].Split(',');
-                    string statusOutput = "AVAILABLE";
-                    if (output[4] != "False")
+                    string[] getAmount = output[4].Split(' ');
+                    string[] getAmount1 = output[5].Split(' ');
+
+                    string statusOutput = $"AVAILABLE ({getAmount[1]})";
+                    
+                    if (int.Parse(getAmount[1]) == 0)
                     {
-                        statusOutput = "BORROWED";
+                        statusOutput = $"BORROWED  ({getAmount1[1]})";
+                    } else if (int.Parse(getAmount1[1]) == 0)
+                    {
+                        statusOutput = $"AVAILABLE ({getAmount[1]})";
                     }
 
                     Console.WriteLine(
-                        $"|{i + 1,-4}|{output[0],-60}|{output[1],-40}|{output[2],-20}|{output[3],-10}|{statusOutput,-10}|{output[5],-20}|");
-                    Console.WriteLine($"{Repeat("-", 172)}");
+                        $"|{i + 1,-4}|{output[0],-60}|{output[1],-40}|{output[2],-20}|{output[3],-10}|{statusOutput,-15}|{output[6],-20}|");
+
+                    if (int.Parse(getAmount1[1]) > 0 && int.Parse(getAmount[1]) > 0)
+                    {
+                        statusOutput = $"BORROWED  ({getAmount1[1]})";
+                        Console.WriteLine($"{Repeat(" ", 139)}|{statusOutput,-15}|");
+                    }
+                    Console.WriteLine($"{Repeat("-", 177)}");
                 }
             }
             catch (IOException)
@@ -162,20 +189,34 @@ namespace Library_Management_System
                         }
 
                         string[] output = data[number2 - 1].Split(',');
+                        string[] getAmount = output[4].Split(' ');
+                        string[] getAmount1 = output[5].Split(' ');
 
-                        string statusOutput = "AVAILABLE";
-                        if (output[3] != "False")
+                        string statusOutput = $"AVAILABLE ({getAmount[1]})";
+                    
+                        if (int.Parse(getAmount[1]) == 0)
                         {
-                            statusOutput = "BORROWED";
+                            statusOutput = $"BORROWED  ({getAmount1[1]})";
+                        } else if (int.Parse(getAmount1[1]) == 0)
+                        {
+                            statusOutput = $"AVAILABLE ({getAmount[1]})";
                         }
 
-                        Console.WriteLine($"{Repeat("-", 172)}");
+                        Console.WriteLine($"{Repeat("-", 177)}");
                         Console.WriteLine(
-                            $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Amount",-10}|{"Status",-10}|{"Date",-20}|");
-                        Console.WriteLine($"{Repeat("-", 172)}");
+                            $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Amount",-10}|{"Status",-15}|{"Date",-20}|");
+                        Console.WriteLine($"{Repeat("-", 177)}");
+                        
                         Console.WriteLine(
-                            $"|{number2,-4}|{output[0],-60}|{output[1],-40}|{output[2],-20}|{output[3],-10}|{statusOutput,-10}|{output[5],-20}|");
-                        Console.WriteLine($"{Repeat("-", 172)}");
+                            $"|{number2,-4}|{output[0],-60}|{output[1],-40}|{output[2],-20}|{output[3],-10}|{statusOutput,-15}|{output[6],-20}|");
+
+                        if (int.Parse(getAmount1[1]) > 0 && int.Parse(getAmount[1]) > 0)
+                        {
+                            statusOutput = $"BORROWED  ({getAmount1[1]})";
+                            Console.WriteLine($"{Repeat(" ", 139)}|{statusOutput,-15}|");
+                        }
+                        
+                        Console.WriteLine($"{Repeat("-", 177)}");
                         break;
                     case 2:
                         CustomOutput("title", data, "title", 0);
@@ -201,18 +242,21 @@ namespace Library_Management_System
                                 return;
                             }
 
-                            Console.WriteLine($"{Repeat("-", 172)}");
+                            Console.WriteLine($"{Repeat("-", 177)}");
                             Console.WriteLine(
-                                $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Amount",-10}|{"Status",-10}|{"Date",-20}|");
-                            Console.WriteLine($"{Repeat("-", 172)}");
+                                $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Amount",-10}|{"Status",-15}|{"Date",-20}|");
+                            Console.WriteLine($"{Repeat("-", 177)}");
+                            
                             for (int i = 0; i < data.Length; i++)
                             {
                                 string[] output1 = data[i].Split(',');
-                                if (output1[4] == "False")
+                                string[] getAmount2 = output1[4].Split(' ');
+
+                                if (getAmount2[0] == "False" && int.Parse(getAmount2[1]) > 0)
                                 {
                                     Console.WriteLine(
-                                        $"|{i + 1,-4}|{output1[0],-60}|{output1[1],-40}|{output1[2],-20}|{output1[3],-10}|{"AVAILABLE",-10}|{output1[5],-20}|");
-                                    Console.WriteLine($"{Repeat("-", 172)}");
+                                        $"|{i + 1,-4}|{output1[0],-60}|{output1[1],-40}|{output1[2],-20}|{output1[3],-10}|{$"AVAILABLE ({getAmount2[1]})",-15}|{output1[5],-20}|");
+                                    Console.WriteLine($"{Repeat("-", 177)}");
                                 }
                             }
                         }
@@ -224,19 +268,21 @@ namespace Library_Management_System
                                 return;
                             }
 
-                            Console.WriteLine($"{Repeat("-", 172)}");
+                            Console.WriteLine($"{Repeat("-", 177)}");
                             Console.WriteLine(
-                                $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Amount",-10}|{"Status",-10}|{"Date",-20}|");
-                            Console.WriteLine($"{Repeat("-", 172)}");
+                                $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Amount",-10}|{"Status",-15}|{"Date",-20}|");
+                            Console.WriteLine($"{Repeat("-", 177)}");
                             
                             for (int i = 0; i < data.Length; i++)
                             {
                                 string[] output1 = data[i].Split(',');
-                                if (output1[4] == "True")
+                                string[] getAmount2 = output1[5].Split(' ');
+
+                                if (getAmount2[0] == "True" && int.Parse(getAmount2[1]) > 0)
                                 {
                                     Console.WriteLine(
-                                        $"|{i + 1,-4}|{output1[0],-60}|{output1[1],-40}|{output1[2],-20}|{output1[3],-10}|{"BORROWED",-10}|{output1[5],-20}|");
-                                    Console.WriteLine($"{Repeat("-", 172)}");
+                                        $"|{i + 1,-4}|{output1[0],-60}|{output1[1],-40}|{output1[2],-20}|{output1[3],-10}|{$"BORROWED  ({getAmount2[1]})",-15}|{output1[5],-20}|");
+                                    Console.WriteLine($"{Repeat("-", 177)}");
                                 }
                             }
                         }
@@ -357,7 +403,6 @@ namespace Library_Management_System
                     Console.WriteLine("\t\t\t\t\t\t** 1. EDIT TITLE                        **\t\t\t\t\t");
                     Console.WriteLine("\t\t\t\t\t\t** 2. EDIT AUTHOR                       **\t\t\t\t\t");
                     Console.WriteLine("\t\t\t\t\t\t** 3. EDIT CATEGORY                     **\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t** 4. EDIT STATUS                       **\t\t\t\t\t");
                     Console.WriteLine("\t\t\t\t\t\t******************************************\t\t\t\t\t");
                     Console.Write("Input to edit: ");
                     int number2 = int.Parse(Console.ReadLine());
@@ -368,31 +413,6 @@ namespace Library_Management_System
                         Console.Write($"Changing {output[number2 - 1]} to: ");
                         string newText = Console.ReadLine();
                         output[number2 - 1] = newText;
-                        data[number1 - 1] = string.Join(",", output);
-                        File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", data);
-                        Console.WriteLine("\t\t\t\t\t\t*********** UPDATE SUCCESSFULLY **********\t\t\t\t\t");
-                    }
-                    else if (number2 == 4)
-                    {
-                        string[] output = data[number1 - 1].Split(',');
-                        string status = "AVAILABLE";
-                        if (output[number2] != "False")
-                        {
-                            status = "BORROWED";
-                        }
-
-                        Console.Write($"Changing {status} to: ");
-                        string newText = Console.ReadLine().ToLower();
-
-                        if (newText == "borrowed" || newText == "taken")
-                        {
-                            output[number2] = "True";
-                        }
-                        else if (newText == "available")
-                        {
-                            output[number2] = "False";
-                        }
-
                         data[number1 - 1] = string.Join(",", output);
                         File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", data);
                         Console.WriteLine("\t\t\t\t\t\t*********** UPDATE SUCCESSFULLY **********\t\t\t\t\t");

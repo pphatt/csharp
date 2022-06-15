@@ -23,14 +23,17 @@ namespace Library_Management_System
         {
             return this.Name;
         }
+        
         public string getAuthor()
         {
             return this.Author;
         }
+        
         public string getCategory()
         {
             return this.Category;
         }
+        
         public string getDate()
         {
             return this.Date;

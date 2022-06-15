@@ -110,7 +110,7 @@ namespace Library_Management_System
                 {
                     string[] output = data[i].Split(',');
                     string statusOutput = "AVAILABLE";
-                    if (output[3] != "False")
+                    if (output[4] != "False")
                     {
                         statusOutput = "BORROWED";
                     }
@@ -208,7 +208,7 @@ namespace Library_Management_System
                             for (int i = 0; i < data.Length; i++)
                             {
                                 string[] output1 = data[i].Split(',');
-                                if (output1[3] == "False")
+                                if (output1[4] == "False")
                                 {
                                     Console.WriteLine(
                                         $"|{i + 1,-4}|{output1[0],-60}|{output1[1],-40}|{output1[2],-20}|{output1[3],-10}|{"AVAILABLE",-10}|{output1[5],-20}|");
@@ -228,10 +228,11 @@ namespace Library_Management_System
                             Console.WriteLine(
                                 $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Amount",-10}|{"Status",-10}|{"Date",-20}|");
                             Console.WriteLine($"{Repeat("-", 172)}");
+                            
                             for (int i = 0; i < data.Length; i++)
                             {
                                 string[] output1 = data[i].Split(',');
-                                if (output1[3] == "True")
+                                if (output1[4] == "True")
                                 {
                                     Console.WriteLine(
                                         $"|{i + 1,-4}|{output1[0],-60}|{output1[1],-40}|{output1[2],-20}|{output1[3],-10}|{"BORROWED",-10}|{output1[5],-20}|");
@@ -246,7 +247,7 @@ namespace Library_Management_System
 
                         break;
                     case 6:
-                        CustomOutput("date", data, "date", 4);
+                        CustomOutput("date", data, "date", 5);
                         break;
                     case 7:
                         break;
@@ -375,7 +376,7 @@ namespace Library_Management_System
                     {
                         string[] output = data[number1 - 1].Split(',');
                         string status = "AVAILABLE";
-                        if (output[number2 - 1] != "False")
+                        if (output[number2] != "False")
                         {
                             status = "BORROWED";
                         }
@@ -385,11 +386,11 @@ namespace Library_Management_System
 
                         if (newText == "borrowed" || newText == "taken")
                         {
-                            output[number2 - 1] = "True";
+                            output[number2] = "True";
                         }
                         else if (newText == "available")
                         {
-                            output[number2 - 1] = "False";
+                            output[number2] = "False";
                         }
 
                         data[number1 - 1] = string.Join(",", output);

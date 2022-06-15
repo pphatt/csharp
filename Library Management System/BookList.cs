@@ -126,14 +126,14 @@ namespace Library_Management_System
                     string[] getAmount = output[4].Split(' ');
                     string[] getAmount1 = output[5].Split(' ');
 
-                    string statusOutput = $"AVAILABLE ({getAmount[1]})";
+                    string statusOutput = $"AVAILABLE ({int.Parse(output[3]) - int.Parse(getAmount1[1])})";
                     
                     if (int.Parse(getAmount[1]) == 0)
                     {
-                        statusOutput = $"BORROWED  ({getAmount1[1]})";
+                        statusOutput = $"BORROWED  ({int.Parse(output[3]) - int.Parse(getAmount[1])})";
                     } else if (int.Parse(getAmount1[1]) == 0)
                     {
-                        statusOutput = $"AVAILABLE ({getAmount[1]})";
+                        statusOutput = $"AVAILABLE ({int.Parse(output[3]) - int.Parse(getAmount1[1])})";
                     }
 
                     Console.WriteLine(
@@ -141,7 +141,7 @@ namespace Library_Management_System
 
                     if (int.Parse(getAmount1[1]) > 0 && int.Parse(getAmount[1]) > 0)
                     {
-                        statusOutput = $"BORROWED  ({getAmount1[1]})";
+                        statusOutput = $"BORROWED  ({int.Parse(output[3]) - int.Parse(getAmount[1])})";
                         Console.WriteLine($"{Repeat(" ", 139)}|{statusOutput,-15}|");
                     }
                     Console.WriteLine($"{Repeat("-", 177)}");
@@ -437,23 +437,80 @@ namespace Library_Management_System
         {
             try
             {
-                // string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\MyTest.txt");
-                // if (data.Length == 0)
-                // {
-                //     Console.WriteLine("There are no data currently");
-                //     return;
-                // }
-                //
-                // Show();
-                //
-                // Console.Write("Input to use: ");
-                // int number = int.Parse(Console.ReadLine());
-                //
-                // if (number < 0 || number > data.Length)
-                // {
-                //     Console.WriteLine("Invalid ID");
-                //     return;
-                // }
+                string[] bookData = File.ReadAllLines(@"D:\Dev\School\Library Management System\MyTest.txt");
+                string[] customerData = File.ReadAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt");
+                
+                if (bookData.Length == 0 || customerData.Length == 0)
+                {
+                    Console.WriteLine("There are no data currently");
+                    return;
+                }
+
+                Console.Write("Input IDs customer to borrow: ");
+                string IDs = Console.ReadLine();
+                int check = -1;
+
+                for (int i = 0; i < customerData.Length; i++)
+                {
+                    string[] output = customerData[i].Split(',');
+                    if (output[0] == IDs)
+                    {
+                        check = i;
+                        break;
+                    }
+                }
+
+                if (check == -1)
+                {
+                    Console.WriteLine($"There is no {IDs} in the database");
+                    return;
+                }
+                
+                string[] output1 = customerData[check].Split(',');
+                
+                Console.WriteLine(Repeat("-", 151));
+                Console.WriteLine(
+                    $"|{"ID",-10}|{"Name",-60}|{"Age",-5}|{"Sex",-6}|{"Phone Number",-15}|{"Status",-48}|");
+                Console.WriteLine(Repeat("-", 151));
+
+                Console.WriteLine(
+                    $"|{output1[0],-10}|{output1[1],-60}|{output1[2],-5}|{output1[3],-6}|{output1[4],-15}|{output1[5],-48}|");
+                Console.WriteLine(Repeat("-", 151));
+                
+                while (true)
+                {
+                    Show();
+
+                    Console.Write("Input ID book to borrow: ");
+                    int number = int.Parse(Console.ReadLine());
+
+                    if (number < 0 || number > bookData.Length)
+                    {
+                        Console.WriteLine("Invalid ID");
+                        return;
+                    }
+
+                    string[] data = bookData[number - 1].Split(',');
+                    string[] availableData = data[4].Split(' ');
+                    string[] borrowedData = data[5].Split(' ');
+
+                    if (int.Parse(availableData[1]) == 0)
+                    {
+                        Console.WriteLine("There are no available book to borrow");
+                        return;
+                    }
+
+                    availableData[1] = $"{int.Parse(availableData[1]) - 1}";
+                    borrowedData[1] = $"{int.Parse(borrowedData[1]) + 1}";
+                    output1[5] = $"Borrowed book's ID: {number} at {DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")}";
+                    data[4] = string.Join(" ", availableData);
+                    data[5] = string.Join(" ", borrowedData);
+                    customerData[check] = string.Join(",", output1);
+                    bookData[number - 1] = string.Join(",", data);
+                    File.WriteAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt", customerData);
+                    File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", bookData);
+                    Console.WriteLine("\t\t\t\t\t\t********* BORROWED SUCCESSFULLY *********\t\t\t\t\t");
+                }
             }
             catch (IOException)
             {

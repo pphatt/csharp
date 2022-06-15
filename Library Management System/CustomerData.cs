@@ -20,16 +20,13 @@ namespace Library_Management_System
 
                 if (output[index] == $"{name}")
                 {
-                    Console.WriteLine(
-                        "--------------------------------------------------------------------------------------------------------------------------------");
+                    Console.WriteLine(BookList.Repeat("-", 128));
                     Console.WriteLine(
                         $"|{"ID",-10}|{"Name",-60}|{"Age",-5}|{"Sex",-6}|{"Phone Number",-15}|{"Status",-25}|");
-                    Console.WriteLine(
-                        "--------------------------------------------------------------------------------------------------------------------------------");
+                    Console.WriteLine(BookList.Repeat("-", 128));
                     Console.WriteLine(
                         $"|{output[0],-10}|{output[1],-60}|{output[2],-5}|{output[3],-6}|{output[4],-15}|{output[5],-25}|");
-                    Console.WriteLine(
-                        "--------------------------------------------------------------------------------------------------------------------------------");
+                    Console.WriteLine(BookList.Repeat("-", 128));
                     return;
                 }
             }
@@ -77,12 +74,10 @@ namespace Library_Management_System
                     return;
                 }
 
-                Console.WriteLine(
-                    "--------------------------------------------------------------------------------------------------------------------------------");
+                Console.WriteLine(BookList.Repeat("-", 128));
                 Console.WriteLine(
                     $"|{"ID",-10}|{"Name",-60}|{"Age",-5}|{"Sex",-6}|{"Phone Number",-15}|{"Status",-25}|");
-                Console.WriteLine(
-                    "--------------------------------------------------------------------------------------------------------------------------------");
+                Console.WriteLine(BookList.Repeat("-", 128));
 
                 for (int i = 0; i < data.Length; i++)
                 {
@@ -90,8 +85,7 @@ namespace Library_Management_System
 
                     Console.WriteLine(
                         $"|{output[0],-10}|{output[1],-60}|{output[2],-5}|{output[3],-6}|{output[4],-15}|{output[5],-25}|");
-                    Console.WriteLine(
-                        "--------------------------------------------------------------------------------------------------------------------------------");
+                    Console.WriteLine(BookList.Repeat("-", 128));
                 }
             }
             catch (IOException)
@@ -154,12 +148,10 @@ namespace Library_Management_System
                             return;
                         }
 
-                        Console.WriteLine(
-                            "--------------------------------------------------------------------------------------------------------------------------------");
+                        Console.WriteLine(BookList.Repeat("-", 128));
                         Console.WriteLine(
                             $"|{"ID",-10}|{"Name",-60}|{"Age",-5}|{"Sex",-6}|{"Phone Number",-15}|{"Status",-25}|");
-                        Console.WriteLine(
-                            "--------------------------------------------------------------------------------------------------------------------------------");
+                        Console.WriteLine(BookList.Repeat("-", 128));
 
                         for (int i = 0; i < data.Length; i++)
                         {
@@ -169,8 +161,7 @@ namespace Library_Management_System
                             {
                                 Console.WriteLine(
                                     $"|{output1[0],-10}|{output1[1],-60}|{output1[2],-5}|{output1[3],-6}|{output1[4],-15}|{output1[5],-25}|");
-                                Console.WriteLine(
-                                    "--------------------------------------------------------------------------------------------------------------------------------");
+                                Console.WriteLine(BookList.Repeat("-", 128));
                             }
                         }
 
@@ -181,12 +172,10 @@ namespace Library_Management_System
 
                         if (sex == "male" || sex == "female")
                         {
-                            Console.WriteLine(
-                                "--------------------------------------------------------------------------------------------------------------------------------");
+                            Console.WriteLine(BookList.Repeat("-", 128));
                             Console.WriteLine(
                                 $"|{"ID",-10}|{"Name",-60}|{"Age",-5}|{"Sex",-6}|{"Phone Number",-15}|{"Status",-25}|");
-                            Console.WriteLine(
-                                "--------------------------------------------------------------------------------------------------------------------------------");
+                            Console.WriteLine(BookList.Repeat("-", 128));
 
                             for (int i = 0; i < data.Length; i++)
                             {
@@ -196,8 +185,7 @@ namespace Library_Management_System
                                 {
                                     Console.WriteLine(
                                         $"|{output1[0],-10}|{output1[1],-60}|{output1[2],-5}|{output1[3],-6}|{output1[4],-15}|{output1[5],-25}|");
-                                    Console.WriteLine(
-                                        "--------------------------------------------------------------------------------------------------------------------------------");
+                                    Console.WriteLine(BookList.Repeat("-", 128));
                                 }
                             }
                         }
@@ -226,12 +214,10 @@ namespace Library_Management_System
                             return;
                         }
 
-                        Console.WriteLine(
-                            "--------------------------------------------------------------------------------------------------------------------------------");
+                        Console.WriteLine(BookList.Repeat("-", 128));
                         Console.WriteLine(
                             $"|{"ID",-10}|{"Name",-60}|{"Age",-5}|{"Sex",-6}|{"Phone Number",-15}|{"Status",-25}|");
-                        Console.WriteLine(
-                            "--------------------------------------------------------------------------------------------------------------------------------");
+                        Console.WriteLine(BookList.Repeat("-", 128));
 
                         for (int i = 0; i < data.Length; i++)
                         {
@@ -241,8 +227,7 @@ namespace Library_Management_System
                             {
                                 Console.WriteLine(
                                     $"|{output1[0],-10}|{output1[1],-60}|{output1[2],-5}|{output1[3],-6}|{output1[4],-15}|{output1[5],-25}|");
-                                Console.WriteLine(
-                                    "--------------------------------------------------------------------------------------------------------------------------------");
+                                Console.WriteLine(BookList.Repeat("-", 128));
                             }
                         }
 

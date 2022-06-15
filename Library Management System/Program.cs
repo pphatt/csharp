@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Library_Management_System
 {
@@ -69,6 +70,17 @@ namespace Library_Management_System
             // {
             //     Console.WriteLine(test1);
             // }
+            // string Repeat(string value, int count)
+            // {
+            //     return new StringBuilder(value.Length * count).Insert(0, value, count).ToString();
+            // }
+            //
+            // Console.WriteLine(
+            //     $"{Repeat("-", 172)}");
+            // Console.WriteLine(
+            //     $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Amount",-10}|{"Status",-10}|{"Date",-20}|");
+            // Console.WriteLine(
+            //     $"{Repeat("-", 172)}");
         }
     }
 }

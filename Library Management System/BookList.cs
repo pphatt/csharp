@@ -1,12 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
+
 
 namespace Library_Management_System
 {
     public class BookList
     {
         List<Book> _bookList = new List<Book>();
+
+        public static string Repeat(string value, int count)
+        {
+            return new StringBuilder(value.Length * count).Insert(0, value, count).ToString();
+        }
 
         private void CustomOutput(string option, string[] data, string name, int index)
         {
@@ -31,11 +38,10 @@ namespace Library_Management_System
                 return;
             }
 
+            Console.WriteLine($"{Repeat("-", 172)}");
             Console.WriteLine(
-                "-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
-            Console.WriteLine($"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Status",-10}|{"Date",-20}|");
-            Console.WriteLine(
-                "-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Amount",-10}|{"Status",-10}|{"Date",-20}|");
+            Console.WriteLine($"{Repeat("-", 172)}");
 
             for (int i = 0; i < data.Length; i++)
             {
@@ -50,9 +56,8 @@ namespace Library_Management_System
                 if (output1[index].Contains(option))
                 {
                     Console.WriteLine(
-                        $"|{j + 1,-4}|{output1[0],-60}|{output1[1],-40}|{output1[2],-20}|{statusOutput,-10}|{output1[4],-20}|");
-                    Console.WriteLine(
-                        "-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                        $"|{j + 1,-4}|{output1[0],-60}|{output1[1],-40}|{output1[2],-20}|{output1[3],-10}|{statusOutput,-10}|{output1[5],-20}|");
+                    Console.WriteLine($"{Repeat("-", 172)}");
                     j++;
                 }
             }
@@ -68,12 +73,14 @@ namespace Library_Management_System
             string author = Console.ReadLine();
             Console.Write("Enter subject: ");
             string subject = Console.ReadLine();
+            Console.Write("Enter amount: ");
+            int amount = int.Parse(Console.ReadLine());
             bool status = false;
             string date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-            _bookList.Add(new Book(bookName, author, subject, date));
+            _bookList.Add(new Book(bookName, author, subject, amount, date));
 
             string output =
-                $"{_bookList[0].getName()},{_bookList[0].getAuthor()},{_bookList[0].getCategory()},{status},{_bookList[0].getDate()}";
+                $"{_bookList[0].getName()},{_bookList[0].getAuthor()},{_bookList[0].getCategory()},{_bookList[0].getAmount()},{status},{_bookList[0].getDate()}";
 
             using (StreamWriter sw = new StreamWriter(path, true))
             {
@@ -94,12 +101,10 @@ namespace Library_Management_System
                     return;
                 }
 
+                Console.WriteLine($"{Repeat("-", 172)}");
                 Console.WriteLine(
-                    "-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
-                Console.WriteLine(
-                    $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Status",-10}|{"Date",-20}|");
-                Console.WriteLine(
-                    "-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                    $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Amount",-10}|{"Status",-10}|{"Date",-20}|");
+                Console.WriteLine($"{Repeat("-", 172)}");
 
                 for (int i = 0; i < data.Length; i++)
                 {
@@ -111,9 +116,8 @@ namespace Library_Management_System
                     }
 
                     Console.WriteLine(
-                        $"|{i + 1,-4}|{output[0],-60}|{output[1],-40}|{output[2],-20}|{statusOutput,-10}|{output[4],-20}|");
-                    Console.WriteLine(
-                        "-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                        $"|{i + 1,-4}|{output[0],-60}|{output[1],-40}|{output[2],-20}|{output[3],-10}|{statusOutput,-10}|{output[5],-20}|");
+                    Console.WriteLine($"{Repeat("-", 172)}");
                 }
             }
             catch (IOException)
@@ -133,15 +137,15 @@ namespace Library_Management_System
                     return;
                 }
 
-                Console.WriteLine("\t\t\t\t\t\t****************** MENU ******************\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 1. SEARCH BY ID                      **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 2. SEARCH BY TITLE                   **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 3. SEARCH BY AUTHOR                  **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 4. SEARCH BY CATEGORY                **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 5. SEARCH BY STATUS                  **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 6. SEARCH BY DATE                    **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 7. EXIT                              **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t******************************************\t\t\t\t\t");
+                Console.WriteLine($"{Repeat("\t", 6)}{Repeat("*", 18)} MENU {Repeat("*", 18)}{Repeat("\t", 5)}");
+                Console.WriteLine($"{Repeat("\t", 6)}** 1. SEARCH BY ID                      **{Repeat("\t", 6)}");
+                Console.WriteLine($"{Repeat("\t", 6)}** 2. SEARCH BY TITLE                   **{Repeat("\t", 6)}");
+                Console.WriteLine($"{Repeat("\t", 6)}** 3. SEARCH BY AUTHOR                  **{Repeat("\t", 6)}");
+                Console.WriteLine($"{Repeat("\t", 6)}** 4. SEARCH BY CATEGORY                **{Repeat("\t", 6)}");
+                Console.WriteLine($"{Repeat("\t", 6)}** 5. SEARCH BY STATUS                  **{Repeat("\t", 6)}");
+                Console.WriteLine($"{Repeat("\t", 6)}** 6. SEARCH BY DATE                    **{Repeat("\t", 6)}");
+                Console.WriteLine($"{Repeat("\t", 6)}** 7. EXIT                              **{Repeat("\t", 6)}");
+                Console.WriteLine($"{Repeat("\t", 6)}{Repeat("*", 42)}{Repeat("\t", 6)}");
                 Console.Write("Input to use: ");
                 int number1 = int.Parse(Console.ReadLine());
 
@@ -165,16 +169,13 @@ namespace Library_Management_System
                             statusOutput = "BORROWED";
                         }
 
+                        Console.WriteLine($"{Repeat("-", 172)}");
                         Console.WriteLine(
-                            "-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                            $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Amount",-10}|{"Status",-10}|{"Date",-20}|");
+                        Console.WriteLine($"{Repeat("-", 172)}");
                         Console.WriteLine(
-                            $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Status",-10}|{"Date",-20}|");
-                        Console.WriteLine(
-                            "-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
-                        Console.WriteLine(
-                            $"|{number2,-4}|{output[0],-60}|{output[1],-40}|{output[2],-20}|{statusOutput,-10}|{output[4],-20}|");
-                        Console.WriteLine(
-                            "-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                            $"|{number2,-4}|{output[0],-60}|{output[1],-40}|{output[2],-20}|{output[3],-10}|{statusOutput,-10}|{output[5],-20}|");
+                        Console.WriteLine($"{Repeat("-", 172)}");
                         break;
                     case 2:
                         CustomOutput("title", data, "title", 0);
@@ -200,21 +201,18 @@ namespace Library_Management_System
                                 return;
                             }
 
+                            Console.WriteLine($"{Repeat("-", 172)}");
                             Console.WriteLine(
-                                "-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
-                            Console.WriteLine(
-                                $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Status",-10}|{"Date",-20}|");
-                            Console.WriteLine(
-                                "-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                                $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Amount",-10}|{"Status",-10}|{"Date",-20}|");
+                            Console.WriteLine($"{Repeat("-", 172)}");
                             for (int i = 0; i < data.Length; i++)
                             {
                                 string[] output1 = data[i].Split(',');
                                 if (output1[3] == "False")
                                 {
                                     Console.WriteLine(
-                                        $"|{i + 1,-4}|{output1[0],-60}|{output1[1],-40}|{output1[2],-20}|{"AVAILABLE",-10}|{output1[4],-20}|");
-                                    Console.WriteLine(
-                                        "-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                                        $"|{i + 1,-4}|{output1[0],-60}|{output1[1],-40}|{output1[2],-20}|{output1[3],-10}|{"AVAILABLE",-10}|{output1[5],-20}|");
+                                    Console.WriteLine($"{Repeat("-", 172)}");
                                 }
                             }
                         }
@@ -226,21 +224,18 @@ namespace Library_Management_System
                                 return;
                             }
 
+                            Console.WriteLine($"{Repeat("-", 172)}");
                             Console.WriteLine(
-                                "-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
-                            Console.WriteLine(
-                                $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Status",-10}|{"Date",-20}|");
-                            Console.WriteLine(
-                                "-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                                $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Amount",-10}|{"Status",-10}|{"Date",-20}|");
+                            Console.WriteLine($"{Repeat("-", 172)}");
                             for (int i = 0; i < data.Length; i++)
                             {
                                 string[] output1 = data[i].Split(',');
                                 if (output1[3] == "True")
                                 {
                                     Console.WriteLine(
-                                        $"|{i + 1,-4}|{output1[0],-60}|{output1[1],-40}|{output1[2],-20}|{"BORROWED",-10}|{output1[4],-20}|");
-                                    Console.WriteLine(
-                                        "-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                                        $"|{i + 1,-4}|{output1[0],-60}|{output1[1],-40}|{output1[2],-20}|{output1[3],-10}|{"BORROWED",-10}|{output1[5],-20}|");
+                                    Console.WriteLine($"{Repeat("-", 172)}");
                                 }
                             }
                         }
@@ -410,6 +405,34 @@ namespace Library_Management_System
                 {
                     Console.WriteLine("Invalid number");
                 }
+            }
+            catch (IOException)
+            {
+                Console.WriteLine("There are no data currently");
+            }
+        }
+
+        public void UpdateStatus()
+        {
+            try
+            {
+                // string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\MyTest.txt");
+                // if (data.Length == 0)
+                // {
+                //     Console.WriteLine("There are no data currently");
+                //     return;
+                // }
+                //
+                // Show();
+                //
+                // Console.Write("Input to use: ");
+                // int number = int.Parse(Console.ReadLine());
+                //
+                // if (number < 0 || number > data.Length)
+                // {
+                //     Console.WriteLine("Invalid ID");
+                //     return;
+                // }
             }
             catch (IOException)
             {

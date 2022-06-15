@@ -7,13 +7,15 @@ namespace Library_Management_System
         private string Name;
         private string Author;
         private string Category;
+        private int Amount;
         private string Date;
         
-        public Book(string Name, string Author, string Category, string Date)
+        public Book(string Name, string Author, string Category, int Amount, string Date)
         {
             this.Name = Name;
             this.Author = Author;
             this.Category = Category;
+            this.Amount = Amount;
             this.Date = Date;
         }
 
@@ -32,6 +34,11 @@ namespace Library_Management_System
         public string getDate()
         {
             return this.Date;
+        }
+
+        public int getAmount()
+        {
+            return this.Amount;
         }
     }
 }

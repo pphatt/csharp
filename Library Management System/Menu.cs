@@ -19,13 +19,14 @@ namespace Library_Management_System
                 Console.WriteLine("\t\t\t\t\t\t** 02. SEARCH BOOK                      **\t\t\t\t\t");
                 Console.WriteLine("\t\t\t\t\t\t** 03. DELETE BOOK                      **\t\t\t\t\t");
                 Console.WriteLine("\t\t\t\t\t\t** 04. EDIT BOOK INFORMATION            **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 05. SHOW ALL BOOKS                   **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 06. ADD NEW CUSTOMER                 **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 07. SEARCH CUSTOMER                  **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 08. DELETE CUSTOMER                  **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 09. EDIT CUSTOMER INFORMATION        **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 10. SHOW ALL CUSTOMERS               **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 11. EXIT                             **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 05. UPDATE BOOK STATUS               **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 06. SHOW ALL BOOKS                   **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 07. ADD NEW CUSTOMER                 **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 08. SEARCH CUSTOMER                  **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 09. DELETE CUSTOMER                  **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 10. EDIT CUSTOMER INFORMATION        **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 11. SHOW ALL CUSTOMERS               **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 12. EXIT                             **\t\t\t\t\t");
                 Console.WriteLine("\t\t\t\t\t\t******************************************\t\t\t\t\t");
                 Console.Write("Input to use: ");
                 int number = int.Parse(Console.ReadLine());
@@ -49,28 +50,32 @@ namespace Library_Management_System
                     Console.ReadKey();
                 } else if (number == 5)
                 {
-                    book.Show();
+                    book.UpdateStatus();
                     Console.ReadKey();
                 } else if (number == 6)
+                {
+                    book.Show();
+                    Console.ReadKey();
+                } else if (number == 7)
                 {
                     Console.WriteLine("\t\t\t\t\t\t********** ADDING NEW CUSTOMER ***********\t\t\t\t\t");
                     customer.AddCustomer();
                     Console.WriteLine("\t\t\t\t\t\t*********** ADDED SUCCESSFULLY ***********\t\t\t\t\t");
                     Console.ReadKey();
-                } else if (number == 7)
+                } else if (number == 8)
                 {
                     customer.SearchCustomer();
                     Console.ReadKey();
-                } else if (number == 8)
+                } else if (number == 9)
                 {
                     customer.DeleteCustomer();
                     Console.ReadKey();
-                } else if (number == 9)
+                } else if (number == 10)
                 {
                     customer.EditCustomer();
                     Console.ReadKey();
                 }
-                else if (number == 10)
+                else if (number == 11)
                 {
                     customer.ShowCustomer();
                     Console.ReadKey();

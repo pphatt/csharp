@@ -50,15 +50,15 @@ namespace Library_Management_System
                 string[] getAmount = output[4].Split(' ');
                 string[] getAmount1 = output[5].Split(' ');
 
-                string statusOutput = $"AVAILABLE ({int.Parse(output[3]) - int.Parse(getAmount1[1])})";
+                string statusOutput = $"AVAILABLE ({getAmount[1]})";
                 string noteData = "";
                     
                 if (int.Parse(getAmount[1]) == 0)
                 {
-                    statusOutput = $"BORROWED  ({int.Parse(output[3]) - int.Parse(getAmount[1])})";
+                    statusOutput = $"BORROWED  ({getAmount1[1]})";
                 } else if (int.Parse(getAmount1[1]) == 0)
                 {
-                    statusOutput = $"AVAILABLE ({int.Parse(output[3]) - int.Parse(getAmount1[1])})";
+                    statusOutput = $"AVAILABLE ({getAmount[1]})";
                 }
 
                 if (int.Parse(getAmount1[1]) > 0)
@@ -146,15 +146,15 @@ namespace Library_Management_System
                     string[] getAmount = output[4].Split(' ');
                     string[] getAmount1 = output[5].Split(' ');
 
-                    string statusOutput = $"AVAILABLE ({int.Parse(output[3]) - int.Parse(getAmount1[1])})";
+                    string statusOutput = $"AVAILABLE ({getAmount[1]})";
                     string noteData = "";
                     
                     if (int.Parse(getAmount[1]) == 0)
                     {
-                        statusOutput = $"BORROWED  ({int.Parse(output[3]) - int.Parse(getAmount[1])})";
+                        statusOutput = $"BORROWED  ({getAmount1[1]})";
                     } else if (int.Parse(getAmount1[1]) == 0)
                     {
-                        statusOutput = $"AVAILABLE ({int.Parse(output[3]) - int.Parse(getAmount1[1])})";
+                        statusOutput = $"AVAILABLE ({getAmount[1]})";
                     }
 
                     if (int.Parse(getAmount1[1]) > 0)
@@ -171,7 +171,7 @@ namespace Library_Management_System
                         statusOutput = "";
                         if (int.Parse(getAmount[1]) > 0)
                         {
-                            statusOutput = $"BORROWED  ({int.Parse(output[3]) - int.Parse(getAmount[1])})";
+                            statusOutput = $"BORROWED  ({getAmount1[1]})";
                             if (output.Length == 8)
                             {
                                 Console.WriteLine($"{Repeat(" ", 139)}|{statusOutput,-15}|{"",-20}|{"",-60}|");
@@ -183,6 +183,7 @@ namespace Library_Management_System
                             string[] getNote = output[j].Split(' ');
                             noteData = $"Borrowed by customer's IDs {getNote[0]} at {getNote[1]} {getNote[2]}";
                             Console.WriteLine($"{Repeat(" ", 139)}|{statusOutput,-15}|{"",-20}|{noteData,-60}|");
+                            statusOutput = "";
                         }
                     }
                     Console.WriteLine($"{Repeat("-", 238)}");
@@ -233,15 +234,15 @@ namespace Library_Management_System
                         string[] getAmount = output[4].Split(' ');
                         string[] getAmount1 = output[5].Split(' ');
 
-                        string statusOutput = $"AVAILABLE ({int.Parse(output[3]) - int.Parse(getAmount1[1])})";
+                        string statusOutput = $"AVAILABLE ({getAmount[1]})";
                         string noteData = "";
                     
                         if (int.Parse(getAmount[1]) == 0)
                         {
-                            statusOutput = $"BORROWED  ({int.Parse(output[3]) - int.Parse(getAmount[1])})";
+                            statusOutput = $"BORROWED  ({getAmount1[1]})";
                         } else if (int.Parse(getAmount1[1]) == 0)
                         {
-                            statusOutput = $"AVAILABLE ({int.Parse(output[3]) - int.Parse(getAmount1[1])})";
+                            statusOutput = $"AVAILABLE ({getAmount[1]})";
                         }
 
                         if (int.Parse(getAmount1[1]) > 0)
@@ -263,7 +264,7 @@ namespace Library_Management_System
                             statusOutput = "";
                             if (int.Parse(getAmount[1]) > 0)
                             {
-                                statusOutput = $"BORROWED  ({int.Parse(output[3]) - int.Parse(getAmount[1])})";
+                                statusOutput = $"BORROWED  ({getAmount1[1]})";
                                 if (output.Length == 8)
                                 {
                                     Console.WriteLine($"{Repeat(" ", 139)}|{statusOutput,-15}|{"",-20}|{"",-60}|");

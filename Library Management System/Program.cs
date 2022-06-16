@@ -81,6 +81,11 @@ namespace Library_Management_System
             //     $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Amount",-10}|{"Status",-10}|{"Date",-20}|");
             // Console.WriteLine(
             //     $"{Repeat("-", 172)}");
+            // string test = "1,2,3,";
+            // string[] test1 = test.Split(',');
+            // Console.WriteLine(test1[3].Length == 0);
+            // string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\MyTest.txt");
+            // Console.WriteLine(data.Length);
         }
     }
 }

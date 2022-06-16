@@ -579,12 +579,15 @@ namespace Library_Management_System
                         Console.WriteLine("There are no available book to borrow");
                         return;
                     }
-                    
-                    string[] bookBorrowed = output1[5].Split('"');
-                    if (output1[5].Length > 0 && int.Parse(bookBorrowed[1]) == number)
+
+                    for (int i = 6; i <= output1.Length - 1; i++)
                     {
-                        Console.WriteLine($"The {IDs} has already borrowed the book");
-                        return;
+                        string[] bookBorrowed = output1[i].Split('"');
+                        if (int.Parse(bookBorrowed[1]) == number)
+                        {
+                            Console.WriteLine($"The {IDs} has already borrowed the book");
+                            return;
+                        }
                     }
 
                     availableData[1] = $"{int.Parse(availableData[1]) - 1}";

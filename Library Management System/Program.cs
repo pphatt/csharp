@@ -86,6 +86,10 @@ namespace Library_Management_System
             // Console.WriteLine(test1[3].Length == 0);
             // string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\MyTest.txt");
             // Console.WriteLine(data.Length);
+            // string test = "a 1";
+            // string[] test1 = test.Split(' ');
+            // test1[1] = $"{int.Parse(test1[1]) + 1}";
+            // Console.WriteLine(string.Join(" ", test1));
         }
     }
 }

@@ -1,3 +1,0 @@
-TRY123,PPP,20,male,090xxxxxxxxx,,Borrowed book's ID: "1" at 16/06/2022 11:23:48,Borrowed book's ID: "2" at 16/06/2022 11:23:51
-YTR123,PiPi,20,female,090xxxxxx,,Borrowed book's ID: "1" at 16/06/2022 11:52:56,Borrowed book's ID: "3" at 16/06/2022 11:53:00
-YYY123,OOO,12,male,090xxxxx,,Borrowed book's ID: "1" at 16/06/2022 11:53:54,Borrowed book's ID: "1" at 16/06/2022 19:16:14,Borrowed book's ID: "2" at 16/06/2022 19:16:28,Borrowed book's ID: "3" at 16/06/2022 19:16:31

@@ -24,8 +24,17 @@ namespace Library_Management_System
                     Console.WriteLine(
                         $"|{"ID",-10}|{"Name",-60}|{"Age",-5}|{"Sex",-6}|{"Phone Number",-15}|{"Status",-48}|");
                     Console.WriteLine(BookList.Repeat("-", 151));
-                    Console.WriteLine(
-                        $"|{output[0],-10}|{output[1],-60}|{output[2],-5}|{output[3],-6}|{output[4],-15}|{output[6],-48}|");
+                    
+                    if (output.Length > 6)
+                    {
+                        Console.WriteLine(
+                            $"|{output[0],-10}|{output[1],-60}|{output[2],-5}|{output[3],-6}|{output[4],-15}|{output[6],-48}|");
+                    }
+                    else
+                    {
+                        Console.WriteLine(
+                            $"|{output[0],-10}|{output[1],-60}|{output[2],-5}|{output[3],-6}|{output[4],-15}|{output[5],-48}|");
+                    }
                     
                     if (output.Length >= 8)
                     {
@@ -185,8 +194,16 @@ namespace Library_Management_System
 
                             if (output1[2] == $"{age}")
                             {
-                                Console.WriteLine(
-                                    $"|{output1[0],-10}|{output1[1],-60}|{output1[2],-5}|{output1[3],-6}|{output1[4],-15}|{output1[6],-48}|");
+                                if (output1.Length > 6)
+                                {
+                                    Console.WriteLine(
+                                        $"|{output1[0],-10}|{output1[1],-60}|{output1[2],-5}|{output1[3],-6}|{output1[4],-15}|{output1[6],-48}|");
+                                }
+                                else
+                                {
+                                    Console.WriteLine(
+                                        $"|{output1[0],-10}|{output1[1],-60}|{output1[2],-5}|{output1[3],-6}|{output1[4],-15}|{output1[5],-48}|");
+                                }
                                 
                                 if (output1.Length >= 8)
                                 {
@@ -219,8 +236,16 @@ namespace Library_Management_System
 
                                 if (output1[3] == sex)
                                 {
-                                    Console.WriteLine(
-                                        $"|{output1[0],-10}|{output1[1],-60}|{output1[2],-5}|{output1[3],-6}|{output1[4],-15}|{output1[6],-48}|");
+                                    if (output1.Length > 6)
+                                    {
+                                        Console.WriteLine(
+                                            $"|{output1[0],-10}|{output1[1],-60}|{output1[2],-5}|{output1[3],-6}|{output1[4],-15}|{output1[6],-48}|");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine(
+                                            $"|{output1[0],-10}|{output1[1],-60}|{output1[2],-5}|{output1[3],-6}|{output1[4],-15}|{output1[5],-48}|");
+                                    }
                                     
                                     if (output1.Length >= 8)
                                     {
@@ -271,8 +296,16 @@ namespace Library_Management_System
 
                             if (output1[4] == phone)
                             {
-                                Console.WriteLine(
-                                    $"|{output1[0],-10}|{output1[1],-60}|{output1[2],-5}|{output1[3],-6}|{output1[4],-15}|{output1[6],-48}|");
+                                if (output1.Length > 6)
+                                {
+                                    Console.WriteLine(
+                                        $"|{output1[0],-10}|{output1[1],-60}|{output1[2],-5}|{output1[3],-6}|{output1[4],-15}|{output1[6],-48}|");
+                                }
+                                else
+                                {
+                                    Console.WriteLine(
+                                        $"|{output1[0],-10}|{output1[1],-60}|{output1[2],-5}|{output1[3],-6}|{output1[4],-15}|{output1[5],-48}|");
+                                }
                                 
                                 if (output1.Length >= 8)
                                 {
@@ -446,16 +479,17 @@ namespace Library_Management_System
                     {
                         Console.WriteLine($"\t\t\t\t\t\t          EDITING THE BOOK NO.{ids} \t\t\t\t");
                         Console.WriteLine("\t\t\t\t\t\t****************** MENU ******************\t\t\t\t\t");
-                        Console.WriteLine("\t\t\t\t\t\t** 1. EDIT TITLE                        **\t\t\t\t\t");
-                        Console.WriteLine("\t\t\t\t\t\t** 2. EDIT AUTHOR                       **\t\t\t\t\t");
-                        Console.WriteLine("\t\t\t\t\t\t** 3. EDIT CATEGORY                     **\t\t\t\t\t");
-                        Console.WriteLine("\t\t\t\t\t\t** 4. EDIT STATUS                       **\t\t\t\t\t");
-                        Console.WriteLine("\t\t\t\t\t\t** 5. EXIT                              **\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t** 1. EDIT IDs                          **\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t** 2. EDIT NAME                         **\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t** 3. EDIT AGE                          **\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t** 4. EDIT SEX                          **\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t** 5. EDIT PHONE NUMBER                 **\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t** 6. EXIT                              **\t\t\t\t\t");
                         Console.WriteLine("\t\t\t\t\t\t******************************************\t\t\t\t\t");
                         Console.Write("Input to edit: ");
                         int number2 = int.Parse(Console.ReadLine());
 
-                        if (number2 > 0 && number2 <= 4)
+                        if (number2 > 0 && number2 <= 5)
                         {
                             Console.Write($"Changing {output[number2 - 1]} to: ");
                             string newText = Console.ReadLine();
@@ -464,7 +498,7 @@ namespace Library_Management_System
                             File.WriteAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt", data);
                             Console.WriteLine("\t\t\t\t\t\t*********** UPDATE SUCCESSFULLY **********\t\t\t\t\t");
                         }
-                        else if (number2 == 5)
+                        else if (number2 == 6)
                         {
 
                         }

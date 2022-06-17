@@ -296,11 +296,31 @@ namespace Library_Management_System
                         Console.WriteLine("\t\t\t\t\t\t******************************************\t\t\t\t\t");
                         Console.Write("Input to use: ");
                         int number3 = int.Parse(Console.ReadLine());
+                        bool check = false;
+                        
                         if (number3 == 1)
                         {
                             if (data.Length == 0)
                             {
                                 Console.WriteLine("There are no data currently");
+                                return;
+                            }
+                            
+                            for (int i = 0; i < data.Length; i++)
+                            {
+                                string[] output1 = data[i].Split(',');
+                                string[] getAmount2 = output1[4].Split(' ');
+
+                                if (getAmount2[0] == "False" && int.Parse(getAmount2[1]) > 0)
+                                {
+                                    check = true;
+                                    break;
+                                }
+                            }
+
+                            if (!check)
+                            {
+                                Console.WriteLine("There are no AVAILABLE book currently");
                                 return;
                             }
 
@@ -318,7 +338,7 @@ namespace Library_Management_System
                                 {
                                     Console.WriteLine(
                                         $"|{i + 1,-4}|{output1[0],-60}|{output1[1],-40}|{output1[2],-20}|{output1[3],-10}|{$"AVAILABLE ({getAmount2[1]})",-15}|{output1[6],-20}|{"",-60}|");
-                                    Console.WriteLine($"{Repeat("-", 177)}");
+                                    Console.WriteLine($"{Repeat("-", 238)}");
                                 }
                             }
                         }
@@ -327,6 +347,24 @@ namespace Library_Management_System
                             if (data.Length == 0)
                             {
                                 Console.WriteLine("There are no data currently");
+                                return;
+                            }
+                            
+                            for (int i = 0; i < data.Length; i++)
+                            {
+                                string[] output1 = data[i].Split(',');
+                                string[] getAmount2 = output1[5].Split(' ');
+
+                                if (getAmount2[0] == "True" && int.Parse(getAmount2[1]) > 0)
+                                {
+                                    check = true;
+                                    break;
+                                }
+                            }
+
+                            if (!check)
+                            {
+                                Console.WriteLine("There are no BORROWED book currently");
                                 return;
                             }
 

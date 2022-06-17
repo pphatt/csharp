@@ -423,13 +423,16 @@ namespace Library_Management_System
                         Console.Write("Input Name to delete: ");
                         string name = Console.ReadLine();
                         List<string> output3 = new List<string>(data);
-
+                        List<string> bookData1 = new List<string>(data1);
+                        string checkID = "";
+                        
                         for (int i = 0; i < output3.Count; i++)
                         {
                             string[] output2 = output3[i].Split(',');
                             if (output2[1] == name)
                             {
                                 output3.RemoveAt(i);
+                                checkID = output2[0];
                                 check1 = true;
                                 break;
                             }
@@ -440,9 +443,39 @@ namespace Library_Management_System
                             Console.WriteLine($"There is no {name} in Name section in the database");
                             return;
                         }
+                        
+                        for (int i = 0; i < bookData1.Count; i++)
+                        {
+                            string[] aOutput = bookData1[i].Split(',');
+                            List<string> aOutputList = new List<string>(aOutput);
+                            bool checkIng = false;
+                            
+                            for (int j = 7; j <= aOutputList.Count - 1; j++)
+                            {
+                                string[] checkIDs = aOutputList[j].Split(' ');
+                                string[] checkAvailable = aOutputList[4].Split(' ');
+                                string[] checkBorrowed = aOutputList[5].Split(' ');
+                                
+                                if (checkIDs[0] == checkID)
+                                {
+                                    aOutputList.RemoveAt(j);
+                                    checkAvailable[1] = $"{int.Parse(checkAvailable[1]) + 1}";
+                                    aOutputList[4] = string.Join(" ", checkAvailable);
+                                    checkBorrowed[1] = $"{int.Parse(checkBorrowed[1]) - 1}";
+                                    aOutputList[5] = string.Join(" ", checkBorrowed);
+                                    checkIng = true;
+                                    break;
+                                }
+                            }
+                            
+                            if (checkIng)
+                            {
+                                bookData1[i] = string.Join(",", aOutputList.ToArray());
+                            }
+                        }
 
-                        File.WriteAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt",
-                            output3.ToArray());
+                        File.WriteAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt", output3.ToArray());
+                        File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", bookData1.ToArray());
                         Console.WriteLine("\t\t\t\t\t\t*********** DELETE SUCCESSFULLY **********\t\t\t\t\t");
 
                         break;

@@ -396,11 +396,11 @@ namespace Library_Management_System
                     Console.WriteLine("There are no data currently");
                     return;
                 }
-
-                Console.WriteLine("\t\t\t\t\t\t****************** MENU ******************\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 1. DELETE BY ID                      **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 2. DELETE BY NAME                    **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t******************************************\t\t\t\t\t");
+                
+                Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 1. DELETE BY ID                        ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 2. DELETE BY NAME                      ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
                 Console.Write("Input to use: ");
                 int number1 = int.Parse(Console.ReadLine());
 
@@ -459,10 +459,10 @@ namespace Library_Management_System
                                 bookData[i] = string.Join(",", aOutputList.ToArray());
                             }
                         }
-
+                        
                         File.WriteAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt", output1.ToArray());
                         File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", bookData.ToArray());
-                        Console.WriteLine("\t\t\t\t\t\t*********** DELETE SUCCESSFULLY **********\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t═══════════ DELETE SUCCESSFULLY ═══════════\t\t\t\t\t");
 
                         break;
                     case 2:
@@ -523,7 +523,7 @@ namespace Library_Management_System
 
                         File.WriteAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt", output3.ToArray());
                         File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", bookData1.ToArray());
-                        Console.WriteLine("\t\t\t\t\t\t*********** DELETE SUCCESSFULLY **********\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t═══════════ DELETE SUCCESSFULLY ═══════════\t\t\t\t\t");
 
                         break;
                     default:
@@ -549,23 +549,23 @@ namespace Library_Management_System
                 }
 
                 ShowCustomer();
-                Console.Write("Input IDs to edit: ");
+                Console.Write("\nInput IDs to edit: ");
                 string ids = Console.ReadLine();
-
+                
                 for (int i = 0; i < data.Length; i++)
                 {
                     string[] output = data[i].Split(',');
                     if (output[0] == ids)
                     {
                         Console.WriteLine($"\t\t\t\t\t\t          EDITING THE BOOK NO.{ids} \t\t\t\t");
-                        Console.WriteLine("\t\t\t\t\t\t****************** MENU ******************\t\t\t\t\t");
-                        Console.WriteLine("\t\t\t\t\t\t** 1. EDIT IDs                          **\t\t\t\t\t");
-                        Console.WriteLine("\t\t\t\t\t\t** 2. EDIT NAME                         **\t\t\t\t\t");
-                        Console.WriteLine("\t\t\t\t\t\t** 3. EDIT AGE                          **\t\t\t\t\t");
-                        Console.WriteLine("\t\t\t\t\t\t** 4. EDIT SEX                          **\t\t\t\t\t");
-                        Console.WriteLine("\t\t\t\t\t\t** 5. EDIT PHONE NUMBER                 **\t\t\t\t\t");
-                        Console.WriteLine("\t\t\t\t\t\t** 6. EXIT                              **\t\t\t\t\t");
-                        Console.WriteLine("\t\t\t\t\t\t******************************************\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t║ 1. EDIT IDs                            ║\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t║ 2. EDIT NAME                           ║\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t║ 3. EDIT AGE                            ║\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t║ 4. EDIT SEX                            ║\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t║ 5. EDIT PHONE NUMBER                   ║\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t║ 6. EXIT                                ║\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
                         Console.Write("Input to edit: ");
                         int number2 = int.Parse(Console.ReadLine());
 
@@ -576,7 +576,7 @@ namespace Library_Management_System
                             output[number2 - 1] = newText;
                             data[i] = string.Join(",", output);
                             File.WriteAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt", data);
-                            Console.WriteLine("\t\t\t\t\t\t*********** UPDATE SUCCESSFULLY **********\t\t\t\t\t");
+                            Console.WriteLine("\t\t\t\t\t\t═══════════ UPDATE SUCCESSFULLY ═══════════\t\t\t\t\t");
                         }
                         else if (number2 == 6)
                         {

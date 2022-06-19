@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Library_Management_System
@@ -90,6 +91,94 @@ namespace Library_Management_System
             // string[] test1 = test.Split(' ');
             // test1[1] = $"{int.Parse(test1[1]) + 1}";
             // Console.WriteLine(string.Join(" ", test1));
+            // DateTime test = DateTime.Today;
+            // string[] test1 = test.ToString("F").Split(',');
+            // // Console.WriteLine(test1[0] == "Saturday");
+            // string[] day = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+            // int check = 0;
+            //
+            // int index = day.ToList().IndexOf(test1[0]);
+            //
+            // for (int i = index; i < day.Length; i++)
+            // {
+            //     Console.WriteLine(day[i]);
+            //     check += 1;
+            // }
+            //
+            // for (int i = 0; i < day.Length - check; i++)
+            // {
+            //     Console.WriteLine(day[i]);
+            // }
+            // string[] day = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+            // string[] routineDay = new string[7];
+            // int check = 0;
+            //
+            // int index = day.ToList().IndexOf(DateTime.Today.ToString("F").Split(',')[0]);
+            //
+            // for (int i = index; i < day.Length; i++)
+            // {
+            //     routineDay[check] = day[i];
+            //     check += 1;
+            // }
+            //
+            // for (int i = 0; i < day.Length - check; i++)
+            // {
+            //     check += i;
+            //     routineDay[check] = day[i];
+            //     check -= i;
+            // }
+            //
+            // foreach (string test1 in routineDay)
+            // {
+            //     Console.WriteLine(test1);
+            // }
+            // string[] test = new string[1];
+            // Console.WriteLine(test[0]);
+            // Console.WriteLine(
+            //     $"{"",-12}|{"",-2}{"ID",-10}|{"",-2}{"Name",-60}|{"",-2}{"Age",-5}|{"",-2}{"Sex",-6}|{"",-2}{"Phone Number",-15}|{"",-2}{"Status",-48}|{"",-2}{"Shift",-48}|");
+            // Console.WriteLine(BookList.Repeat("-", 226));
+            // Console.WriteLine(
+            //     $"{"",-2}{"Monday".ToUpper(),-10}|{"",-2}{"",-10}|{"",-2}{"",-60}|{"",-2}{"",-5}|{"",-2}{"",-6}|{"",-2}{"",-15}|{"",-2}{"",-48}|{"",-2}{"",-48}|");
+            // Console.WriteLine(
+            //     $"{"",-2}{"Tuesday".ToUpper(),-10}|{"",-2}{"",-10}|{"",-2}{"",-60}|{"",-2}{"",-5}|{"",-2}{"",-6}|{"",-2}{"",-15}|{"",-2}{"",-48}|{"",-2}{"",-48}|");
+            // Console.WriteLine(
+            //     $"{"",-2}{"Wednesday".ToUpper(),-10}|{"",-2}{"",-10}|{"",-2}{"",-60}|{"",-2}{"",-5}|{"",-2}{"",-6}|{"",-2}{"",-15}|{"",-2}{"",-48}|{"",-2}{"",-48}|");
+            // Console.WriteLine(
+            //     $"{"",-2}{"Thursday".ToUpper(),-10}|{"",-2}{"",-10}|{"",-2}{"",-60}|{"",-2}{"",-5}|{"",-2}{"",-6}|{"",-2}{"",-15}|{"",-2}{"",-48}|{"",-2}{"",-48}|");
+            // Console.WriteLine(
+            //     $"{"",-2}{"Friday".ToUpper(),-10}|{"",-2}{"",-10}|{"",-2}{"",-60}|{"",-2}{"",-5}|{"",-2}{"",-6}|{"",-2}{"",-15}|{"",-2}{"",-48}|{"",-2}{"",-48}|");
+            // Console.WriteLine(
+            //     $"{"",-2}{"Saturday".ToUpper(),-10}|{"",-2}{"",-10}|{"",-2}{"",-60}|{"",-2}{"",-5}|{"",-2}{"",-6}|{"",-2}{"",-15}|{"",-2}{"",-48}|{"",-2}{"",-48}|");
+            // Console.WriteLine(BookList.Repeat("-", 226));
+            // Console.WriteLine("══╔═══════╗══");
+            // Console.WriteLine("══╔═══════╗══");
+            // Console.WriteLine("══║ Hello ║══");
+            // Console.WriteLine("══╚═══════╝══");
+            // Console.WriteLine("┌─┐");
+            // Console.WriteLine("│1│");
+            // Console.WriteLine("└─┘");
+            // Console.WriteLine(
+            //     $"║{"",-12}║{"",-1}{"ID",-10}║{"",-1}{"Name",-60}║{"",-1}{"Age",-5}║{"",-1}{"Sex",-6}║{"",-1}{"Phone Number",-15}║{"",-1}{"Status",-48}║{"",-1}{"Shift",-48}║");
+            
+            // int[] test = { 12, 11, 61, 6, 7, 16, 49, 49 };
+            // for (int i = 0; i < test.Length; i++)
+            // {
+            //     Console.Write($"╔{BookList.Repeat("═",test[i])}╗");
+            // }
+            // // Console.WriteLine("\nA");
+            // // Console.WriteLine($"╔{BookList.Repeat("═",12)}╗╔{BookList.Repeat("═",11)}╗╔{BookList.Repeat("═",61)}╗╔{BookList.Repeat("═",6)}╗");
+            // Console.WriteLine(
+            //     $"\n║{"",-12}║║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║║{"",-1}{"Shift",-48}║");
+            // // Console.Write("║");
+            // for (int i = 0; i < test.Length; i++)
+            // {
+            //     Console.Write($" {BookList.Repeat("═",test[i])} ");
+            // }
+            // Console.Write("║");
+            // Console.WriteLine(
+            //     $"\n║{"Monday".ToUpper(),-12}║║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║║{"",-1}{"Shift",-48}║");
+            // Console.WriteLine(
+            //     $"║{"Monday".ToUpper(),-12}║║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║║{"",-1}{"Shift",-48}║");
         }
     }
 }

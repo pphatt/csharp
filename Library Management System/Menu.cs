@@ -8,6 +8,7 @@ namespace Library_Management_System
     {
         BookList book = new BookList();
         CustomerData customer = new CustomerData();
+        LibrarianCalendar LibrarianCalendar = new LibrarianCalendar();
 
         public Menu()
         {
@@ -26,7 +27,10 @@ namespace Library_Management_System
                 Console.WriteLine("\t\t\t\t\t\t** 09. DELETE CUSTOMER                  **\t\t\t\t\t");
                 Console.WriteLine("\t\t\t\t\t\t** 10. EDIT CUSTOMER INFORMATION        **\t\t\t\t\t");
                 Console.WriteLine("\t\t\t\t\t\t** 11. SHOW ALL CUSTOMERS               **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 12. EXIT                             **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 12. ADD LIBRARIAN                    **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 13. SHOW LIBRARIAN                   **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 14. SHOW LIBRARIAN's CALENDAR        **\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t** 15. EXIT                             **\t\t\t\t\t");
                 Console.WriteLine("\t\t\t\t\t\t******************************************\t\t\t\t\t");
                 Console.Write("Input to use: ");
                 int number = int.Parse(Console.ReadLine());
@@ -78,6 +82,18 @@ namespace Library_Management_System
                 else if (number == 11)
                 {
                     customer.ShowCustomer();
+                    Console.ReadKey();
+                } else if (number == 12)
+                {
+                    LibrarianCalendar.AddLibrarian();
+                    Console.ReadKey();
+                } else if (number == 13)
+                {
+                    LibrarianCalendar.ShowLibrarian();
+                    Console.ReadKey();
+                } else if (number == 14)
+                {
+                    LibrarianCalendar.ShowCalendar();
                     Console.ReadKey();
                 }
                 else

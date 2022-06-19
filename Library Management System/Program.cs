@@ -179,6 +179,8 @@ namespace Library_Management_System
             //     $"\n║{"Monday".ToUpper(),-12}║║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║║{"",-1}{"Shift",-48}║");
             // Console.WriteLine(
             //     $"║{"Monday".ToUpper(),-12}║║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║║{"",-1}{"Shift",-48}║");
+            // string[] test = { "1", "2" };
+            // Console.WriteLine(test[0]);
         }
     }
 }

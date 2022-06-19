@@ -15,9 +15,8 @@ namespace Library_Management_System
             {
                 string path = @"D:\Dev\School\Library Management System\LibrarianData.txt";
                 string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\LibrarianData.txt");
-                Console.WriteLine(data.Length);
 
-                if (data.Length > 7)
+                if (data.Length > 6)
                 {
                     Console.WriteLine("No more librarian need to be recruited");
                     return;
@@ -62,23 +61,38 @@ namespace Library_Management_System
             try
             {
                 string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\LibrarianData.txt");
+                int[] test = { 11, 61, 6, 11, 16, 49, 49 };
+                
                 if (data.Length == 0 || data.Length == 1)
                 {
                     Console.WriteLine("There are no data currently");
                     return;
                 }
 
-                Console.WriteLine(BookList.Repeat("-", 200));
+                for (int i = 0; i < test.Length; i++)
+                {
+                    Console.Write($"╔{BookList.Repeat("═",test[i])}╗");
+                }
+                
                 Console.WriteLine(
-                    $"|{"ID",-10}|{"Name",-60}|{"Age",-5}|{"Sex",-6}|{"Phone Number",-15}|{"Status",-48}|{"Shift",-48}|");
-                Console.WriteLine(BookList.Repeat("-", 200));
+                    $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-10}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║║{"",-1}{"Shift",-48}║");
+                
+                for (int i = 0; i < test.Length; i++)
+                {
+                    Console.Write($" {BookList.Repeat("═",test[i])} ");
+                }
+                
+                Console.Write("\n");
 
                 for (int i = 1; i < data.Length; i++)
                 {
                     string[] output = data[i].Split(',');
                     Console.WriteLine(
-                        $"|{output[0],-10}|{output[1],-60}|{output[2],-5}|{output[3],-6}|{output[4],-15}|{output[5],-48}|{output[6],-48}|");
-                    Console.WriteLine(BookList.Repeat("-", 200));
+                        $"║{"",-1}{output[0],-10}║║{"",-1}{output[1],-60}║║{"",-1}{output[2],-5}║║{"",-1}{output[3],-10}║║{"",-1}{output[4],-15}║║{"",-1}{output[5],-48}║║{"",-1}{output[6],-48}║");
+                }
+                for (int i = 0; i < test.Length; i++)
+                {
+                    Console.Write($"╚{BookList.Repeat("═",test[i])}╝");
                 }
             }
             catch (IOException)
@@ -95,7 +109,7 @@ namespace Library_Management_System
                 string[] day = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
                 string[] routineDay = new string[7];
                 string[] employeeDay = new string[7];
-                int[] test = { 12, 11, 61, 6, 7, 16, 49, 49 };
+                int[] test = { 12, 11, 61, 6, 11, 16, 49 };
                 int check = 0;
 
                 int index = Array.IndexOf(day, DateTime.Today.ToString("F").Split(',')[0]);
@@ -126,7 +140,7 @@ namespace Library_Management_System
                 }
                 
                 Console.WriteLine(
-                    $"\n║{"",-12}║║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║║{"",-1}{"Shift",-48}║");
+                    $"\n║{"",-12}║║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-10}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║");
                 
                 for (int i = 0; i < test.Length; i++)
                 {
@@ -135,10 +149,22 @@ namespace Library_Management_System
                 
                 Console.Write("\n");
                 
+                int checking = 0;
                 for (int i = 0; i < routineDay.Length; i++)
                 {
+                    string[] output;
+                    if (employeeDay[checking] == null)
+                    {
+                        output = new string[7];
+                    }
+                    else
+                    {
+                        output = data[Int32.Parse(employeeDay[checking])].Split(',');
+                    }
+                    
                     Console.WriteLine(
-                        $"║{"",-2}{routineDay[i].ToUpper(),-10}║║{"",-1}{"",-10}║║{"",-1}{"",-60}║║{"",-1}{"",-5}║║{"",-1}{"",-6}║║{"",-1}{"",-15}║║{"",-1}{"",-48}║║{"",-1}{"",-48}║");
+                        $"║{"",-2}{routineDay[i].ToUpper(),-10}║║{"",-1}{output[0],-10}║║{"",-1}{output[1],-60}║║{"",-1}{output[2],-5}║║{"",-1}{output[3],-10}║║{"",-1}{output[4],-15}║║{"",-1}{output[5],-48}║");
+                    checking += 1;
                 }
                 for (int i = 0; i < test.Length; i++)
                 {

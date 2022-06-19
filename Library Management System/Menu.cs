@@ -15,23 +15,23 @@ namespace Library_Management_System
             while (true)
             {
                 Console.WriteLine("\n\t\t\t\t\t\t         LIBRARY MANAGEMENT SYSTEM    \t\t\t\t\t\n");
-                Console.WriteLine("\t\t\t\t\t\t****************** MENU ******************\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 01. ADD NEW BOOK                     **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 02. SEARCH BOOK                      **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 03. DELETE BOOK                      **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 04. EDIT BOOK INFORMATION            **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 05. UPDATE BOOK STATUS               **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 06. SHOW ALL BOOKS                   **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 07. ADD NEW CUSTOMER                 **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 08. SEARCH CUSTOMER                  **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 09. DELETE CUSTOMER                  **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 10. EDIT CUSTOMER INFORMATION        **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 11. SHOW ALL CUSTOMERS               **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 12. ADD LIBRARIAN                    **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 13. SHOW LIBRARIAN                   **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 14. SHOW LIBRARIAN's CALENDAR        **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 15. EXIT                             **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t******************************************\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 01. ADD NEW BOOK                       ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 02. SEARCH BOOK                        ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 03. DELETE BOOK                        ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 04. EDIT BOOK INFORMATION              ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 05. UPDATE BOOK STATUS                 ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 06. SHOW ALL BOOKS                     ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 07. ADD NEW CUSTOMER                   ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 08. SEARCH CUSTOMER                    ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 09. DELETE CUSTOMER                    ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 10. EDIT CUSTOMER INFORMATION          ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 11. SHOW ALL CUSTOMERS                 ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 12. ADD LIBRARIAN                      ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 13. SHOW LIBRARIAN                     ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 14. SHOW LIBRARIAN's CALENDAR          ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 15. EXIT                               ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
                 Console.Write("Input to use: ");
                 int number = int.Parse(Console.ReadLine());
                 if (number == 1)

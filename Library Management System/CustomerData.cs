@@ -13,6 +13,7 @@ namespace Library_Management_System
             string section = name;
             Console.Write($"Input {name} to search: ");
             name = Console.ReadLine();
+            int[] storeLength = { 11, 61, 6, 7, 16, 49 };
 
             for (int i = 0; i < data.Length; i++)
             {
@@ -20,32 +21,42 @@ namespace Library_Management_System
 
                 if (output[index] == $"{name}")
                 {
-                    Console.WriteLine(BookList.Repeat("-", 151));
-                    Console.WriteLine(
-                        $"|{"ID",-10}|{"Name",-60}|{"Age",-5}|{"Sex",-6}|{"Phone Number",-15}|{"Status",-48}|");
-                    Console.WriteLine(BookList.Repeat("-", 151));
+                    // Console.WriteLine(BookList.Repeat("-", 151));
                     
-                    if (output.Length > 6)
+                    for (int j = 0; j < storeLength.Length; j++)
                     {
-                        Console.WriteLine(
-                            $"|{output[0],-10}|{output[1],-60}|{output[2],-5}|{output[3],-6}|{output[4],-15}|{output[6],-48}|");
+                        Console.Write($"╔{BookList.Repeat("═",storeLength[j])}╗");
                     }
-                    else
+                    
+                    Console.WriteLine(
+                        $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║");
+                    
+                    for (int j = 0; j < storeLength.Length; j++)
                     {
-                        Console.WriteLine(
-                            $"|{output[0],-10}|{output[1],-60}|{output[2],-5}|{output[3],-6}|{output[4],-15}|{output[5],-48}|");
+                        Console.Write($" {BookList.Repeat("═",storeLength[j])} ");
                     }
+                    Console.Write("\n");
+                    
+                    string x = (output.Length > 6) 
+                        ? $"║{"",-1}{output[0],-10}║║{"",-1}{output[1],-60}║║{"",-1}{output[2],-5}║║{"",-1}{output[3],-6}║║{"",-1}{output[4],-15}║║{"",-1}{output[6],-48}║" 
+                        : $"║{"",-1}{output[0],-10}║║{"",-1}{output[1],-60}║║{"",-1}{output[2],-5}║║{"",-1}{output[3],-6}║║{"",-1}{output[4],-15}║║{"",-1}{output[5],-48}║";
+                    Console.WriteLine(x);
                     
                     if (output.Length >= 8)
                     {
                         for (int j = 7; j <= output.Length - 1; j++)
                         {
                             Console.WriteLine(
-                                $"|{"",-100}|{output[j],-48}|");
+                                $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-1}{output[j],-48}║");
                         }
                     }
                     
-                    Console.WriteLine(BookList.Repeat("-", 151));
+                    for (int j = 0; j < storeLength.Length; j++)
+                    {
+                        Console.Write($"╚{BookList.Repeat("═",storeLength[j])}╝");
+                    }
+                    
+                    // Console.WriteLine(BookList.Repeat("-", 151));
                     return;
                 }
             }
@@ -86,41 +97,51 @@ namespace Library_Management_System
             try
             {
                 string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt");
+                int[] storeLength = { 11, 61, 6, 7, 16, 49 };
+                
                 if (data.Length == 0)
                 {
                     Console.WriteLine("There are no data currently");
                     return;
                 }
 
-                Console.WriteLine(BookList.Repeat("-", 151));
+                for (int j = 0; j < storeLength.Length; j++)
+                {
+                    Console.Write($"╔{BookList.Repeat("═",storeLength[j])}╗");
+                }
+                
                 Console.WriteLine(
-                    $"|{"ID",-10}|{"Name",-60}|{"Age",-5}|{"Sex",-6}|{"Phone Number",-15}|{"Status",-48}|");
-                Console.WriteLine(BookList.Repeat("-", 151));
+                    $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║");
 
                 for (int i = 0; i < data.Length; i++)
                 {
-                    string[] output = data[i].Split(',');
+                    for (int j = 0; j < storeLength.Length; j++)
+                    {
+                        Console.Write($" {BookList.Repeat("═",storeLength[j])} ");
+                    }
                     
-                    if (output.Length > 6)
-                    {
-                        Console.WriteLine(
-                            $"|{output[0],-10}|{output[1],-60}|{output[2],-5}|{output[3],-6}|{output[4],-15}|{output[6],-48}|");
-                    }
-                    else
-                    {
-                        Console.WriteLine(
-                            $"|{output[0],-10}|{output[1],-60}|{output[2],-5}|{output[3],-6}|{output[4],-15}|{output[5],-48}|");
-                    }
+                    Console.Write("\n");
+                    
+                    string[] output = data[i].Split(',');
+
+                    string x = (output.Length > 6) 
+                        ? $"║{"",-1}{output[0],-10}║║{"",-1}{output[1],-60}║║{"",-1}{output[2],-5}║║{"",-1}{output[3],-6}║║{"",-1}{output[4],-15}║║{"",-1}{output[6],-48}║" 
+                        : $"║{"",-1}{output[0],-10}║║{"",-1}{output[1],-60}║║{"",-1}{output[2],-5}║║{"",-1}{output[3],-6}║║{"",-1}{output[4],-15}║║{"",-1}{output[5],-48}║";
+                    Console.WriteLine(x);
                     
                     if (output.Length >= 8)
                     {
                         for (int j = 7; j <= output.Length - 1; j++)
                         {
                             Console.WriteLine(
-                                $"|{"",-100}|{output[j],-48}|");
+                                $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-1}{output[j],-48}║");
                         }
                     }
-                    Console.WriteLine(BookList.Repeat("-", 151));
+                }
+                
+                for (int j = 0; j < storeLength.Length; j++)
+                {
+                    Console.Write($"╚{BookList.Repeat("═",storeLength[j])}╝");
                 }
             }
             catch (IOException)
@@ -134,21 +155,23 @@ namespace Library_Management_System
             try
             {
                 string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt");
+                int[] storeLength = { 11, 61, 6, 7, 16, 49 };
+                
                 if (data.Length == 0)
                 {
                     Console.WriteLine("There are no data currently");
                     return;
                 }
 
-                Console.WriteLine("\t\t\t\t\t\t****************** MENU ******************\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 1. SEARCH BY IDs                     **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 2. SEARCH BY NAME                    **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 3. SEARCH BY AGE                     **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 4. SEARCH BY SEX                     **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 5. SEARCH BY PHONE NUMBER            **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 6. SEARCH BY STATUS                  **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 7. EXIT                              **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t******************************************\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 1. SEARCH BY IDs                       ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 2. SEARCH BY NAME                      ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 3. SEARCH BY AGE                       ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 4. SEARCH BY SEX                       ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 5. SEARCH BY PHONE NUMBER              ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 6. SEARCH BY STATUS                    ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 7. EXIT                                ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
                 Console.Write("Input to use: ");
                 int number1 = int.Parse(Console.ReadLine());
 
@@ -183,10 +206,13 @@ namespace Library_Management_System
                             return;
                         }
 
-                        Console.WriteLine(BookList.Repeat("-", 151));
+                        for (int j = 0; j < storeLength.Length; j++)
+                        {
+                            Console.Write($"╔{BookList.Repeat("═",storeLength[j])}╗");
+                        }
+                
                         Console.WriteLine(
-                            $"|{"ID",-10}|{"Name",-60}|{"Age",-5}|{"Sex",-6}|{"Phone Number",-15}|{"Status",-48}|");
-                        Console.WriteLine(BookList.Repeat("-", 151));
+                            $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║");
 
                         for (int i = 0; i < data.Length; i++)
                         {
@@ -194,28 +220,33 @@ namespace Library_Management_System
 
                             if (output1[2] == $"{age}")
                             {
-                                if (output1.Length > 6)
+                                for (int j = 0; j < storeLength.Length; j++)
                                 {
-                                    Console.WriteLine(
-                                        $"|{output1[0],-10}|{output1[1],-60}|{output1[2],-5}|{output1[3],-6}|{output1[4],-15}|{output1[6],-48}|");
+                                    Console.Write($" {BookList.Repeat("═",storeLength[j])} ");
                                 }
-                                else
-                                {
-                                    Console.WriteLine(
-                                        $"|{output1[0],-10}|{output1[1],-60}|{output1[2],-5}|{output1[3],-6}|{output1[4],-15}|{output1[5],-48}|");
-                                }
+                    
+                                Console.Write("\n");
+                                
+                                string x = (output1.Length > 6) 
+                                    ? $"║{"",-1}{output1[0],-10}║║{"",-1}{output1[1],-60}║║{"",-1}{output1[2],-5}║║{"",-1}{output1[3],-6}║║{"",-1}{output1[4],-15}║║{"",-1}{output1[6],-48}║" 
+                                    : $"║{"",-1}{output1[0],-10}║║{"",-1}{output1[1],-60}║║{"",-1}{output1[2],-5}║║{"",-1}{output1[3],-6}║║{"",-1}{output1[4],-15}║║{"",-1}{output1[5],-48}║";
+                                
+                                Console.WriteLine(x);
                                 
                                 if (output1.Length >= 8)
                                 {
                                     for (int j = 7; j <= output1.Length - 1; j++)
                                     {
                                         Console.WriteLine(
-                                            $"|{"",-100}|{output1[j],-48}|");
+                                            $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-1}{output1[j],-48}║");
                                     }
                                 }
-                                
-                                Console.WriteLine(BookList.Repeat("-", 151));
                             }
+                        }
+                        
+                        for (int j = 0; j < storeLength.Length; j++)
+                        {
+                            Console.Write($"╚{BookList.Repeat("═",storeLength[j])}╝");
                         }
 
                         break;
@@ -225,10 +256,13 @@ namespace Library_Management_System
 
                         if (sex == "male" || sex == "female")
                         {
-                            Console.WriteLine(BookList.Repeat("-", 151));
+                            for (int j = 0; j < storeLength.Length; j++)
+                            {
+                                Console.Write($"╔{BookList.Repeat("═",storeLength[j])}╗");
+                            }
+                
                             Console.WriteLine(
-                                $"|{"ID",-10}|{"Name",-60}|{"Age",-5}|{"Sex",-6}|{"Phone Number",-15}|{"Status",-48}|");
-                            Console.WriteLine(BookList.Repeat("-", 151));
+                                $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║");
 
                             for (int i = 0; i < data.Length; i++)
                             {
@@ -236,28 +270,33 @@ namespace Library_Management_System
 
                                 if (output1[3] == sex)
                                 {
-                                    if (output1.Length > 6)
+                                    for (int j = 0; j < storeLength.Length; j++)
                                     {
-                                        Console.WriteLine(
-                                            $"|{output1[0],-10}|{output1[1],-60}|{output1[2],-5}|{output1[3],-6}|{output1[4],-15}|{output1[6],-48}|");
+                                        Console.Write($" {BookList.Repeat("═",storeLength[j])} ");
                                     }
-                                    else
-                                    {
-                                        Console.WriteLine(
-                                            $"|{output1[0],-10}|{output1[1],-60}|{output1[2],-5}|{output1[3],-6}|{output1[4],-15}|{output1[5],-48}|");
-                                    }
+                    
+                                    Console.Write("\n");
+                                    
+                                    string x = (output1.Length > 6) 
+                                        ? $"║{"",-1}{output1[0],-10}║║{"",-1}{output1[1],-60}║║{"",-1}{output1[2],-5}║║{"",-1}{output1[3],-6}║║{"",-1}{output1[4],-15}║║{"",-1}{output1[6],-48}║" 
+                                        : $"║{"",-1}{output1[0],-10}║║{"",-1}{output1[1],-60}║║{"",-1}{output1[2],-5}║║{"",-1}{output1[3],-6}║║{"",-1}{output1[4],-15}║║{"",-1}{output1[5],-48}║";
+                                
+                                    Console.WriteLine(x);
                                     
                                     if (output1.Length >= 8)
                                     {
                                         for (int j = 7; j <= output1.Length - 1; j++)
                                         {
                                             Console.WriteLine(
-                                                $"|{"",-100}|{output1[j],-48}|");
+                                                $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-1}{output1[j],-48}║");
                                         }
                                     }
-                                    
-                                    Console.WriteLine(BookList.Repeat("-", 151));
                                 }
+                            }
+                            
+                            for (int j = 0; j < storeLength.Length; j++)
+                            {
+                                Console.Write($"╚{BookList.Repeat("═",storeLength[j])}╝");
                             }
                         }
 
@@ -285,10 +324,13 @@ namespace Library_Management_System
                             return;
                         }
 
-                        Console.WriteLine(BookList.Repeat("-", 151));
+                        for (int j = 0; j < storeLength.Length; j++)
+                        {
+                            Console.Write($"╔{BookList.Repeat("═",storeLength[j])}╗");
+                        }
+                
                         Console.WriteLine(
-                            $"|{"ID",-10}|{"Name",-60}|{"Age",-5}|{"Sex",-6}|{"Phone Number",-15}|{"Status",-48}|");
-                        Console.WriteLine(BookList.Repeat("-", 151));
+                            $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║");
 
                         for (int i = 0; i < data.Length; i++)
                         {
@@ -296,28 +338,33 @@ namespace Library_Management_System
 
                             if (output1[4] == phone)
                             {
-                                if (output1.Length > 6)
+                                for (int j = 0; j < storeLength.Length; j++)
                                 {
-                                    Console.WriteLine(
-                                        $"|{output1[0],-10}|{output1[1],-60}|{output1[2],-5}|{output1[3],-6}|{output1[4],-15}|{output1[6],-48}|");
+                                    Console.Write($" {BookList.Repeat("═",storeLength[j])} ");
                                 }
-                                else
-                                {
-                                    Console.WriteLine(
-                                        $"|{output1[0],-10}|{output1[1],-60}|{output1[2],-5}|{output1[3],-6}|{output1[4],-15}|{output1[5],-48}|");
-                                }
+                    
+                                Console.Write("\n");
+                                
+                                string x = (output1.Length > 6) 
+                                    ? $"║{"",-1}{output1[0],-10}║║{"",-1}{output1[1],-60}║║{"",-1}{output1[2],-5}║║{"",-1}{output1[3],-6}║║{"",-1}{output1[4],-15}║║{"",-1}{output1[6],-48}║" 
+                                    : $"║{"",-1}{output1[0],-10}║║{"",-1}{output1[1],-60}║║{"",-1}{output1[2],-5}║║{"",-1}{output1[3],-6}║║{"",-1}{output1[4],-15}║║{"",-1}{output1[5],-48}║";
+                                
+                                Console.WriteLine(x);
                                 
                                 if (output1.Length >= 8)
                                 {
                                     for (int j = 7; j <= output1.Length - 1; j++)
                                     {
                                         Console.WriteLine(
-                                            $"|{"",-100}|{output1[j],-48}|");
+                                            $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-1}{output1[j],-48}║");
                                     }
                                 }
-                                
-                                Console.WriteLine(BookList.Repeat("-", 151));
                             }
+                        }
+                        
+                        for (int j = 0; j < storeLength.Length; j++)
+                        {
+                            Console.Write($"╚{BookList.Repeat("═",storeLength[j])}╝");
                         }
 
                         break;

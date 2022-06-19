@@ -76,17 +76,17 @@ namespace Library_Management_System
                 
                 Console.WriteLine(
                     $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-10}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║║{"",-1}{"Shift",-48}║");
-                
-                for (int i = 0; i < test.Length; i++)
-                {
-                    Console.Write($" {BookList.Repeat("═",test[i])} ");
-                }
-                
-                Console.Write("\n");
 
                 for (int i = 1; i < data.Length; i++)
                 {
                     string[] output = data[i].Split(',');
+                    
+                    for (int j = 0; j < test.Length; j++)
+                    {
+                        Console.Write($" {BookList.Repeat("═",test[j])} ");
+                    }
+                    Console.Write("\n");
+                    
                     Console.WriteLine(
                         $"║{"",-1}{output[0],-10}║║{"",-1}{output[1],-60}║║{"",-1}{output[2],-5}║║{"",-1}{output[3],-10}║║{"",-1}{output[4],-15}║║{"",-1}{output[5],-48}║║{"",-1}{output[6],-48}║");
                 }
@@ -141,26 +141,19 @@ namespace Library_Management_System
                 
                 Console.WriteLine(
                     $"\n║{"",-12}║║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-10}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║");
-                
-                for (int i = 0; i < test.Length; i++)
-                {
-                    Console.Write($" {BookList.Repeat("═",test[i])} ");
-                }
-                
-                Console.Write("\n");
-                
+
                 int checking = 0;
                 for (int i = 0; i < routineDay.Length; i++)
                 {
-                    string[] output;
-                    if (employeeDay[checking] == null)
+                    string[] output = (employeeDay[checking] == null)
+                        ? new string[7]
+                        : data[Int32.Parse(employeeDay[checking])].Split(',');
+                    
+                    for (int j = 0; j < test.Length; j++)
                     {
-                        output = new string[7];
+                        Console.Write($" {BookList.Repeat("═",test[j])} ");
                     }
-                    else
-                    {
-                        output = data[Int32.Parse(employeeDay[checking])].Split(',');
-                    }
+                    Console.Write("\n");
                     
                     Console.WriteLine(
                         $"║{"",-2}{routineDay[i].ToUpper(),-10}║║{"",-1}{output[0],-10}║║{"",-1}{output[1],-60}║║{"",-1}{output[2],-5}║║{"",-1}{output[3],-10}║║{"",-1}{output[4],-15}║║{"",-1}{output[5],-48}║");

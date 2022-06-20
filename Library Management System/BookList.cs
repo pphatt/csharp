@@ -501,10 +501,10 @@ namespace Library_Management_System
                     return;
                 }
 
-                Console.WriteLine("\t\t\t\t\t\t****************** MENU ******************\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 1. DELETE BY ID                      **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t** 2. DELETE BY NAME                    **\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t******************************************\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 1. DELETE BY ID                        ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 2. DELETE BY NAME                      ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
                 Console.Write("Input to use: ");
                 int number1 = int.Parse(Console.ReadLine());
 
@@ -523,7 +523,7 @@ namespace Library_Management_System
                         List<string> output = new List<string>(data);
                         output.RemoveAt(number2 - 1);
                         File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", output.ToArray());
-                        Console.WriteLine("\t\t\t\t\t\t*********** DELETE SUCCESSFULLY **********\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t═══════════ DELETE SUCCESSFULLY ═══════════\t\t\t\t\t");
 
                         break;
                     case 2:
@@ -550,7 +550,7 @@ namespace Library_Management_System
                         }
 
                         File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", output1.ToArray());
-                        Console.WriteLine("\t\t\t\t\t\t*********** DELETE SUCCESSFULLY **********\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t═══════════ DELETE SUCCESSFULLY ═══════════\t\t\t\t\t");
 
                         break;
                     default:

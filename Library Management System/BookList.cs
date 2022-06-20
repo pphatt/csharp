@@ -19,6 +19,8 @@ namespace Library_Management_System
         {
             int j = 0;
             bool check = false;
+            int[] storeLength = { 5, 61, 41, 21, 11, 16, 21, 61 };
+            
             Console.Write($"Input {name} to search: ");
             option = Console.ReadLine();
 
@@ -38,10 +40,13 @@ namespace Library_Management_System
                 return;
             }
 
-            Console.WriteLine($"{Repeat("-", 238)}");
+            for (int k = 0; k < storeLength.Length; k++)
+            {
+                Console.Write($"╔{Repeat("═",storeLength[k])}╗");
+            }
+            
             Console.WriteLine(
-                $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Amount",-10}|{"Status",-15}|{"Date",-20}|{"Note",-60}|");
-            Console.WriteLine($"{Repeat("-", 238)}");
+                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Amount",-10}║║{"",-1}{"Status",-15}║║{"",-1}{"Date",-20}║║{"",-1}{"Note",-60}║");
 
             for (int i = 0; i < data.Length; i++)
             {
@@ -69,8 +74,13 @@ namespace Library_Management_System
 
                 if (output[index].Contains(option))
                 {
+                    for (int k = 0; k < storeLength.Length; k++)
+                    {
+                        Console.Write($" {Repeat("═",storeLength[k])} ");
+                    }
+
                     Console.WriteLine(
-                        $"|{j + 1,-4}|{output[0],-60}|{output[1],-40}|{output[2],-20}|{output[3],-10}|{statusOutput,-15}|{output[6],-20}|{noteData,-60}|");
+                        $"\n║{"",-1}{j + 1,-4}║║{"",-1}{output[0],-60}║║{"",-1}{output[1],-40}║║{"",-1}{output[2],-20}║║{"",-1}{output[3],-10}║║{"",-1}{statusOutput,-15}║║{"",-1}{output[6],-20}║║{"",-1}{noteData,-60}║");
 
                     if (int.Parse(getAmount1[1]) > 0)
                     {
@@ -80,7 +90,7 @@ namespace Library_Management_System
                             statusOutput = $"BORROWED  ({int.Parse(output[3]) - int.Parse(getAmount[1])})";
                             if (output.Length == 8)
                             {
-                                Console.WriteLine($"{Repeat(" ", 139)}|{statusOutput,-15}|{"",-20}|{"",-60}|");
+                                Console.WriteLine($"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-1}{statusOutput,-15}║║{"",-1}{"",-20}║║{"",-1}{"",-60}║");
                             }
                         }
 
@@ -88,12 +98,16 @@ namespace Library_Management_System
                         {
                             string[] getNote = output[k].Split(' ');
                             noteData = $"Borrowed by customer's IDs {getNote[0]} at {getNote[1]} {getNote[2]}";
-                            Console.WriteLine($"{Repeat(" ", 139)}|{statusOutput,-15}|{"",-20}|{noteData,-60}|");
+                            Console.WriteLine($"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-1}{statusOutput,-15}║║{"",-1}{"",-20}║║{"",-1}{noteData,-60}║");
                         }
                     }
-                    Console.WriteLine($"{Repeat("-", 238)}");
+                    
                     j++;
                 }
+            }
+            for (int k = 0; k < storeLength.Length; k++)
+            {
+                Console.Write($"╚{Repeat("═",storeLength[k])}╝");
             }
         }
 
@@ -129,16 +143,21 @@ namespace Library_Management_System
             try
             {
                 string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\MyTest.txt");
+                int[] storeLength = { 5, 61, 41, 21, 11, 16, 21, 61 };
+                
                 if (data.Length == 0)
                 {
                     Console.WriteLine("There are no data currently");
                     return;
                 }
 
-                Console.WriteLine($"{Repeat("-", 238)}");
+                for (int k = 0; k < storeLength.Length; k++)
+                {
+                    Console.Write($"╔{Repeat("═",storeLength[k])}╗");
+                }
+            
                 Console.WriteLine(
-                    $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Amount",-10}|{"Status",-15}|{"Date",-20}|{"Note",-60}|");
-                Console.WriteLine($"{Repeat("-", 238)}");
+                    $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Amount",-10}║║{"",-1}{"Status",-15}║║{"",-1}{"Date",-20}║║{"",-1}{"Note",-60}║");
 
                 for (int i = 0; i < data.Length; i++)
                 {
@@ -162,9 +181,14 @@ namespace Library_Management_System
                         string[] getNote = output[7].Split(' ');
                         noteData = $"Borrowed by customer's IDs {getNote[0]} at {getNote[1]} {getNote[2]}";
                     }
+                    
+                    for (int k = 0; k < storeLength.Length; k++)
+                    {
+                        Console.Write($" {Repeat("═",storeLength[k])} ");
+                    }
 
                     Console.WriteLine(
-                        $"|{i + 1,-4}|{output[0],-60}|{output[1],-40}|{output[2],-20}|{output[3],-10}|{statusOutput,-15}|{output[6],-20}|{noteData,-60}|");
+                        $"\n║{"",-1}{i + 1,-4}║║{"",-1}{output[0],-60}║║{"",-1}{output[1],-40}║║{"",-1}{output[2],-20}║║{"",-1}{output[3],-10}║║{"",-1}{statusOutput,-15}║║{"",-1}{output[6],-20}║║{"",-1}{noteData,-60}║");
 
                     if (int.Parse(getAmount1[1]) > 0)
                     {
@@ -174,7 +198,7 @@ namespace Library_Management_System
                             statusOutput = $"BORROWED  ({getAmount1[1]})";
                             if (output.Length == 8)
                             {
-                                Console.WriteLine($"{Repeat(" ", 139)}|{statusOutput,-15}|{"",-20}|{"",-60}|");
+                                Console.WriteLine($"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-1}{statusOutput,-15}║║{"",-1}{"",-20}║║{"",-1}{"",-60}║");
                             }
                         }
 
@@ -182,11 +206,15 @@ namespace Library_Management_System
                         {
                             string[] getNote = output[j].Split(' ');
                             noteData = $"Borrowed by customer's IDs {getNote[0]} at {getNote[1]} {getNote[2]}";
-                            Console.WriteLine($"{Repeat(" ", 139)}|{statusOutput,-15}|{"",-20}|{noteData,-60}|");
+                            Console.WriteLine($"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-1}{statusOutput,-15}║║{"",-1}{"",-20}║║{"",-1}{noteData,-60}║");
                             statusOutput = "";
                         }
                     }
-                    Console.WriteLine($"{Repeat("-", 238)}");
+                }
+                
+                for (int k = 0; k < storeLength.Length; k++)
+                {
+                    Console.Write($"╚{Repeat("═",storeLength[k])}╝");
                 }
             }
             catch (IOException)
@@ -200,21 +228,23 @@ namespace Library_Management_System
             try
             {
                 string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\MyTest.txt");
+                int[] storeLength = { 5, 61, 41, 21, 11, 16, 21, 61 };
+                
                 if (data.Length == 0)
                 {
                     Console.WriteLine("There are no data currently");
                     return;
                 }
 
-                Console.WriteLine($"{Repeat("\t", 6)}{Repeat("*", 18)} MENU {Repeat("*", 18)}{Repeat("\t", 5)}");
-                Console.WriteLine($"{Repeat("\t", 6)}** 1. SEARCH BY ID                      **{Repeat("\t", 6)}");
-                Console.WriteLine($"{Repeat("\t", 6)}** 2. SEARCH BY TITLE                   **{Repeat("\t", 6)}");
-                Console.WriteLine($"{Repeat("\t", 6)}** 3. SEARCH BY AUTHOR                  **{Repeat("\t", 6)}");
-                Console.WriteLine($"{Repeat("\t", 6)}** 4. SEARCH BY CATEGORY                **{Repeat("\t", 6)}");
-                Console.WriteLine($"{Repeat("\t", 6)}** 5. SEARCH BY STATUS                  **{Repeat("\t", 6)}");
-                Console.WriteLine($"{Repeat("\t", 6)}** 6. SEARCH BY DATE                    **{Repeat("\t", 6)}");
-                Console.WriteLine($"{Repeat("\t", 6)}** 7. EXIT                              **{Repeat("\t", 6)}");
-                Console.WriteLine($"{Repeat("\t", 6)}{Repeat("*", 42)}{Repeat("\t", 6)}");
+                Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 1. SEARCH BY ID                        ║\t\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 2. SEARCH BY TITLE                     ║\t\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 3. SEARCH BY AUTHOR                    ║\t\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 4. SEARCH BY CATEGORY                  ║\t\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 5. SEARCH BY STATUS                    ║\t\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 6. SEARCH BY DATE                      ║\t\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 7. EXIT                                ║\t\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t\t");
                 Console.Write("Input to use: ");
                 int number1 = int.Parse(Console.ReadLine());
 
@@ -251,13 +281,21 @@ namespace Library_Management_System
                             noteData = $"Borrowed by customer's IDs {getNote[0]} at {getNote[1]} {getNote[2]}";
                         }
 
-                        Console.WriteLine($"{Repeat("-", 238)}");
+                        for (int k = 0; k < storeLength.Length; k++)
+                        {
+                            Console.Write($"╔{Repeat("═",storeLength[k])}╗");
+                        }
+            
                         Console.WriteLine(
-                            $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Amount",-10}|{"Status",-15}|{"Date",-20}|{"Note",-60}|");
-                        Console.WriteLine($"{Repeat("-", 238)}");
+                            $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Amount",-10}║║{"",-1}{"Status",-15}║║{"",-1}{"Date",-20}║║{"",-1}{"Note",-60}║");
+                        
+                        for (int k = 0; k < storeLength.Length; k++)
+                        {
+                            Console.Write($" {Repeat("═",storeLength[k])} ");
+                        }
                         
                         Console.WriteLine(
-                            $"|{number2,-4}|{output[0],-60}|{output[1],-40}|{output[2],-20}|{output[3],-10}|{statusOutput,-15}|{output[6],-20}|{noteData,-60}|");
+                            $"\n║{"",-1}{number2,-4}║║{"",-1}{output[0],-60}║║{"",-1}{output[1],-40}║║{"",-1}{output[2],-20}║║{"",-1}{output[3],-10}║║{"",-1}{statusOutput,-15}║║{"",-1}{output[6],-20}║║{"",-1}{noteData,-60}║");
 
                         if (int.Parse(getAmount1[1]) > 0)
                         {
@@ -267,7 +305,7 @@ namespace Library_Management_System
                                 statusOutput = $"BORROWED  ({getAmount1[1]})";
                                 if (output.Length == 8)
                                 {
-                                    Console.WriteLine($"{Repeat(" ", 139)}|{statusOutput,-15}|{"",-20}|{"",-60}|");
+                                    Console.WriteLine($"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-1}{statusOutput,-15}║║{"",-1}{"",-20}║║{"",-1}{"",-60}║");
                                 }
                             }
 
@@ -275,10 +313,15 @@ namespace Library_Management_System
                             {
                                 string[] getNote = output[j].Split(' ');
                                 noteData = $"Borrowed by customer's IDs {getNote[0]} at {getNote[1]} {getNote[2]}";
-                                Console.WriteLine($"{Repeat(" ", 139)}|{statusOutput,-15}|{"",-20}|{noteData,-60}|");
+                                Console.WriteLine($"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-1}{statusOutput,-15}║║{"",-1}{"",-20}║║{"",-1}{noteData,-60}║");
                             }
                         }
-                        Console.WriteLine($"{Repeat("-", 238)}");
+                        
+                        for (int k = 0; k < storeLength.Length; k++)
+                        {
+                            Console.Write($"╚{Repeat("═",storeLength[k])}╝");
+                        }
+                        
                         break;
                     case 2:
                         CustomOutput("title", data, "title", 0);
@@ -290,10 +333,10 @@ namespace Library_Management_System
                         CustomOutput("category", data, "category", 2);
                         break;
                     case 5:
-                        Console.WriteLine("\t\t\t\t\t\t****************** MENU ******************\t\t\t\t\t");
-                        Console.WriteLine("\t\t\t\t\t\t** 1. AVAILABLE                         **\t\t\t\t\t");
-                        Console.WriteLine("\t\t\t\t\t\t** 2. BORROWED                          **\t\t\t\t\t");
-                        Console.WriteLine("\t\t\t\t\t\t******************************************\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t║ 1. AVAILABLE                           ║\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t║ 2. BORROWED                            ║\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
                         Console.Write("Input to use: ");
                         int number3 = int.Parse(Console.ReadLine());
                         bool check = false;
@@ -324,10 +367,13 @@ namespace Library_Management_System
                                 return;
                             }
 
-                            Console.WriteLine($"{Repeat("-", 238)}");
+                            for (int k = 0; k < storeLength.Length; k++)
+                            {
+                                Console.Write($"╔{Repeat("═",storeLength[k])}╗");
+                            }
+            
                             Console.WriteLine(
-                                $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Amount",-10}|{"Status",-15}|{"Date",-20}|{"Note",-60}|");
-                            Console.WriteLine($"{Repeat("-", 238)}");
+                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Amount",-10}║║{"",-1}{"Status",-15}║║{"",-1}{"Date",-20}║║{"",-1}{"Note",-60}║");
                             
                             for (int i = 0; i < data.Length; i++)
                             {
@@ -336,10 +382,18 @@ namespace Library_Management_System
 
                                 if (getAmount2[0] == "False" && int.Parse(getAmount2[1]) > 0)
                                 {
+                                    for (int k = 0; k < storeLength.Length; k++)
+                                    {
+                                        Console.Write($" {Repeat("═",storeLength[k])} ");
+                                    }
+                                    
                                     Console.WriteLine(
-                                        $"|{i + 1,-4}|{output1[0],-60}|{output1[1],-40}|{output1[2],-20}|{output1[3],-10}|{$"AVAILABLE ({getAmount2[1]})",-15}|{output1[6],-20}|{"",-60}|");
-                                    Console.WriteLine($"{Repeat("-", 238)}");
+                                        $"\n║{"",-1}{i + 1,-4}║║{"",-1}{output1[0],-60}║║{"",-1}{output1[1],-40}║║{"",-1}{output1[2],-20}║║{"",-1}{output1[3],-10}║║{"",-1}{$"AVAILABLE ({getAmount2[1]})",-15}║║{"",-1}{output1[6],-20}║║{"",-1}{"",-60}║");
                                 }
+                            }
+                            for (int k = 0; k < storeLength.Length; k++)
+                            {
+                                Console.Write($"╚{Repeat("═",storeLength[k])}╝");
                             }
                         }
                         else if (number3 == 2)
@@ -368,10 +422,13 @@ namespace Library_Management_System
                                 return;
                             }
 
-                            Console.WriteLine($"{Repeat("-", 238)}");
+                            for (int k = 0; k < storeLength.Length; k++)
+                            {
+                                Console.Write($"╔{Repeat("═",storeLength[k])}╗");
+                            }
+            
                             Console.WriteLine(
-                                $"|{"ID",-4}|{"Name",-60}|{"Author",-40}|{"Category",-20}|{"Amount",-10}|{"Status",-15}|{"Date",-20}|{"Note",-60}|");
-                            Console.WriteLine($"{Repeat("-", 238)}");
+                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Amount",-10}║║{"",-1}{"Status",-15}║║{"",-1}{"Date",-20}║║{"",-1}{"Note",-60}║");
                             
                             for (int i = 0; i < data.Length; i++)
                             {
@@ -387,8 +444,12 @@ namespace Library_Management_System
 
                                 if (getAmount2[0] == "True" && int.Parse(getAmount2[1]) > 0)
                                 {
+                                    for (int k = 0; k < storeLength.Length; k++)
+                                    {
+                                        Console.Write($" {Repeat("═",storeLength[k])} ");
+                                    }
                                     Console.WriteLine(
-                                        $"|{i + 1,-4}|{output1[0],-60}|{output1[1],-40}|{output1[2],-20}|{output1[3],-10}|{$"BORROWED  ({getAmount2[1]})",-15}|{output1[6],-20}|{noteData1,-60}|");
+                                        $"\n║{"",-1}{i + 1,-4}║║{"",-1}{output1[0],-60}║║{"",-1}{output1[1],-40}║║{"",-1}{output1[2],-20}║║{"",-1}{output1[3],-10}║║{"",-1}{$"BORROWED  ({getAmount2[1]})",-15}║║{"",-1}{output1[6],-20}║║{"",-1}{noteData1,-60}║");
                                     if (int.Parse(getAmount2[1]) > 0)
                                     {
                                         statusOutput = "";
@@ -397,11 +458,14 @@ namespace Library_Management_System
                                         {
                                             string[] getNote = output1[j].Split(' ');
                                             noteData = $"Borrowed by customer's IDs {getNote[0]} at {getNote[1]} {getNote[2]}";
-                                            Console.WriteLine($"{Repeat(" ", 139)}|{statusOutput,-15}|{"",-20}|{noteData,-60}|");
+                                            Console.WriteLine($"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-1}{statusOutput,-15}║║{"",-1}{"",-20}║║{"",-1}{noteData,-60}║");
                                         }
                                     }
-                                    Console.WriteLine($"{Repeat("-", 238)}");
                                 }
+                            }
+                            for (int k = 0; k < storeLength.Length; k++)
+                            {
+                                Console.Write($"╚{Repeat("═",storeLength[k])}╝");
                             }
                         }
                         else
@@ -512,16 +576,16 @@ namespace Library_Management_System
                 }
 
                 Show();
-                Console.Write("Input to use: ");
+                Console.Write("\nInput to use: ");
                 int number1 = int.Parse(Console.ReadLine());
                 if (number1 > 0 && number1 <= data.Length)
                 {
                     Console.WriteLine($"\t\t\t\t\t\t          EDITING THE BOOK NO.{number1:D2} \t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t****************** MENU ******************\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t** 1. EDIT TITLE                        **\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t** 2. EDIT AUTHOR                       **\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t** 3. EDIT CATEGORY                     **\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t******************************************\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t║ 1. EDIT TITLE                          ║\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t║ 2. EDIT AUTHOR                         ║\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t║ 3. EDIT CATEGORY                       ║\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
                     Console.Write("Input to edit: ");
                     int number2 = int.Parse(Console.ReadLine());
 
@@ -533,7 +597,7 @@ namespace Library_Management_System
                         output[number2 - 1] = newText;
                         data[number1 - 1] = string.Join(",", output);
                         File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", data);
-                        Console.WriteLine("\t\t\t\t\t\t*********** UPDATE SUCCESSFULLY **********\t\t\t\t\t");
+                        Console.WriteLine("\t\t\t\t\t\t═══════════ UPDATE SUCCESSFULLY ═══════════\t\t\t\t\t");
                     }
                     else
                     {
@@ -557,6 +621,8 @@ namespace Library_Management_System
             {
                 string[] bookData = File.ReadAllLines(@"D:\Dev\School\Library Management System\MyTest.txt");
                 string[] customerData = File.ReadAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt");
+                int[] storeLength = { 5, 61, 41, 21, 11, 16, 21, 61 };
+                int[] storeLength1 = { 11, 61, 6, 7, 16, 49 };
                 
                 if (bookData.Length == 0 || customerData.Length == 0)
                 {
@@ -586,20 +652,33 @@ namespace Library_Management_System
                 
                 string[] output1 = customerData[check].Split(',');
                 
-                Console.WriteLine(Repeat("-", 151));
+                for (int k = 0; k < storeLength1.Length; k++)
+                {
+                    Console.Write($"╔{Repeat("═",storeLength1[k])}╗");
+                }
+            
                 Console.WriteLine(
-                    $"|{"ID",-10}|{"Name",-60}|{"Age",-5}|{"Sex",-6}|{"Phone Number",-15}|{"Status",-48}|");
-                Console.WriteLine(Repeat("-", 151));
+                    $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║");
 
+                for (int k = 0; k < storeLength1.Length; k++)
+                {
+                    Console.Write($" {Repeat("═",storeLength1[k])} ");
+                }
+                
                 Console.WriteLine(
-                    $"|{output1[0],-10}|{output1[1],-60}|{output1[2],-5}|{output1[3],-6}|{output1[4],-15}|{output1[5],-48}|");
-                Console.WriteLine(Repeat("-", 151));
+                    $"\n║{"",-1}{output1[0],-10}║║{"",-1}{output1[1],-60}║║{"",-1}{output1[2],-5}║║{"",-1}{output1[3],-6}║║{"",-1}{output1[4],-15}║║{"",-1}{output1[5],-48}║");
+                
+                for (int k = 0; k < storeLength1.Length; k++)
+                {
+                    Console.Write($"╚{Repeat("═",storeLength1[k])}╝");
+                }
                 
                 while (true)
                 {
+                    Console.Write("\n");
                     Show();
 
-                    Console.Write("Input ID book to borrow: ");
+                    Console.Write("\nInput ID book to borrow: ");
                     int number = int.Parse(Console.ReadLine());
 
                     if (number < 0 || number > bookData.Length)
@@ -646,7 +725,7 @@ namespace Library_Management_System
                     bookData[number - 1] = string.Join(",", data);
                     File.WriteAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt", customerData);
                     File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", bookData);
-                    Console.WriteLine("\t\t\t\t\t\t********* BORROWED SUCCESSFULLY *********\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t═════════ BORROWED SUCCESSFULLY ═════════\t\t\t\t\t");
                 }
             }
             catch (IOException)

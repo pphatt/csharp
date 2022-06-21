@@ -1,7 +1,1 @@
-
-1,PPP,20,Female,090xxxxxx,,Monday
-2,OOO,20,Female,090xxxxxx,,Tuesday
-3,KKK,20,Female,090xxxxxx,,Wednesday
-4,LLL,20,Female,090xxxxxx,,Thursday
-5,AAA,20,Female,090xxxxxx,,Friday
-6,BBB,20,Female,090xxxxxx,,Saturday
+1,PP,20,femal,090xxxxx,,

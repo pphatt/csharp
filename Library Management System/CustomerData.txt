@@ -1,4 +1,0 @@
-ABC123,P13,21,male,090xxxx,,Borrowed book's ID: "1" at 20/06/2022 17:59:24,Borrowed book's ID: "2" at 20/06/2022 17:59:32,Borrowed book's ID: "3" at 20/06/2022 17:59:34,Borrowed book's ID: "4" at 20/06/2022 17:59:35
-DDD123,P43,22,male,090xxxx,,Borrowed book's ID: "1" at 20/06/2022 17:59:59,Borrowed book's ID: "2" at 20/06/2022 18:00:00,Borrowed book's ID: "3" at 20/06/2022 18:00:00,Borrowed book's ID: "4" at 20/06/2022 18:00:01
-FFF123,Pzz,23,male,090xxxx,,Borrowed book's ID: "1" at 20/06/2022 18:00:14,Borrowed book's ID: "2" at 20/06/2022 18:00:14,Borrowed book's ID: "3" at 20/06/2022 18:00:15,Borrowed book's ID: "4" at 20/06/2022 18:00:16
-CCC123,Pqq,24,male,090xxxx,

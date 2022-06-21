@@ -55,7 +55,7 @@ namespace Library_Management_System
                 string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\LibrarianData.txt");
                 int[] test = { 11, 61, 6, 11, 16, 49, 49 };
 
-                if (data.Length == 0 || data.Length == 1)
+                if (data.Length == 0)
                 {
                     Console.WriteLine("There are no data currently");
                     return;
@@ -100,6 +100,16 @@ namespace Library_Management_System
             try
             {
                 string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\LibrarianData.txt");
+                for (int i = 0; i < data.Length; i++)
+                {
+                    string[] checkD = data[i].Split(',');
+                    if (checkD[6] == "")
+                    {
+                        Console.WriteLine("There is no data currently or the TIME TABLE IS NOT FULL");
+                        return;
+                    }
+                }
+                
                 string[] day = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
                 string[] routineDay = new string[7];
                 string[] employeeDay = new string[7];
@@ -141,7 +151,7 @@ namespace Library_Management_System
                 {
                     string[] output = (employeeDay[checking] == null)
                         ? new string[7]
-                        : data[Int32.Parse(employeeDay[checking])].Split(',');
+                        : data[Int32.Parse(employeeDay[checking]) - 1].Split(',');
 
                     for (int j = 0; j < test.Length; j++)
                     {
@@ -168,6 +178,46 @@ namespace Library_Management_System
 
         public void AddCalendar()
         {
+            string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\LibrarianData.txt");
+            string[] days = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+            
+            for (int i = 0; i < data.Length; i++)
+            {
+                int check = Array.IndexOf(days, data[i].Split(',')[6]);
+                if (check >= 0)
+                {
+                    days = days.Where((val, indx) => indx != check).ToArray();
+                }
+            }
+            
+            ShowLibrarian();
+            Console.Write("\nInput to use: ");
+            int number = int.Parse(Console.ReadLine());
+            
+            if (number > 0 && number <= data.Length && days.Length > 0)
+            {
+                string[] librarianCheck = data[number - 1].Split(',');
+                if (librarianCheck[6] == "")
+                {
+                    Console.WriteLine("Here are the available day");
+                    foreach (string day in days)
+                    {
+                        Console.Write($"|{day}|");
+                    }
+                    
+                    Console.Write("\nInput to use: ");
+                    int number1 = int.Parse(Console.ReadLine());
+                    librarianCheck[6] = $"{days[number1 - 1]}";
+                    data[number - 1] = string.Join(",", librarianCheck);
+                    File.WriteAllLines(@"D:\Dev\School\Library Management System\LibrarianData.txt", data);
+                    Console.WriteLine("\t\t\t\t\t\t═══════════ UPDATED SUCCESSFULLY ═══════════\t\t\t\t\t");
+                }
+                else
+                {
+                    Console.WriteLine("The Librarian already has schedule");
+                    return;
+                }
+            }
         }
     }
 }

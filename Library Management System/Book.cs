@@ -4,44 +4,44 @@ namespace Library_Management_System
 {
     public class Book
     {
-        private string Name;
-        private string Author;
-        private string Category;
-        private int Amount;
-        private string Date;
+        private string _Name;
+        private string _Author;
+        private string _Category;
+        private int _Amount;
+        private string _Date;
         
         public Book(string Name, string Author, string Category, int Amount, string Date)
         {
-            this.Name = Name;
-            this.Author = Author;
-            this.Category = Category;
-            this.Amount = Amount;
-            this.Date = Date;
+            _Name = Name;
+            _Author = Author;
+            _Category = Category;
+            _Amount = Amount;
+            _Date = Date;
         }
 
         public string getName()
         {
-            return this.Name;
+            return _Name;
         }
         
         public string getAuthor()
         {
-            return this.Author;
+            return _Author;
         }
         
         public string getCategory()
         {
-            return this.Category;
+            return _Category;
         }
         
         public string getDate()
         {
-            return this.Date;
+            return _Date;
         }
 
         public int getAmount()
         {
-            return this.Amount;
+            return _Amount;
         }
     }
 }

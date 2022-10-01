@@ -1,6 +1,0 @@
-1,PP0,20,female,090xxxx,,Tuesday
-2,PP1,20,female,090xxxx,,Monday
-3,PP2,20,female,090xxxx,,Wednesday
-4,PP3,20,female,090xxxx,,Friday
-5,PP4,20,female,090xxxx,,Thursday
-6,PP5,20,female,090xxxx,,Saturday

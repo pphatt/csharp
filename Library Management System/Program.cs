@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,8 +10,53 @@ namespace Library_Management_System
 {
     internal class Program
     {
+        public static string ConnectionString = @"data source=DESKTOP-0FQDJF2\SQLEXPRESS;initial catalog=Management_Library;trusted_connection=true";
+
         public static void Main(string[] args)
         {
+            
+            // string queryString = "INSERT INTO Books (BookIDs, BookName, BookAuthor, BookCategory, BookAmount, Date, CustomerIDs) VALUES (@BookIDs, @BookName, @BookAuthor, @BookCategory, @BookAmount, @Date, @CustomerIDs)";
+            string queryString = "SELECT COUNT(BookIDs) FROM Books";
+            
+            /*
+             * Update Row, Insert, Add data to Table
+             */
+            
+            // using (SqlConnection connection = new SqlConnection(ConnectionString))
+            // {
+            //     SqlCommand command = new SqlCommand(queryString, connection);
+            //     // command.Parameters.AddWithValue("@BookIDs", 1);
+            //     // command.Parameters.AddWithValue("@BookName", "1");
+            //     // command.Parameters.AddWithValue("@BookAuthor", "1");
+            //     // command.Parameters.AddWithValue("@BookCategory", "bookName");
+            //     // command.Parameters.AddWithValue("@BookAmount", 1);
+            //     // command.Parameters.AddWithValue("@Date", "2022-1-1");
+            //     // command.Parameters.AddWithValue("@CustomerIDs", "1");
+            //     connection.Open();
+            //     command.ExecuteNonQuery();
+            //     Console.WriteLine(command.);
+            // }
+            
+            
+            /*
+             * Read Row or Data from Table
+             */
+            
+            // using (SqlConnection connection = new SqlConnection(ConnectionString))
+            // {
+            //     SqlCommand command = new SqlCommand(queryString, connection);
+            //     
+            //     connection.Open();
+            //     
+            //     using(SqlDataReader reader = command.ExecuteReader())
+            //     {
+            //         while (reader.Read())
+            //         {
+            //             Console.WriteLine((int)reader[0] + 1);
+            //         }
+            //     }
+            // }
+            
             Menu menu = new Menu();
             // string path = @"D:\Dev\School\Library Management System\MyTest.txt";
             //

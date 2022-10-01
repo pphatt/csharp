@@ -6,9 +6,9 @@ namespace Library_Management_System
 {
     public class Menu
     {
-        BookList book = new BookList();
-        CustomerData customer = new CustomerData();
-        LibrarianCalendar LibrarianCalendar = new LibrarianCalendar();
+        BookList _book = new BookList();
+        CustomerData _customer = new CustomerData();
+        LibrarianCalendar _LibrarianCalendar = new LibrarianCalendar();
 
         public Menu()
         {
@@ -38,69 +38,69 @@ namespace Library_Management_System
                 if (number == 1)
                 {
                     Console.WriteLine("\t\t\t\t\t\t════════════ ADDING NEW BOOK ═════════════\t\t\t\t\t");
-                    book.Add();
+                    _book.Add();
                     Console.WriteLine("\t\t\t\t\t\t═══════════ ADDED SUCCESSFULLY ═══════════\t\t\t\t\t");
                     Console.ReadKey();
                 } else if (number == 2)
                 {
-                    book.Search();
+                    _book.Search();
                     Console.ReadKey();
                 } else if (number == 3)
                 {
-                    book.Delete();
+                    _book.Delete();
                     Console.ReadKey();
                 } else if (number == 4)
                 {
-                    book.Edit();
+                    _book.Edit();
                     Console.ReadKey();
                 } else if (number == 5)
                 {
-                    book.UpdateStatus();
+                    _book.UpdateStatus();
                     Console.ReadKey();
                 } else if (number == 6)
                 {
-                    book.Show();
+                    _book.Show();
                     Console.ReadKey();
                 } else if (number == 7)
                 {
                     Console.WriteLine("\t\t\t\t\t\t═══════════ ADDING NEW CUSTOMER ══════════\t\t\t\t\t");
-                    customer.AddCustomer();
+                    _customer.AddCustomer();
                     Console.WriteLine("\t\t\t\t\t\t═══════════ ADDED SUCCESSFULLY ═══════════\t\t\t\t\t");
                     Console.ReadKey();
                 } else if (number == 8)
                 {
-                    customer.SearchCustomer();
+                    _customer.SearchCustomer();
                     Console.ReadKey();
                 } else if (number == 9)
                 {
-                    customer.DeleteCustomer();
+                    _customer.DeleteCustomer();
                     Console.ReadKey();
                 } else if (number == 10)
                 {
-                    customer.EditCustomer();
+                    _customer.EditCustomer();
                     Console.ReadKey();
                 }
                 else if (number == 11)
                 {
-                    customer.ShowCustomer();
+                    _customer.ShowCustomer();
                     Console.ReadKey();
                 } else if (number == 12)
                 {
                     Console.WriteLine("\t\t\t\t\t\t═══════════ ADDING NEW LIBRARIAN ══════════\t\t\t\t\t");
-                    LibrarianCalendar.AddLibrarian();
+                    _LibrarianCalendar.AddLibrarian();
                     Console.WriteLine("\t\t\t\t\t\t═══════════ ADDED SUCCESSFULLY ═══════════\t\t\t\t\t");
                     Console.ReadKey();
                 } else if (number == 13)
                 {
-                    LibrarianCalendar.ShowLibrarian();
+                    _LibrarianCalendar.ShowLibrarian();
                     Console.ReadKey();
                 } else if (number == 14)
                 {
-                    LibrarianCalendar.AddCalendar();
+                    _LibrarianCalendar.AddCalendar();
                     Console.ReadKey();
                 } else if (number == 15)
                 {
-                    LibrarianCalendar.ShowCalendar();
+                    _LibrarianCalendar.ShowCalendar();
                     Console.ReadKey();
                 }
                 else

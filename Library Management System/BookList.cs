@@ -14,105 +14,105 @@ namespace Library_Management_System
             return new StringBuilder(value.Length * count).Insert(0, value, count).ToString();
         }
 
-        private void CustomOutput(string option, string[] data, string name, int index)
-        {
-            int j = 0;
-            bool check = false;
-            int[] storeLength = { 5, 61, 41, 21, 11, 16, 21, 61 };
-
-            Console.Write($"Input {name} to search: ");
-            option = Console.ReadLine();
-
-            for (int i = 0; i < data.Length; i++)
-            {
-                string[] output1 = data[i].Split(',');
-                if (output1[index].Contains(option))
-                {
-                    check = true;
-                    break;
-                }
-            }
-
-            if (check == false)
-            {
-                Console.WriteLine($"\t\t\t\t\t     There is no {option} in {name} section in the database\t\t\t\t\t\t");
-                return;
-            }
-
-            for (int k = 0; k < storeLength.Length; k++)
-            {
-                Console.Write($"╔{Repeat("═", storeLength[k])}╗");
-            }
-
-            Console.WriteLine(
-                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Amount",-10}║║{"",-1}{"Status",-15}║║{"",-1}{"Date",-20}║║{"",-1}{"Note",-60}║");
-
-            for (int i = 0; i < data.Length; i++)
-            {
-                string[] output = data[i].Split(',');
-
-                string[] getAmount = output[4].Split(' ');
-                string[] getAmount1 = output[5].Split(' ');
-
-                string statusOutput = $"AVAILABLE ({getAmount[1]})";
-                string noteData = "";
-
-                if (int.Parse(getAmount[1]) == 0)
-                {
-                    statusOutput = $"BORROWED  ({getAmount1[1]})";
-                }
-                else if (int.Parse(getAmount1[1]) == 0)
-                {
-                    statusOutput = $"AVAILABLE ({getAmount[1]})";
-                }
-
-                if (int.Parse(getAmount1[1]) > 0)
-                {
-                    string[] getNote = output[7].Split(' ');
-                    noteData = $"Borrowed by customer's IDs {getNote[0]} at {getNote[1]} {getNote[2]}";
-                }
-
-                if (output[index].Contains(option))
-                {
-                    for (int k = 0; k < storeLength.Length; k++)
-                    {
-                        Console.Write($" {Repeat("═", storeLength[k])} ");
-                    }
-
-                    Console.WriteLine(
-                        $"\n║{"",-1}{j + 1,-4}║║{"",-1}{output[0],-60}║║{"",-1}{output[1],-40}║║{"",-1}{output[2],-20}║║{"",-1}{output[3],-10}║║{"",-1}{statusOutput,-15}║║{"",-1}{output[6],-20}║║{"",-1}{noteData,-60}║");
-
-                    if (int.Parse(getAmount1[1]) > 0)
-                    {
-                        statusOutput = "";
-                        if (int.Parse(getAmount[1]) > 0)
-                        {
-                            statusOutput = $"BORROWED  ({int.Parse(output[3]) - int.Parse(getAmount[1])})";
-                            if (output.Length == 8)
-                            {
-                                Console.WriteLine(
-                                    $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-1}{statusOutput,-15}║║{"",-1}{"",-20}║║{"",-1}{"",-60}║");
-                            }
-                        }
-
-                        for (int k = 8; k <= output.Length - 1; k++)
-                        {
-                            string[] getNote = output[k].Split(' ');
-                            noteData = $"Borrowed by customer's IDs {getNote[0]} at {getNote[1]} {getNote[2]}";
-                            Console.WriteLine(
-                                $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-1}{statusOutput,-15}║║{"",-1}{"",-20}║║{"",-1}{noteData,-60}║");
-                        }
-                    }
-
-                    j++;
-                }
-            }
-
-            for (int k = 0; k < storeLength.Length; k++)
-            {
-                Console.Write($"╚{Repeat("═", storeLength[k])}╝");
-            }
-        }
+        // private void CustomOutput(string option, string[] data, string name, int index)
+        // {
+        //     int j = 0;
+        //     bool check = false;
+        //     int[] storeLength = { 5, 61, 41, 21, 11, 16, 21, 61 };
+        //
+        //     Console.Write($"Input {name} to search: ");
+        //     option = Console.ReadLine();
+        //
+        //     for (int i = 0; i < data.Length; i++)
+        //     {
+        //         string[] output1 = data[i].Split(',');
+        //         if (output1[index].Contains(option))
+        //         {
+        //             check = true;
+        //             break;
+        //         }
+        //     }
+        //
+        //     if (check == false)
+        //     {
+        //         Console.WriteLine($"\t\t\t\t\t     There is no {option} in {name} section in the database\t\t\t\t\t\t");
+        //         return;
+        //     }
+        //
+        //     for (int k = 0; k < storeLength.Length; k++)
+        //     {
+        //         Console.Write($"╔{Repeat("═", storeLength[k])}╗");
+        //     }
+        //
+        //     Console.WriteLine(
+        //         $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Amount",-10}║║{"",-1}{"Status",-15}║║{"",-1}{"Date",-20}║║{"",-1}{"Note",-60}║");
+        //
+        //     for (int i = 0; i < data.Length; i++)
+        //     {
+        //         string[] output = data[i].Split(',');
+        //
+        //         string[] getAmount = output[4].Split(' ');
+        //         string[] getAmount1 = output[5].Split(' ');
+        //
+        //         string statusOutput = $"AVAILABLE ({getAmount[1]})";
+        //         string noteData = "";
+        //
+        //         if (int.Parse(getAmount[1]) == 0)
+        //         {
+        //             statusOutput = $"BORROWED  ({getAmount1[1]})";
+        //         }
+        //         else if (int.Parse(getAmount1[1]) == 0)
+        //         {
+        //             statusOutput = $"AVAILABLE ({getAmount[1]})";
+        //         }
+        //
+        //         if (int.Parse(getAmount1[1]) > 0)
+        //         {
+        //             string[] getNote = output[7].Split(' ');
+        //             noteData = $"Borrowed by customer's IDs {getNote[0]} at {getNote[1]} {getNote[2]}";
+        //         }
+        //
+        //         if (output[index].Contains(option))
+        //         {
+        //             for (int k = 0; k < storeLength.Length; k++)
+        //             {
+        //                 Console.Write($" {Repeat("═", storeLength[k])} ");
+        //             }
+        //
+        //             Console.WriteLine(
+        //                 $"\n║{"",-1}{j + 1,-4}║║{"",-1}{output[0],-60}║║{"",-1}{output[1],-40}║║{"",-1}{output[2],-20}║║{"",-1}{output[3],-10}║║{"",-1}{statusOutput,-15}║║{"",-1}{output[6],-20}║║{"",-1}{noteData,-60}║");
+        //
+        //             if (int.Parse(getAmount1[1]) > 0)
+        //             {
+        //                 statusOutput = "";
+        //                 if (int.Parse(getAmount[1]) > 0)
+        //                 {
+        //                     statusOutput = $"BORROWED  ({int.Parse(output[3]) - int.Parse(getAmount[1])})";
+        //                     if (output.Length == 8)
+        //                     {
+        //                         Console.WriteLine(
+        //                             $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-1}{statusOutput,-15}║║{"",-1}{"",-20}║║{"",-1}{"",-60}║");
+        //                     }
+        //                 }
+        //
+        //                 for (int k = 8; k <= output.Length - 1; k++)
+        //                 {
+        //                     string[] getNote = output[k].Split(' ');
+        //                     noteData = $"Borrowed by customer's IDs {getNote[0]} at {getNote[1]} {getNote[2]}";
+        //                     Console.WriteLine(
+        //                         $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-1}{statusOutput,-15}║║{"",-1}{"",-20}║║{"",-1}{noteData,-60}║");
+        //                 }
+        //             }
+        //
+        //             j++;
+        //         }
+        //     }
+        //
+        //     for (int k = 0; k < storeLength.Length; k++)
+        //     {
+        //         Console.Write($"╚{Repeat("═", storeLength[k])}╝");
+        //     }
+        // }
 
         public void Add()
         {
@@ -127,33 +127,33 @@ namespace Library_Management_System
             // bool status = false;
             string date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
 
-            string queryString =
+            string addDataQuery =
                 "INSERT INTO Books (BookIDs, BookName, BookAuthor, BookCategory, BookAmount, Date, CustomerIDs) VALUES (@BookIDs, @BookName, @BookAuthor, @BookCategory, @BookAmount, @Date, @CustomerIDs)";
 
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
                 connection.Open();
-                SqlCommand command = new SqlCommand(queryString, connection);
+                SqlCommand insertCommand = new SqlCommand(addDataQuery, connection);
 
                 string getTableSize = "SELECT COUNT(BookIDs) from Books";
 
-                SqlCommand command1 = new SqlCommand(getTableSize, connection);
+                SqlCommand getTableSizeCommand = new SqlCommand(getTableSize, connection);
 
-                using (SqlDataReader reader = command1.ExecuteReader())
+                using (SqlDataReader reader = getTableSizeCommand.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        command.Parameters.AddWithValue("@BookIDs", (int)reader[0] + 1);
+                        insertCommand.Parameters.AddWithValue("@BookIDs", (int)reader[0] + 1);
                     }
                 }
 
-                command.Parameters.AddWithValue("@BookName", bookName);
-                command.Parameters.AddWithValue("@BookAuthor", author);
-                command.Parameters.AddWithValue("@BookCategory", subject);
-                command.Parameters.AddWithValue("@BookAmount", amount);
-                command.Parameters.AddWithValue("@Date", date);
-                command.Parameters.AddWithValue("@CustomerIDs", "1");
-                command.ExecuteNonQuery();
+                insertCommand.Parameters.AddWithValue("@BookName", bookName);
+                insertCommand.Parameters.AddWithValue("@BookAuthor", author);
+                insertCommand.Parameters.AddWithValue("@BookCategory", subject);
+                insertCommand.Parameters.AddWithValue("@BookAmount", amount);
+                insertCommand.Parameters.AddWithValue("@Date", date);
+                insertCommand.Parameters.AddWithValue("@CustomerIDs", "1");
+                insertCommand.ExecuteNonQuery();
             }
         }
 
@@ -170,11 +170,11 @@ namespace Library_Management_System
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     int[] storeLength = { 5, 61, 41, 21, 11, 23 };
-                    bool count = false;
+                    bool check = false;
 
                     while (reader.Read())
                     {
-                        if (!count)
+                        if (!check)
                         {
                             for (int k = 0; k < storeLength.Length; k++)
                             {
@@ -184,7 +184,7 @@ namespace Library_Management_System
                             Console.WriteLine(
                                 $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Amount",-10}║║{"",-1}{"Date",-22}║");
 
-                            count = true;
+                            check = true;
                         }
 
                         for (int k = 0; k < storeLength.Length; k++)
@@ -196,12 +196,13 @@ namespace Library_Management_System
                             $"\n║{"",-1}{reader[0],-4}║║{"",-1}{reader[1],-60}║║{"",-1}{reader[2],-40}║║{"",-1}{reader[3],-20}║║{"",-1}{reader[4],-10}║║{"",-1}{reader[5],-22}║");
                     }
 
-                    if (count)
+                    if (check)
                     {
                         for (int k = 0; k < storeLength.Length; k++)
                         {
                             Console.Write($"╚{Repeat("═", storeLength[k])}╝");
                         }
+
                         Console.WriteLine("");
                     }
                     else
@@ -214,277 +215,711 @@ namespace Library_Management_System
 
         public void Search()
         {
-            try
+            int[] storeLength = { 5, 61, 41, 21, 11, 23 };
+
+            // string queryString =
+            //     "Select BookIDs, BookName, BookAuthor, BookCategory, BookAmount, Date, CustomerIDs from Books where BookName like 'C++%'";
+
+            string getTableSize = "Select Count(BookIDs) from Books";
+
+            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
-                string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\MyTest.txt");
-                int[] storeLength = { 5, 61, 41, 21, 11, 16, 21, 61 };
+                SqlCommand getTableSizeCommand = new SqlCommand(getTableSize, connection);
 
-                if (data.Length == 0)
+                connection.Open();
+
+                using (SqlDataReader reader = getTableSizeCommand.ExecuteReader())
                 {
-                    Console.WriteLine("There are no data currently");
-                    return;
-                }
-
-                Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t║ 1. SEARCH BY ID                        ║\t\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t║ 2. SEARCH BY TITLE                     ║\t\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t║ 3. SEARCH BY AUTHOR                    ║\t\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t║ 4. SEARCH BY CATEGORY                  ║\t\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t║ 5. SEARCH BY STATUS                    ║\t\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t║ 6. SEARCH BY DATE                      ║\t\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t║ 7. EXIT                                ║\t\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t\t");
-                Console.Write("Input to use: ");
-                int number1 = int.Parse(Console.ReadLine());
-
-                switch (number1)
-                {
-                    case 1:
-                        Console.Write("Input ID to search: ");
-                        int number2 = int.Parse(Console.ReadLine());
-
-                        if (number2 < 0 || number2 > data.Length)
+                    while (reader.Read())
+                    {
+                        if ((int)reader[0] > 0)
                         {
-                            Console.WriteLine("Invalid ID");
-                            return;
-                        }
-
-                        string[] output = data[number2 - 1].Split(',');
-                        string[] getAmount = output[4].Split(' ');
-                        string[] getAmount1 = output[5].Split(' ');
-
-                        string statusOutput = $"AVAILABLE ({getAmount[1]})";
-                        string noteData = "";
-
-                        if (int.Parse(getAmount[1]) == 0)
-                        {
-                            statusOutput = $"BORROWED  ({getAmount1[1]})";
-                        }
-                        else if (int.Parse(getAmount1[1]) == 0)
-                        {
-                            statusOutput = $"AVAILABLE ({getAmount[1]})";
-                        }
-
-                        if (int.Parse(getAmount1[1]) > 0)
-                        {
-                            string[] getNote = output[7].Split(' ');
-                            noteData = $"Borrowed by customer's IDs {getNote[0]} at {getNote[1]} {getNote[2]}";
-                        }
-
-                        for (int k = 0; k < storeLength.Length; k++)
-                        {
-                            Console.Write($"╔{Repeat("═", storeLength[k])}╗");
-                        }
-
-                        Console.WriteLine(
-                            $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Amount",-10}║║{"",-1}{"Status",-15}║║{"",-1}{"Date",-20}║║{"",-1}{"Note",-60}║");
-
-                        for (int k = 0; k < storeLength.Length; k++)
-                        {
-                            Console.Write($" {Repeat("═", storeLength[k])} ");
-                        }
-
-                        Console.WriteLine(
-                            $"\n║{"",-1}{number2,-4}║║{"",-1}{output[0],-60}║║{"",-1}{output[1],-40}║║{"",-1}{output[2],-20}║║{"",-1}{output[3],-10}║║{"",-1}{statusOutput,-15}║║{"",-1}{output[6],-20}║║{"",-1}{noteData,-60}║");
-
-                        if (int.Parse(getAmount1[1]) > 0)
-                        {
-                            statusOutput = "";
-                            if (int.Parse(getAmount[1]) > 0)
-                            {
-                                statusOutput = $"BORROWED  ({getAmount1[1]})";
-                                if (output.Length == 8)
-                                {
-                                    Console.WriteLine(
-                                        $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-1}{statusOutput,-15}║║{"",-1}{"",-20}║║{"",-1}{"",-60}║");
-                                }
-                            }
-
-                            for (int j = 8; j <= output.Length - 1; j++)
-                            {
-                                string[] getNote = output[j].Split(' ');
-                                noteData = $"Borrowed by customer's IDs {getNote[0]} at {getNote[1]} {getNote[2]}";
-                                Console.WriteLine(
-                                    $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-1}{statusOutput,-15}║║{"",-1}{"",-20}║║{"",-1}{noteData,-60}║");
-                            }
-                        }
-
-                        for (int k = 0; k < storeLength.Length; k++)
-                        {
-                            Console.Write($"╚{Repeat("═", storeLength[k])}╝");
-                        }
-
-                        break;
-                    case 2:
-                        CustomOutput("title", data, "title", 0);
-                        break;
-                    case 3:
-                        CustomOutput("author", data, "author", 1);
-                        break;
-                    case 4:
-                        CustomOutput("category", data, "category", 2);
-                        break;
-                    case 5:
-                        Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
-                        Console.WriteLine("\t\t\t\t\t\t║ 1. AVAILABLE                           ║\t\t\t\t\t");
-                        Console.WriteLine("\t\t\t\t\t\t║ 2. BORROWED                            ║\t\t\t\t\t");
-                        Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
-                        Console.Write("Input to use: ");
-                        int number3 = int.Parse(Console.ReadLine());
-                        bool check = false;
-
-                        if (number3 == 1)
-                        {
-                            if (data.Length == 0)
-                            {
-                                Console.WriteLine("There are no data currently");
-                                return;
-                            }
-
-                            for (int i = 0; i < data.Length; i++)
-                            {
-                                string[] output1 = data[i].Split(',');
-                                string[] getAmount2 = output1[4].Split(' ');
-
-                                if (getAmount2[0] == "False" && int.Parse(getAmount2[1]) > 0)
-                                {
-                                    check = true;
-                                    break;
-                                }
-                            }
-
-                            if (!check)
-                            {
-                                Console.WriteLine("There are no AVAILABLE book currently");
-                                return;
-                            }
-
-                            for (int k = 0; k < storeLength.Length; k++)
-                            {
-                                Console.Write($"╔{Repeat("═", storeLength[k])}╗");
-                            }
-
-                            Console.WriteLine(
-                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Amount",-10}║║{"",-1}{"Status",-15}║║{"",-1}{"Date",-20}║║{"",-1}{"Note",-60}║");
-
-                            for (int i = 0; i < data.Length; i++)
-                            {
-                                string[] output1 = data[i].Split(',');
-                                string[] getAmount2 = output1[4].Split(' ');
-
-                                if (getAmount2[0] == "False" && int.Parse(getAmount2[1]) > 0)
-                                {
-                                    for (int k = 0; k < storeLength.Length; k++)
-                                    {
-                                        Console.Write($" {Repeat("═", storeLength[k])} ");
-                                    }
-
-                                    Console.WriteLine(
-                                        $"\n║{"",-1}{i + 1,-4}║║{"",-1}{output1[0],-60}║║{"",-1}{output1[1],-40}║║{"",-1}{output1[2],-20}║║{"",-1}{output1[3],-10}║║{"",-1}{$"AVAILABLE ({getAmount2[1]})",-15}║║{"",-1}{output1[6],-20}║║{"",-1}{"",-60}║");
-                                }
-                            }
-
-                            for (int k = 0; k < storeLength.Length; k++)
-                            {
-                                Console.Write($"╚{Repeat("═", storeLength[k])}╝");
-                            }
-                        }
-                        else if (number3 == 2)
-                        {
-                            if (data.Length == 0)
-                            {
-                                Console.WriteLine("There are no data currently");
-                                return;
-                            }
-
-                            for (int i = 0; i < data.Length; i++)
-                            {
-                                string[] output1 = data[i].Split(',');
-                                string[] getAmount2 = output1[5].Split(' ');
-
-                                if (getAmount2[0] == "True" && int.Parse(getAmount2[1]) > 0)
-                                {
-                                    check = true;
-                                    break;
-                                }
-                            }
-
-                            if (!check)
-                            {
-                                Console.WriteLine("There are no BORROWED book currently");
-                                return;
-                            }
-
-                            for (int k = 0; k < storeLength.Length; k++)
-                            {
-                                Console.Write($"╔{Repeat("═", storeLength[k])}╗");
-                            }
-
-                            Console.WriteLine(
-                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Amount",-10}║║{"",-1}{"Status",-15}║║{"",-1}{"Date",-20}║║{"",-1}{"Note",-60}║");
-
-                            for (int i = 0; i < data.Length; i++)
-                            {
-                                string[] output1 = data[i].Split(',');
-                                string[] getAmount2 = output1[5].Split(' ');
-                                string noteData1 = "";
-
-                                if (int.Parse(getAmount2[1]) > 0)
-                                {
-                                    string[] getNote = output1[7].Split(' ');
-                                    noteData1 = $"Borrowed by customer's IDs {getNote[0]} at {getNote[1]} {getNote[2]}";
-                                }
-
-                                if (getAmount2[0] == "True" && int.Parse(getAmount2[1]) > 0)
-                                {
-                                    for (int k = 0; k < storeLength.Length; k++)
-                                    {
-                                        Console.Write($" {Repeat("═", storeLength[k])} ");
-                                    }
-
-                                    Console.WriteLine(
-                                        $"\n║{"",-1}{i + 1,-4}║║{"",-1}{output1[0],-60}║║{"",-1}{output1[1],-40}║║{"",-1}{output1[2],-20}║║{"",-1}{output1[3],-10}║║{"",-1}{$"BORROWED  ({getAmount2[1]})",-15}║║{"",-1}{output1[6],-20}║║{"",-1}{noteData1,-60}║");
-                                    if (int.Parse(getAmount2[1]) > 0)
-                                    {
-                                        statusOutput = "";
-
-                                        for (int j = 8; j <= output1.Length - 1; j++)
-                                        {
-                                            string[] getNote = output1[j].Split(' ');
-                                            noteData =
-                                                $"Borrowed by customer's IDs {getNote[0]} at {getNote[1]} {getNote[2]}";
-                                            Console.WriteLine(
-                                                $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-1}{statusOutput,-15}║║{"",-1}{"",-20}║║{"",-1}{noteData,-60}║");
-                                        }
-                                    }
-                                }
-                            }
-
-                            for (int k = 0; k < storeLength.Length; k++)
-                            {
-                                Console.Write($"╚{Repeat("═", storeLength[k])}╝");
-                            }
+                            Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t\t");
+                            Console.WriteLine("\t\t\t\t\t\t║ 1. SEARCH BY ID                        ║\t\t\t\t\t\t");
+                            Console.WriteLine("\t\t\t\t\t\t║ 2. SEARCH BY TITLE                     ║\t\t\t\t\t\t");
+                            Console.WriteLine("\t\t\t\t\t\t║ 3. SEARCH BY AUTHOR                    ║\t\t\t\t\t\t");
+                            Console.WriteLine("\t\t\t\t\t\t║ 4. SEARCH BY CATEGORY                  ║\t\t\t\t\t\t");
+                            Console.WriteLine("\t\t\t\t\t\t║ 5. SEARCH BY STATUS                    ║\t\t\t\t\t\t");
+                            Console.WriteLine("\t\t\t\t\t\t║ 6. SEARCH BY DATE                      ║\t\t\t\t\t\t");
+                            Console.WriteLine("\t\t\t\t\t\t║ 7. EXIT                                ║\t\t\t\t\t\t");
+                            Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t\t");
+                            Console.Write("Input to use: ");
                         }
                         else
                         {
-                            Console.WriteLine("Invalid number");
+                            Console.WriteLine("There are no data currently");
+                            return;
                         }
-
-                        break;
-                    case 6:
-                        CustomOutput("date", data, "date", 5);
-                        break;
-                    case 7:
-                        break;
-                    default:
-                        Console.WriteLine("Invalid number");
-                        break;
+                    }
                 }
             }
-            catch (IOException)
+
+            int number1 = int.Parse(Console.ReadLine());
+
+            switch (number1)
             {
-                Console.WriteLine("There are no data currently");
+                case 1:
+                    Console.Write("Input Book's ID to search: ");
+                    int ids = int.Parse(Console.ReadLine());
+
+                    string getIDsQuery =
+                        $"Select BookIDs, BookName, BookAuthor, BookCategory, BookAmount, Date, CustomerIDs from Books where BookIDs = '{ids}'";
+
+                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+                    {
+                        SqlCommand command = new SqlCommand(getIDsQuery, connection);
+
+                        connection.Open();
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            bool check = false;
+
+                            while (reader.Read())
+                            {
+                                if (!check)
+                                {
+                                    for (int k = 0; k < storeLength.Length; k++)
+                                    {
+                                        Console.Write($"╔{Repeat("═", storeLength[k])}╗");
+                                    }
+
+                                    Console.WriteLine(
+                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Amount",-10}║║{"",-1}{"Date",-22}║");
+
+                                    check = true;
+                                }
+
+                                for (int k = 0; k < storeLength.Length; k++)
+                                {
+                                    Console.Write($" {Repeat("═", storeLength[k])} ");
+                                }
+
+                                Console.WriteLine(
+                                    $"\n║{"",-1}{reader[0],-4}║║{"",-1}{reader[1],-60}║║{"",-1}{reader[2],-40}║║{"",-1}{reader[3],-20}║║{"",-1}{reader[4],-10}║║{"",-1}{reader[5],-22}║");
+                            }
+
+                            if (check)
+                            {
+                                for (int k = 0; k < storeLength.Length; k++)
+                                {
+                                    Console.Write($"╚{Repeat("═", storeLength[k])}╝");
+                                }
+
+                                Console.WriteLine("");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid ID");
+                            }
+                        }
+                    }
+
+                    break;
+                case 2:
+                    Console.Write("Input Book's Title to search: ");
+
+                    string title = Console.ReadLine();
+
+                    string getTitlesQuery =
+                        $"Select BookIDs, BookName, BookAuthor, BookCategory, BookAmount, Date, CustomerIDs from Books where BookName like '{title}%'";
+
+                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+                    {
+                        SqlCommand command = new SqlCommand(getTitlesQuery, connection);
+
+                        connection.Open();
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            bool check = false;
+
+                            while (reader.Read())
+                            {
+                                if (!check)
+                                {
+                                    for (int k = 0; k < storeLength.Length; k++)
+                                    {
+                                        Console.Write($"╔{Repeat("═", storeLength[k])}╗");
+                                    }
+
+                                    Console.WriteLine(
+                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Amount",-10}║║{"",-1}{"Date",-22}║");
+
+                                    check = true;
+                                }
+
+                                for (int k = 0; k < storeLength.Length; k++)
+                                {
+                                    Console.Write($" {Repeat("═", storeLength[k])} ");
+                                }
+
+                                Console.WriteLine(
+                                    $"\n║{"",-1}{reader[0],-4}║║{"",-1}{reader[1],-60}║║{"",-1}{reader[2],-40}║║{"",-1}{reader[3],-20}║║{"",-1}{reader[4],-10}║║{"",-1}{reader[5],-22}║");
+                            }
+
+                            if (check)
+                            {
+                                for (int k = 0; k < storeLength.Length; k++)
+                                {
+                                    Console.Write($"╚{Repeat("═", storeLength[k])}╝");
+                                }
+
+                                Console.WriteLine("");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Book's title {title.ToUpper()} does not exist in the database.");
+                            }
+                        }
+                    }
+
+                    break;
+                case 3:
+                    Console.Write("Input Author's Name to search: ");
+
+                    string name = Console.ReadLine();
+
+                    string getAuthorNamesQuery =
+                        $"Select BookIDs, BookName, BookAuthor, BookCategory, BookAmount, Date, CustomerIDs from Books where BookAuthor like '{name}%'";
+
+                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+                    {
+                        SqlCommand command = new SqlCommand(getAuthorNamesQuery, connection);
+
+                        connection.Open();
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            bool check = false;
+
+                            while (reader.Read())
+                            {
+                                if (!check)
+                                {
+                                    for (int k = 0; k < storeLength.Length; k++)
+                                    {
+                                        Console.Write($"╔{Repeat("═", storeLength[k])}╗");
+                                    }
+
+                                    Console.WriteLine(
+                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Amount",-10}║║{"",-1}{"Date",-22}║");
+
+                                    check = true;
+                                }
+
+                                for (int k = 0; k < storeLength.Length; k++)
+                                {
+                                    Console.Write($" {Repeat("═", storeLength[k])} ");
+                                }
+
+                                Console.WriteLine(
+                                    $"\n║{"",-1}{reader[0],-4}║║{"",-1}{reader[1],-60}║║{"",-1}{reader[2],-40}║║{"",-1}{reader[3],-20}║║{"",-1}{reader[4],-10}║║{"",-1}{reader[5],-22}║");
+                            }
+
+                            if (check)
+                            {
+                                for (int k = 0; k < storeLength.Length; k++)
+                                {
+                                    Console.Write($"╚{Repeat("═", storeLength[k])}╝");
+                                }
+
+                                Console.WriteLine("");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Author's name: {name} does not exist in the database.");
+                            }
+                        }
+                    }
+
+                    break;
+                case 4:
+                    Console.Write("Input Category to search: ");
+
+                    string category = Console.ReadLine();
+
+                    string getCategoryQuery =
+                        $"Select BookIDs, BookName, BookAuthor, BookCategory, BookAmount, Date, CustomerIDs from Books where BookCategory like '{category}%'";
+
+                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+                    {
+                        SqlCommand command = new SqlCommand(getCategoryQuery, connection);
+
+                        connection.Open();
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            bool check = false;
+
+                            while (reader.Read())
+                            {
+                                if (!check)
+                                {
+                                    for (int k = 0; k < storeLength.Length; k++)
+                                    {
+                                        Console.Write($"╔{Repeat("═", storeLength[k])}╗");
+                                    }
+
+                                    Console.WriteLine(
+                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Amount",-10}║║{"",-1}{"Date",-22}║");
+
+                                    check = true;
+                                }
+
+                                for (int k = 0; k < storeLength.Length; k++)
+                                {
+                                    Console.Write($" {Repeat("═", storeLength[k])} ");
+                                }
+
+                                Console.WriteLine(
+                                    $"\n║{"",-1}{reader[0],-4}║║{"",-1}{reader[1],-60}║║{"",-1}{reader[2],-40}║║{"",-1}{reader[3],-20}║║{"",-1}{reader[4],-10}║║{"",-1}{reader[5],-22}║");
+                            }
+
+                            if (check)
+                            {
+                                for (int k = 0; k < storeLength.Length; k++)
+                                {
+                                    Console.Write($"╚{Repeat("═", storeLength[k])}╝");
+                                }
+
+                                Console.WriteLine("");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Category: {category} does not exist in the database.");
+                            }
+                        }
+                    }
+
+                    break;
+                // case 5:
+                //     Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
+                //     Console.WriteLine("\t\t\t\t\t\t║ 1. AVAILABLE                           ║\t\t\t\t\t");
+                //     Console.WriteLine("\t\t\t\t\t\t║ 2. BORROWED                            ║\t\t\t\t\t");
+                //     Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
+                //     Console.Write("Input to use: ");
+                //     int number3 = int.Parse(Console.ReadLine());
+                //     // bool check = false;
+                //
+                //     if (number3 == 1)
+                //     {
+                //         if (data.Length == 0)
+                //         {
+                //             Console.WriteLine("There are no data currently");
+                //             return;
+                //         }
+                //
+                //         for (int i = 0; i < data.Length; i++)
+                //         {
+                //             string[] output1 = data[i].Split(',');
+                //             string[] getAmount2 = output1[4].Split(' ');
+                //
+                //             if (getAmount2[0] == "False" && int.Parse(getAmount2[1]) > 0)
+                //             {
+                //                 check = true;
+                //                 break;
+                //             }
+                //         }
+                //
+                //         if (!check)
+                //         {
+                //             Console.WriteLine("There are no AVAILABLE book currently");
+                //             return;
+                //         }
+                //
+                //         for (int k = 0; k < storeLength.Length; k++)
+                //         {
+                //             Console.Write($"╔{Repeat("═", storeLength[k])}╗");
+                //         }
+                //
+                //         Console.WriteLine(
+                //             $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Amount",-10}║║{"",-1}{"Status",-15}║║{"",-1}{"Date",-20}║║{"",-1}{"Note",-60}║");
+                //
+                //         for (int i = 0; i < data.Length; i++)
+                //         {
+                //             string[] output1 = data[i].Split(',');
+                //             string[] getAmount2 = output1[4].Split(' ');
+                //
+                //             if (getAmount2[0] == "False" && int.Parse(getAmount2[1]) > 0)
+                //             {
+                //                 for (int k = 0; k < storeLength.Length; k++)
+                //                 {
+                //                     Console.Write($" {Repeat("═", storeLength[k])} ");
+                //                 }
+                //
+                //                 Console.WriteLine(
+                //                     $"\n║{"",-1}{i + 1,-4}║║{"",-1}{output1[0],-60}║║{"",-1}{output1[1],-40}║║{"",-1}{output1[2],-20}║║{"",-1}{output1[3],-10}║║{"",-1}{$"AVAILABLE ({getAmount2[1]})",-15}║║{"",-1}{output1[6],-20}║║{"",-1}{"",-60}║");
+                //             }
+                //         }
+                //
+                //         for (int k = 0; k < storeLength.Length; k++)
+                //         {
+                //             Console.Write($"╚{Repeat("═", storeLength[k])}╝");
+                //         }
+                //     }
+                //     else if (number3 == 2)
+                //     {
+                //         if (data.Length == 0)
+                //         {
+                //             Console.WriteLine("There are no data currently");
+                //             return;
+                //         }
+                //
+                //         for (int i = 0; i < data.Length; i++)
+                //         {
+                //             string[] output1 = data[i].Split(',');
+                //             string[] getAmount2 = output1[5].Split(' ');
+                //
+                //             if (getAmount2[0] == "True" && int.Parse(getAmount2[1]) > 0)
+                //             {
+                //                 check = true;
+                //                 break;
+                //             }
+                //         }
+                //
+                //         if (!check)
+                //         {
+                //             Console.WriteLine("There are no BORROWED book currently");
+                //             return;
+                //         }
+                //
+                //         for (int k = 0; k < storeLength.Length; k++)
+                //         {
+                //             Console.Write($"╔{Repeat("═", storeLength[k])}╗");
+                //         }
+                //
+                //         Console.WriteLine(
+                //             $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Amount",-10}║║{"",-1}{"Status",-15}║║{"",-1}{"Date",-20}║║{"",-1}{"Note",-60}║");
+                //
+                //         for (int i = 0; i < data.Length; i++)
+                //         {
+                //             string[] output1 = data[i].Split(',');
+                //             string[] getAmount2 = output1[5].Split(' ');
+                //             string noteData1 = "";
+                //
+                //             if (int.Parse(getAmount2[1]) > 0)
+                //             {
+                //                 string[] getNote = output1[7].Split(' ');
+                //                 noteData1 = $"Borrowed by customer's IDs {getNote[0]} at {getNote[1]} {getNote[2]}";
+                //             }
+                //
+                //             if (getAmount2[0] == "True" && int.Parse(getAmount2[1]) > 0)
+                //             {
+                //                 for (int k = 0; k < storeLength.Length; k++)
+                //                 {
+                //                     Console.Write($" {Repeat("═", storeLength[k])} ");
+                //                 }
+                //
+                //                 Console.WriteLine(
+                //                     $"\n║{"",-1}{i + 1,-4}║║{"",-1}{output1[0],-60}║║{"",-1}{output1[1],-40}║║{"",-1}{output1[2],-20}║║{"",-1}{output1[3],-10}║║{"",-1}{$"BORROWED  ({getAmount2[1]})",-15}║║{"",-1}{output1[6],-20}║║{"",-1}{noteData1,-60}║");
+                //                 if (int.Parse(getAmount2[1]) > 0)
+                //                 {
+                //                     statusOutput = "";
+                //
+                //                     for (int j = 8; j <= output1.Length - 1; j++)
+                //                     {
+                //                         string[] getNote = output1[j].Split(' ');
+                //                         noteData =
+                //                             $"Borrowed by customer's IDs {getNote[0]} at {getNote[1]} {getNote[2]}";
+                //                         Console.WriteLine(
+                //                             $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-1}{statusOutput,-15}║║{"",-1}{"",-20}║║{"",-1}{noteData,-60}║");
+                //                     }
+                //                 }
+                //             }
+                //         }
+                //
+                //         for (int k = 0; k < storeLength.Length; k++)
+                //         {
+                //             Console.Write($"╚{Repeat("═", storeLength[k])}╝");
+                //         }
+                //     }
+                //     else
+                //     {
+                //         Console.WriteLine("Invalid number");
+                //     }
+                //
+                //     break;
+                // case 6:
+                //     CustomOutput("date", data, "date", 5);
+                //     break;
+                // case 7:
+                //     break;
+                default:
+                    Console.WriteLine("Invalid number");
+                    break;
             }
+            // try
+            // {
+            //     string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\MyTest.txt");
+            //     int[] storeLength = { 5, 61, 41, 21, 11, 16, 21, 61 };
+            //
+            //     if (data.Length == 0)
+            //     {
+            //         Console.WriteLine("There are no data currently");
+            //         return;
+            //     }
+            //
+            //     Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t\t");
+            //     Console.WriteLine("\t\t\t\t\t\t║ 1. SEARCH BY ID                        ║\t\t\t\t\t\t");
+            //     Console.WriteLine("\t\t\t\t\t\t║ 2. SEARCH BY TITLE                     ║\t\t\t\t\t\t");
+            //     Console.WriteLine("\t\t\t\t\t\t║ 3. SEARCH BY AUTHOR                    ║\t\t\t\t\t\t");
+            //     Console.WriteLine("\t\t\t\t\t\t║ 4. SEARCH BY CATEGORY                  ║\t\t\t\t\t\t");
+            //     Console.WriteLine("\t\t\t\t\t\t║ 5. SEARCH BY STATUS                    ║\t\t\t\t\t\t");
+            //     Console.WriteLine("\t\t\t\t\t\t║ 6. SEARCH BY DATE                      ║\t\t\t\t\t\t");
+            //     Console.WriteLine("\t\t\t\t\t\t║ 7. EXIT                                ║\t\t\t\t\t\t");
+            //     Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t\t");
+            //     Console.Write("Input to use: ");
+            //     int number1 = int.Parse(Console.ReadLine());
+            //
+            //     switch (number1)
+            //     {
+            //         case 1:
+            //             Console.Write("Input ID to search: ");
+            //             int number2 = int.Parse(Console.ReadLine());
+            //
+            //             if (number2 < 0 || number2 > data.Length)
+            //             {
+            //                 Console.WriteLine("Invalid ID");
+            //                 return;
+            //             }
+            //
+            //             string[] output = data[number2 - 1].Split(',');
+            //             string[] getAmount = output[4].Split(' ');
+            //             string[] getAmount1 = output[5].Split(' ');
+            //
+            //             string statusOutput = $"AVAILABLE ({getAmount[1]})";
+            //             string noteData = "";
+            //
+            //             if (int.Parse(getAmount[1]) == 0)
+            //             {
+            //                 statusOutput = $"BORROWED  ({getAmount1[1]})";
+            //             }
+            //             else if (int.Parse(getAmount1[1]) == 0)
+            //             {
+            //                 statusOutput = $"AVAILABLE ({getAmount[1]})";
+            //             }
+            //
+            //             if (int.Parse(getAmount1[1]) > 0)
+            //             {
+            //                 string[] getNote = output[7].Split(' ');
+            //                 noteData = $"Borrowed by customer's IDs {getNote[0]} at {getNote[1]} {getNote[2]}";
+            //             }
+            //
+            //             for (int k = 0; k < storeLength.Length; k++)
+            //             {
+            //                 Console.Write($"╔{Repeat("═", storeLength[k])}╗");
+            //             }
+            //
+            //             Console.WriteLine(
+            //                 $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Amount",-10}║║{"",-1}{"Status",-15}║║{"",-1}{"Date",-20}║║{"",-1}{"Note",-60}║");
+            //
+            //             for (int k = 0; k < storeLength.Length; k++)
+            //             {
+            //                 Console.Write($" {Repeat("═", storeLength[k])} ");
+            //             }
+            //
+            //             Console.WriteLine(
+            //                 $"\n║{"",-1}{number2,-4}║║{"",-1}{output[0],-60}║║{"",-1}{output[1],-40}║║{"",-1}{output[2],-20}║║{"",-1}{output[3],-10}║║{"",-1}{statusOutput,-15}║║{"",-1}{output[6],-20}║║{"",-1}{noteData,-60}║");
+            //
+            //             if (int.Parse(getAmount1[1]) > 0)
+            //             {
+            //                 statusOutput = "";
+            //                 if (int.Parse(getAmount[1]) > 0)
+            //                 {
+            //                     statusOutput = $"BORROWED  ({getAmount1[1]})";
+            //                     if (output.Length == 8)
+            //                     {
+            //                         Console.WriteLine(
+            //                             $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-1}{statusOutput,-15}║║{"",-1}{"",-20}║║{"",-1}{"",-60}║");
+            //                     }
+            //                 }
+            //
+            //                 for (int j = 8; j <= output.Length - 1; j++)
+            //                 {
+            //                     string[] getNote = output[j].Split(' ');
+            //                     noteData = $"Borrowed by customer's IDs {getNote[0]} at {getNote[1]} {getNote[2]}";
+            //                     Console.WriteLine(
+            //                         $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-1}{statusOutput,-15}║║{"",-1}{"",-20}║║{"",-1}{noteData,-60}║");
+            //                 }
+            //             }
+            //
+            //             for (int k = 0; k < storeLength.Length; k++)
+            //             {
+            //                 Console.Write($"╚{Repeat("═", storeLength[k])}╝");
+            //             }
+            //
+            //             break;
+            //         case 2:
+            //             CustomOutput("title", data, "title", 0);
+            //             break;
+            //         case 3:
+            //             CustomOutput("author", data, "author", 1);
+            //             break;
+            //         case 4:
+            //             CustomOutput("category", data, "category", 2);
+            //             break;
+            //         case 5:
+            //             Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
+            //             Console.WriteLine("\t\t\t\t\t\t║ 1. AVAILABLE                           ║\t\t\t\t\t");
+            //             Console.WriteLine("\t\t\t\t\t\t║ 2. BORROWED                            ║\t\t\t\t\t");
+            //             Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
+            //             Console.Write("Input to use: ");
+            //             int number3 = int.Parse(Console.ReadLine());
+            //             bool check = false;
+            //
+            //             if (number3 == 1)
+            //             {
+            //                 if (data.Length == 0)
+            //                 {
+            //                     Console.WriteLine("There are no data currently");
+            //                     return;
+            //                 }
+            //
+            //                 for (int i = 0; i < data.Length; i++)
+            //                 {
+            //                     string[] output1 = data[i].Split(',');
+            //                     string[] getAmount2 = output1[4].Split(' ');
+            //
+            //                     if (getAmount2[0] == "False" && int.Parse(getAmount2[1]) > 0)
+            //                     {
+            //                         check = true;
+            //                         break;
+            //                     }
+            //                 }
+            //
+            //                 if (!check)
+            //                 {
+            //                     Console.WriteLine("There are no AVAILABLE book currently");
+            //                     return;
+            //                 }
+            //
+            //                 for (int k = 0; k < storeLength.Length; k++)
+            //                 {
+            //                     Console.Write($"╔{Repeat("═", storeLength[k])}╗");
+            //                 }
+            //
+            //                 Console.WriteLine(
+            //                     $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Amount",-10}║║{"",-1}{"Status",-15}║║{"",-1}{"Date",-20}║║{"",-1}{"Note",-60}║");
+            //
+            //                 for (int i = 0; i < data.Length; i++)
+            //                 {
+            //                     string[] output1 = data[i].Split(',');
+            //                     string[] getAmount2 = output1[4].Split(' ');
+            //
+            //                     if (getAmount2[0] == "False" && int.Parse(getAmount2[1]) > 0)
+            //                     {
+            //                         for (int k = 0; k < storeLength.Length; k++)
+            //                         {
+            //                             Console.Write($" {Repeat("═", storeLength[k])} ");
+            //                         }
+            //
+            //                         Console.WriteLine(
+            //                             $"\n║{"",-1}{i + 1,-4}║║{"",-1}{output1[0],-60}║║{"",-1}{output1[1],-40}║║{"",-1}{output1[2],-20}║║{"",-1}{output1[3],-10}║║{"",-1}{$"AVAILABLE ({getAmount2[1]})",-15}║║{"",-1}{output1[6],-20}║║{"",-1}{"",-60}║");
+            //                     }
+            //                 }
+            //
+            //                 for (int k = 0; k < storeLength.Length; k++)
+            //                 {
+            //                     Console.Write($"╚{Repeat("═", storeLength[k])}╝");
+            //                 }
+            //             }
+            //             else if (number3 == 2)
+            //             {
+            //                 if (data.Length == 0)
+            //                 {
+            //                     Console.WriteLine("There are no data currently");
+            //                     return;
+            //                 }
+            //
+            //                 for (int i = 0; i < data.Length; i++)
+            //                 {
+            //                     string[] output1 = data[i].Split(',');
+            //                     string[] getAmount2 = output1[5].Split(' ');
+            //
+            //                     if (getAmount2[0] == "True" && int.Parse(getAmount2[1]) > 0)
+            //                     {
+            //                         check = true;
+            //                         break;
+            //                     }
+            //                 }
+            //
+            //                 if (!check)
+            //                 {
+            //                     Console.WriteLine("There are no BORROWED book currently");
+            //                     return;
+            //                 }
+            //
+            //                 for (int k = 0; k < storeLength.Length; k++)
+            //                 {
+            //                     Console.Write($"╔{Repeat("═", storeLength[k])}╗");
+            //                 }
+            //
+            //                 Console.WriteLine(
+            //                     $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Amount",-10}║║{"",-1}{"Status",-15}║║{"",-1}{"Date",-20}║║{"",-1}{"Note",-60}║");
+            //
+            //                 for (int i = 0; i < data.Length; i++)
+            //                 {
+            //                     string[] output1 = data[i].Split(',');
+            //                     string[] getAmount2 = output1[5].Split(' ');
+            //                     string noteData1 = "";
+            //
+            //                     if (int.Parse(getAmount2[1]) > 0)
+            //                     {
+            //                         string[] getNote = output1[7].Split(' ');
+            //                         noteData1 = $"Borrowed by customer's IDs {getNote[0]} at {getNote[1]} {getNote[2]}";
+            //                     }
+            //
+            //                     if (getAmount2[0] == "True" && int.Parse(getAmount2[1]) > 0)
+            //                     {
+            //                         for (int k = 0; k < storeLength.Length; k++)
+            //                         {
+            //                             Console.Write($" {Repeat("═", storeLength[k])} ");
+            //                         }
+            //
+            //                         Console.WriteLine(
+            //                             $"\n║{"",-1}{i + 1,-4}║║{"",-1}{output1[0],-60}║║{"",-1}{output1[1],-40}║║{"",-1}{output1[2],-20}║║{"",-1}{output1[3],-10}║║{"",-1}{$"BORROWED  ({getAmount2[1]})",-15}║║{"",-1}{output1[6],-20}║║{"",-1}{noteData1,-60}║");
+            //                         if (int.Parse(getAmount2[1]) > 0)
+            //                         {
+            //                             statusOutput = "";
+            //
+            //                             for (int j = 8; j <= output1.Length - 1; j++)
+            //                             {
+            //                                 string[] getNote = output1[j].Split(' ');
+            //                                 noteData =
+            //                                     $"Borrowed by customer's IDs {getNote[0]} at {getNote[1]} {getNote[2]}";
+            //                                 Console.WriteLine(
+            //                                     $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-1}{statusOutput,-15}║║{"",-1}{"",-20}║║{"",-1}{noteData,-60}║");
+            //                             }
+            //                         }
+            //                     }
+            //                 }
+            //
+            //                 for (int k = 0; k < storeLength.Length; k++)
+            //                 {
+            //                     Console.Write($"╚{Repeat("═", storeLength[k])}╝");
+            //                 }
+            //             }
+            //             else
+            //             {
+            //                 Console.WriteLine("Invalid number");
+            //             }
+            //
+            //             break;
+            //         case 6:
+            //             CustomOutput("date", data, "date", 5);
+            //             break;
+            //         case 7:
+            //             break;
+            //         default:
+            //             Console.WriteLine("Invalid number");
+            //             break;
+            //     }
+            // }
+            // catch (IOException)
+            // {
+            //     Console.WriteLine("There are no data currently");
+            // }
         }
 
         public void Delete()

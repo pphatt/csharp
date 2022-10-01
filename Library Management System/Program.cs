@@ -16,7 +16,7 @@ namespace Library_Management_System
         {
             
             // string queryString = "INSERT INTO Books (BookIDs, BookName, BookAuthor, BookCategory, BookAmount, Date, CustomerIDs) VALUES (@BookIDs, @BookName, @BookAuthor, @BookCategory, @BookAmount, @Date, @CustomerIDs)";
-            string queryString = "SELECT COUNT(BookIDs) FROM Books";
+            string queryString = "Select BookIDs, BookName, BookAuthor, BookCategory, BookAmount, Date, CustomerIDs from Books where BookName like '1'";
             
             /*
              * Update Row, Insert, Add data to Table
@@ -42,7 +42,7 @@ namespace Library_Management_System
              * Read Row or Data from Table
              */
             
-            // using (SqlConnection connection = new SqlConnection(ConnectionString))
+            // using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             // {
             //     SqlCommand command = new SqlCommand(queryString, connection);
             //     
@@ -52,7 +52,7 @@ namespace Library_Management_System
             //     {
             //         while (reader.Read())
             //         {
-            //             Console.WriteLine((int)reader[0] + 1);
+            //             Console.WriteLine(String.Format($"{reader[0]} {reader[1]} {reader[2]} {reader[3]} {reader[4]} {reader[5]}"));
             //         }
             //     }
             // }

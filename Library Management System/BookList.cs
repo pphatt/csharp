@@ -127,7 +127,7 @@ namespace Library_Management_System
             string date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
 
             string addDataQuery =
-                "INSERT INTO Books (BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Date, CustomerIDs) VALUES (@BookIDs, @BookName, @BookAuthor, @BookCategory, @BookAmountAvailable, @BookAmountBorrowed, @Date, @CustomerIDs)";
+                "INSERT INTO Books (BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Date) VALUES (@BookIDs, @BookName, @BookAuthor, @BookCategory, @BookAmountAvailable, @BookAmountBorrowed, @Date)";
 
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
@@ -152,14 +152,16 @@ namespace Library_Management_System
                 insertCommand.Parameters.AddWithValue("@BookAmountAvailable", amount);
                 insertCommand.Parameters.AddWithValue("@BookAmountBorrowed", 0);
                 insertCommand.Parameters.AddWithValue("@Date", date);
-                insertCommand.Parameters.AddWithValue("@CustomerIDs", "");
                 insertCommand.ExecuteNonQuery();
             }
         }
 
         public void Show()
         {
-            string queryString = "SELECT * FROM Books";
+            string queryString =
+                "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, BookAmount.CustomerIDs, BookAmount.Date " +
+                "from Books, BookAmount where Books.BookIDs = BookAmount.BookIDs " +
+                "order by Books.BookIDs, CustomerIDs, BookAmount.Date";
 
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
@@ -170,6 +172,7 @@ namespace Library_Management_System
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     bool check = false;
+                    string t = "";
 
                     while (reader.Read())
                     {
@@ -181,10 +184,21 @@ namespace Library_Management_System
                             }
 
                             Console.WriteLine(
-                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-5}{"Amount",-11}║║{"",-1}{"Date",-22}║");
+                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available", -10}║║{"",-1}{"Borrowed", -10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
 
                             check = true;
                         }
+
+                        if ($"{reader[0]}" == t)
+                        {
+                            t = $"{reader[0]}";
+                            Console.WriteLine(
+                                $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║║{"",-1}{$"Customer's IDs: {reader[7]}",-22}║");
+                            
+                            continue;
+                        }
+                        
+                        t = $"{reader[0]}";
 
                         for (int k = 0; k < Program.StoreLength.Length; k++)
                         {
@@ -192,7 +206,7 @@ namespace Library_Management_System
                         }
 
                         Console.WriteLine(
-                            $"\n║{"",-1}{reader[0],-4}║║{"",-1}{reader[1],-60}║║{"",-1}{reader[2],-40}║║{"",-1}{reader[3],-20}║║{"",-3}{reader[4],-5}║{"",-3}{reader[5],-4}║║{"",-1}{reader[6],-22}║");
+                            $"\n║{"",-1}{reader[0],-4}║║{"",-1}{reader[1],-60}║║{"",-1}{reader[2],-40}║║{"",-1}{reader[3],-20}║║{"",-1}{reader[4],-10}║║{"",-1}{reader[5],-10}║║{"",-1}{reader[6],-22}║║{"",-1}{$"Customer's IDs: {reader[7]}",-22}║");
                     }
 
                     if (check)

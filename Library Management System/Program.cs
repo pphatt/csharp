@@ -11,7 +11,7 @@ namespace Library_Management_System
     internal class Program
     {
         public static readonly string ConnectionString = @"data source=DESKTOP-0FQDJF2\SQLEXPRESS;initial catalog=Management_Library;trusted_connection=true";
-        public static readonly int[] StoreLength = { 5, 61, 41, 21, 16, 23 };
+        public static readonly int[] StoreLength = { 5, 61, 41, 21, 11, 11, 23, 23 };
 
         public static void Main(string[] args)
         {

@@ -128,7 +128,6 @@ namespace Library_Management_System
 
             string addDataQuery =
                 "INSERT INTO Books (BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Date) VALUES (@BookIDs, @BookName, @BookAuthor, @BookCategory, @BookAmountAvailable, @BookAmountBorrowed, @Date)";
-                // "INSERT INTO BookAmount (BookIDs, CustomerIDs, Date) values (@BookAIDs, @CustomerAIDs, @DateA)";
 
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
@@ -138,14 +137,11 @@ namespace Library_Management_System
                 string getTableSize = "SELECT COUNT(BookIDs) from Books";
 
                 SqlCommand getTableSizeCommand = new SqlCommand(getTableSize, connection);
-                
-                // int ids = 0;
 
                 using (SqlDataReader reader = getTableSizeCommand.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        // ids = (int)reader[0] + 1;
                         insertCommand.Parameters.AddWithValue("@BookIDs", (int)reader[0] + 1);
                     }
                 }
@@ -156,9 +152,6 @@ namespace Library_Management_System
                 insertCommand.Parameters.AddWithValue("@BookAmountAvailable", amount);
                 insertCommand.Parameters.AddWithValue("@BookAmountBorrowed", 0);
                 insertCommand.Parameters.AddWithValue("@Date", date);
-                // insertCommand.Parameters.AddWithValue("@BookAIDs", ids);
-                // insertCommand.Parameters.AddWithValue("@CustomerAIDs", 0);
-                // insertCommand.Parameters.AddWithValue("@DateA", null);
                 insertCommand.ExecuteNonQuery();
             }
         }
@@ -166,9 +159,9 @@ namespace Library_Management_System
         public void Show()
         {
             string queryString =
-                "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, BookAmount.CustomerIDs, BookAmount.Date " +
-                "from Books, BookAmount " +
-                "order by Books.BookIDs, CustomerIDs, BookAmount.Date";
+                "select * " +
+                "from Books " +
+                "order by BookIDs";
 
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
@@ -176,12 +169,11 @@ namespace Library_Management_System
 
                 connection.Open();
 
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (SqlDataReader readerBookInfo = command.ExecuteReader())
                 {
                     bool check = false;
-                    string t = "";
 
-                    while (reader.Read())
+                    while (readerBookInfo.Read())
                     {
                         if (!check)
                         {
@@ -196,24 +188,42 @@ namespace Library_Management_System
                             check = true;
                         }
 
-                        if ($"{reader[0]}" == t)
-                        {
-                            t = $"{reader[0]}";
-                            Console.WriteLine(
-                                $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║║{"",-1}{$"Customer's IDs: {reader[7]}",-22}║");
-
-                            continue;
-                        }
-
-                        t = $"{reader[0]}";
-
                         for (int k = 0; k < Program.StoreLength.Length; k++)
                         {
                             Console.Write($" {Repeat("═", Program.StoreLength[k])} ");
                         }
 
-                        Console.WriteLine(
-                            $"\n║{"",-1}{reader[0],-4}║║{"",-1}{reader[1],-60}║║{"",-1}{reader[2],-40}║║{"",-1}{reader[3],-20}║║{"",-1}{reader[4],-10}║║{"",-1}{reader[5],-10}║║{"",-1}{reader[6],-22}║║{"",-1}{$"Customer's IDs: {reader[7]}",-22}║");
+                        Console.Write(
+                            $"\n║{"",-1}{readerBookInfo[0],-4}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-40}║║{"",-1}{readerBookInfo[3],-20}║║{"",-1}{readerBookInfo[4],-10}║║{"",-1}{readerBookInfo[5],-10}║║{"",-1}{readerBookInfo[6],-22}║");
+
+                        string t = "select CustomerIDs, Date " +
+                                   "from BookAmount " +
+                                   $"where BookIDs = {readerBookInfo[0]}";
+
+                        SqlCommand query = new SqlCommand(t, connection);
+
+                        using (SqlDataReader readerBookStatus = query.ExecuteReader())
+                        {
+                            bool c2 = false;
+
+                            if (readerBookStatus.Read())
+                            {
+                                Console.Write($"║{"",-1}{$"Customer's IDs: {readerBookStatus[0]}",-22}║\n");
+                                c2 = true;
+                            }
+
+                            while (readerBookStatus.Read())
+                            {
+                                Console.WriteLine(
+                                    $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║║{"",-1}{$"Customer's IDs: {readerBookStatus[0]}",-22}║");
+                                c2 = true;
+                            }
+
+                            if (!c2)
+                            {
+                                Console.WriteLine($"║{"",-1}{"Empty",-22}║");
+                            }
+                        }
                     }
 
                     if (check)
@@ -237,7 +247,7 @@ namespace Library_Management_System
         {
             // string queryString =
             //     "Select BookIDs, BookName, BookAuthor, BookCategory, BookAmount, Date, CustomerIDs from Books where BookName like 'C++%'";
-            
+
             /*
              * getTableSize is that we check if there is a book or not. If there is which means that the Count(size of table) > 1, we can query the db.
              * Otherwise we can't query the db because there is no books in the database currently.
@@ -284,7 +294,7 @@ namespace Library_Management_System
                 case 1:
                     Console.Write("Input Book's ID to search: ");
                     int ids = int.Parse(Console.ReadLine());
-                    
+
                     /*
                      * This is good. Because in this search, I use 2 query command at the same time and you have to enable it to use.
                      * But it is not good for the performance. MultipleActiveResultSets = true in the connection string.
@@ -302,18 +312,18 @@ namespace Library_Management_System
                         "from Books " +
                         $"where BookIDs = {ids} " +
                         "order by BookIDs";
-                    
+
                     using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                     {
                         SqlCommand command = new SqlCommand(getIDsQuery, connection);
 
                         connection.Open();
 
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (SqlDataReader readerBookInfo = command.ExecuteReader())
                         {
                             bool c1 = false;
-                            
-                            while (reader.Read())
+
+                            while (readerBookInfo.Read())
                             {
                                 if (!c1)
                                 {
@@ -334,27 +344,28 @@ namespace Library_Management_System
                                 }
 
                                 Console.Write(
-                                    $"\n║{"",-1}{reader[0],-4}║║{"",-1}{reader[1],-60}║║{"",-1}{reader[2],-40}║║{"",-1}{reader[3],-20}║║{"",-1}{reader[4],-10}║║{"",-1}{reader[5],-10}║║{"",-1}{reader[6],-22}║");
+                                    $"\n║{"",-1}{readerBookInfo[0],-4}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-40}║║{"",-1}{readerBookInfo[3],-20}║║{"",-1}{readerBookInfo[4],-10}║║{"",-1}{readerBookInfo[5],-10}║║{"",-1}{readerBookInfo[6],-22}║");
 
                                 string t = "select CustomerIDs, Date " +
                                            "from BookAmount " +
-                                           $"where BookIDs = {reader[0]}";
-                                
+                                           $"where BookIDs = {readerBookInfo[0]}";
+
                                 SqlCommand query = new SqlCommand(t, connection);
-                                
-                                using (SqlDataReader reader1 = query.ExecuteReader())
+
+                                using (SqlDataReader readerBookStatus = query.ExecuteReader())
                                 {
                                     bool c2 = false;
-                                
-                                    if (reader1.Read())
+
+                                    if (readerBookStatus.Read())
                                     {
-                                        Console.Write($"║{"",-1}{$"Customer's IDs: {reader1[0]}",-22}║\n");
+                                        Console.Write($"║{"",-1}{$"Customer's IDs: {readerBookStatus[0]}",-22}║\n");
                                         c2 = true;
                                     }
-                                    
-                                    while (reader1.Read())
+
+                                    while (readerBookStatus.Read())
                                     {
-                                        Console.WriteLine($"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║║{"",-1}{$"Customer's IDs: {reader1[0]}",-22}║");
+                                        Console.WriteLine(
+                                            $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║║{"",-1}{$"Customer's IDs: {readerBookStatus[0]}",-22}║");
                                         c2 = true;
                                     }
 
@@ -388,7 +399,9 @@ namespace Library_Management_System
                     string title = Console.ReadLine();
 
                     string getTitlesQuery =
-                        $"Select BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Date, CustomerIDs from Books where BookName like '{title}%'";
+                        "Select * " +
+                        "from Books " +
+                        $"where BookName like '%{title}%'";
 
                     using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                     {
@@ -396,13 +409,13 @@ namespace Library_Management_System
 
                         connection.Open();
 
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (SqlDataReader readerBookInfo = command.ExecuteReader())
                         {
-                            bool check = false;
+                            bool c1 = false;
 
-                            while (reader.Read())
+                            while (readerBookInfo.Read())
                             {
-                                if (!check)
+                                if (!c1)
                                 {
                                     for (int k = 0; k < Program.StoreLength.Length; k++)
                                     {
@@ -410,9 +423,9 @@ namespace Library_Management_System
                                     }
 
                                     Console.WriteLine(
-                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-5}{"Amount",-11}║║{"",-1}{"Date",-22}║");
+                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
 
-                                    check = true;
+                                    c1 = true;
                                 }
 
                                 for (int k = 0; k < Program.StoreLength.Length; k++)
@@ -420,11 +433,40 @@ namespace Library_Management_System
                                     Console.Write($" {Repeat("═", Program.StoreLength[k])} ");
                                 }
 
-                                Console.WriteLine(
-                                    $"\n║{"",-1}{reader[0],-4}║║{"",-1}{reader[1],-60}║║{"",-1}{reader[2],-40}║║{"",-1}{reader[3],-20}║║{"",-3}{reader[4],-5}║{"",-3}{reader[5],-4}║║{"",-1}{reader[6],-22}║");
+                                Console.Write(
+                                    $"\n║{"",-1}{readerBookInfo[0],-4}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-40}║║{"",-1}{readerBookInfo[3],-20}║║{"",-1}{readerBookInfo[4],-10}║║{"",-1}{readerBookInfo[5],-10}║║{"",-1}{readerBookInfo[6],-22}║");
+
+                                string t = "select CustomerIDs, Date " +
+                                           "from BookAmount " +
+                                           $"where BookIDs = {readerBookInfo[0]}";
+
+                                SqlCommand query = new SqlCommand(t, connection);
+
+                                using (SqlDataReader readerBookStatus = query.ExecuteReader())
+                                {
+                                    bool c2 = false;
+
+                                    if (readerBookStatus.Read())
+                                    {
+                                        Console.Write($"║{"",-1}{$"Customer's IDs: {readerBookStatus[0]}",-22}║\n");
+                                        c2 = true;
+                                    }
+
+                                    while (readerBookStatus.Read())
+                                    {
+                                        Console.WriteLine(
+                                            $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║║{"",-1}{$"Customer's IDs: {readerBookStatus[0]}",-22}║");
+                                        c2 = true;
+                                    }
+
+                                    if (!c2)
+                                    {
+                                        Console.WriteLine($"║{"",-1}{"Empty",-22}║");
+                                    }
+                                }
                             }
 
-                            if (check)
+                            if (c1)
                             {
                                 for (int k = 0; k < Program.StoreLength.Length; k++)
                                 {
@@ -435,7 +477,7 @@ namespace Library_Management_System
                             }
                             else
                             {
-                                Console.WriteLine($"Book's title {title.ToUpper()} does not exist in the database.");
+                                Console.WriteLine($"There is no Book's Title ({title}) in the database");
                             }
                         }
                     }
@@ -447,7 +489,9 @@ namespace Library_Management_System
                     string name = Console.ReadLine();
 
                     string getAuthorNamesQuery =
-                        $"Select BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Date, CustomerIDs from Books where BookAuthor like '{name}%'";
+                        "Select * " +
+                        "from Books " +
+                        $"where BookAuthor like '%{name}%'";
 
                     using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                     {
@@ -455,13 +499,13 @@ namespace Library_Management_System
 
                         connection.Open();
 
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (SqlDataReader readerBookInfo = command.ExecuteReader())
                         {
-                            bool check = false;
+                            bool c1 = false;
 
-                            while (reader.Read())
+                            while (readerBookInfo.Read())
                             {
-                                if (!check)
+                                if (!c1)
                                 {
                                     for (int k = 0; k < Program.StoreLength.Length; k++)
                                     {
@@ -469,9 +513,9 @@ namespace Library_Management_System
                                     }
 
                                     Console.WriteLine(
-                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-5}{"Amount",-11}║║{"",-1}{"Date",-22}║");
+                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
 
-                                    check = true;
+                                    c1 = true;
                                 }
 
                                 for (int k = 0; k < Program.StoreLength.Length; k++)
@@ -479,11 +523,40 @@ namespace Library_Management_System
                                     Console.Write($" {Repeat("═", Program.StoreLength[k])} ");
                                 }
 
-                                Console.WriteLine(
-                                    $"\n║{"",-1}{reader[0],-4}║║{"",-1}{reader[1],-60}║║{"",-1}{reader[2],-40}║║{"",-1}{reader[3],-20}║║{"",-3}{reader[4],-5}║{"",-3}{reader[5],-4}║║{"",-1}{reader[6],-22}║");
+                                Console.Write(
+                                    $"\n║{"",-1}{readerBookInfo[0],-4}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-40}║║{"",-1}{readerBookInfo[3],-20}║║{"",-1}{readerBookInfo[4],-10}║║{"",-1}{readerBookInfo[5],-10}║║{"",-1}{readerBookInfo[6],-22}║");
+
+                                string t = "select CustomerIDs, Date " +
+                                           "from BookAmount " +
+                                           $"where BookIDs = {readerBookInfo[0]}";
+
+                                SqlCommand query = new SqlCommand(t, connection);
+
+                                using (SqlDataReader readerBookStatus = query.ExecuteReader())
+                                {
+                                    bool c2 = false;
+
+                                    if (readerBookStatus.Read())
+                                    {
+                                        Console.Write($"║{"",-1}{$"Customer's IDs: {readerBookStatus[0]}",-22}║\n");
+                                        c2 = true;
+                                    }
+
+                                    while (readerBookStatus.Read())
+                                    {
+                                        Console.WriteLine(
+                                            $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║║{"",-1}{$"Customer's IDs: {readerBookStatus[0]}",-22}║");
+                                        c2 = true;
+                                    }
+
+                                    if (!c2)
+                                    {
+                                        Console.WriteLine($"║{"",-1}{"Empty",-22}║");
+                                    }
+                                }
                             }
 
-                            if (check)
+                            if (c1)
                             {
                                 for (int k = 0; k < Program.StoreLength.Length; k++)
                                 {
@@ -494,7 +567,7 @@ namespace Library_Management_System
                             }
                             else
                             {
-                                Console.WriteLine($"Author's name: {name} does not exist in the database.");
+                                Console.WriteLine($"There is no Book's Author ({name}) in the database");
                             }
                         }
                     }
@@ -506,7 +579,9 @@ namespace Library_Management_System
                     string category = Console.ReadLine();
 
                     string getCategoryQuery =
-                        $"Select BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Date, CustomerIDs from Books where BookCategory like '{category}%'";
+                        "Select * " +
+                        "from Books " +
+                        $"where BookCategory like '%{category}%'";
 
                     using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                     {
@@ -514,13 +589,13 @@ namespace Library_Management_System
 
                         connection.Open();
 
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (SqlDataReader readerBookInfo = command.ExecuteReader())
                         {
-                            bool check = false;
+                            bool c1 = false;
 
-                            while (reader.Read())
+                            while (readerBookInfo.Read())
                             {
-                                if (!check)
+                                if (!c1)
                                 {
                                     for (int k = 0; k < Program.StoreLength.Length; k++)
                                     {
@@ -528,9 +603,9 @@ namespace Library_Management_System
                                     }
 
                                     Console.WriteLine(
-                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-5}{"Amount",-11}║║{"",-1}{"Date",-22}║");
+                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
 
-                                    check = true;
+                                    c1 = true;
                                 }
 
                                 for (int k = 0; k < Program.StoreLength.Length; k++)
@@ -538,11 +613,40 @@ namespace Library_Management_System
                                     Console.Write($" {Repeat("═", Program.StoreLength[k])} ");
                                 }
 
-                                Console.WriteLine(
-                                    $"\n║{"",-1}{reader[0],-4}║║{"",-1}{reader[1],-60}║║{"",-1}{reader[2],-40}║║{"",-1}{reader[3],-20}║║{"",-3}{reader[4],-5}║{"",-3}{reader[5],-4}║║{"",-1}{reader[6],-22}║");
+                                Console.Write(
+                                    $"\n║{"",-1}{readerBookInfo[0],-4}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-40}║║{"",-1}{readerBookInfo[3],-20}║║{"",-1}{readerBookInfo[4],-10}║║{"",-1}{readerBookInfo[5],-10}║║{"",-1}{readerBookInfo[6],-22}║");
+
+                                string t = "select CustomerIDs, Date " +
+                                           "from BookAmount " +
+                                           $"where BookIDs = {readerBookInfo[0]}";
+
+                                SqlCommand query = new SqlCommand(t, connection);
+
+                                using (SqlDataReader readerBookStatus = query.ExecuteReader())
+                                {
+                                    bool c2 = false;
+
+                                    if (readerBookStatus.Read())
+                                    {
+                                        Console.Write($"║{"",-1}{$"Customer's IDs: {readerBookStatus[0]}",-22}║\n");
+                                        c2 = true;
+                                    }
+
+                                    while (readerBookStatus.Read())
+                                    {
+                                        Console.WriteLine(
+                                            $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║║{"",-1}{$"Customer's IDs: {readerBookStatus[0]}",-22}║");
+                                        c2 = true;
+                                    }
+
+                                    if (!c2)
+                                    {
+                                        Console.WriteLine($"║{"",-1}{"Empty",-22}║");
+                                    }
+                                }
                             }
 
-                            if (check)
+                            if (c1)
                             {
                                 for (int k = 0; k < Program.StoreLength.Length; k++)
                                 {
@@ -553,7 +657,7 @@ namespace Library_Management_System
                             }
                             else
                             {
-                                Console.WriteLine($"Category: {category} does not exist in the database.");
+                                Console.WriteLine("Invalid Category");
                             }
                         }
                     }

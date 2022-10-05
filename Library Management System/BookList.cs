@@ -166,9 +166,9 @@ namespace Library_Management_System
                     {
                         if (!check)
                         {
-                            for (int k = 0; k < Program.StoreLength.Length; k++)
+                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                             {
-                                Console.Write($"╔{Repeat("═", Program.StoreLength[k])}╗");
+                                Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
                             }
 
                             Console.WriteLine(
@@ -189,9 +189,9 @@ namespace Library_Management_System
 
                         prevIDs = $"{readerBookInfo[0]}";
 
-                        for (int k = 0; k < Program.StoreLength.Length; k++)
+                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                         {
-                            Console.Write($" {Repeat("═", Program.StoreLength[k])} ");
+                            Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
                         }
 
                         string status = $"{readerBookInfo[7]}" != ""
@@ -204,9 +204,9 @@ namespace Library_Management_System
 
                     if (check)
                     {
-                        for (int k = 0; k < Program.StoreLength.Length; k++)
+                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                         {
-                            Console.Write($"╚{Repeat("═", Program.StoreLength[k])}╝");
+                            Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
                         }
 
                         Console.WriteLine("");
@@ -297,9 +297,9 @@ namespace Library_Management_System
                             {
                                 if (!check)
                                 {
-                                    for (int k = 0; k < Program.StoreLength.Length; k++)
+                                    for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                     {
-                                        Console.Write($"╔{Repeat("═", Program.StoreLength[k])}╗");
+                                        Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
                                     }
 
                                     Console.WriteLine(
@@ -320,9 +320,9 @@ namespace Library_Management_System
 
                                 prevIDs = $"{readerBookInfo[0]}";
 
-                                for (int k = 0; k < Program.StoreLength.Length; k++)
+                                for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                 {
-                                    Console.Write($" {Repeat("═", Program.StoreLength[k])} ");
+                                    Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
                                 }
 
                                 string status = $"{readerBookInfo[7]}" != ""
@@ -335,9 +335,9 @@ namespace Library_Management_System
 
                             if (check)
                             {
-                                for (int k = 0; k < Program.StoreLength.Length; k++)
+                                for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                 {
-                                    Console.Write($"╚{Repeat("═", Program.StoreLength[k])}╝");
+                                    Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
                                 }
 
                                 Console.WriteLine("");
@@ -375,9 +375,9 @@ namespace Library_Management_System
                             {
                                 if (!check)
                                 {
-                                    for (int k = 0; k < Program.StoreLength.Length; k++)
+                                    for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                     {
-                                        Console.Write($"╔{Repeat("═", Program.StoreLength[k])}╗");
+                                        Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
                                     }
 
                                     Console.WriteLine(
@@ -398,9 +398,9 @@ namespace Library_Management_System
 
                                 prevIDs = $"{readerBookInfo[0]}";
 
-                                for (int k = 0; k < Program.StoreLength.Length; k++)
+                                for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                 {
-                                    Console.Write($" {Repeat("═", Program.StoreLength[k])} ");
+                                    Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
                                 }
 
                                 string status = $"{readerBookInfo[7]}" != ""
@@ -413,9 +413,9 @@ namespace Library_Management_System
 
                             if (check)
                             {
-                                for (int k = 0; k < Program.StoreLength.Length; k++)
+                                for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                 {
-                                    Console.Write($"╚{Repeat("═", Program.StoreLength[k])}╝");
+                                    Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
                                 }
 
                                 Console.WriteLine("");
@@ -453,9 +453,9 @@ namespace Library_Management_System
                             {
                                 if (!check)
                                 {
-                                    for (int k = 0; k < Program.StoreLength.Length; k++)
+                                    for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                     {
-                                        Console.Write($"╔{Repeat("═", Program.StoreLength[k])}╗");
+                                        Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
                                     }
 
                                     Console.WriteLine(
@@ -476,9 +476,9 @@ namespace Library_Management_System
 
                                 prevIDs = $"{readerBookInfo[0]}";
 
-                                for (int k = 0; k < Program.StoreLength.Length; k++)
+                                for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                 {
-                                    Console.Write($" {Repeat("═", Program.StoreLength[k])} ");
+                                    Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
                                 }
 
                                 string status = $"{readerBookInfo[7]}" != ""
@@ -491,9 +491,9 @@ namespace Library_Management_System
 
                             if (check)
                             {
-                                for (int k = 0; k < Program.StoreLength.Length; k++)
+                                for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                 {
-                                    Console.Write($"╚{Repeat("═", Program.StoreLength[k])}╝");
+                                    Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
                                 }
 
                                 Console.WriteLine("");
@@ -531,9 +531,9 @@ namespace Library_Management_System
                             {
                                 if (!check)
                                 {
-                                    for (int k = 0; k < Program.StoreLength.Length; k++)
+                                    for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                     {
-                                        Console.Write($"╔{Repeat("═", Program.StoreLength[k])}╗");
+                                        Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
                                     }
 
                                     Console.WriteLine(
@@ -554,9 +554,9 @@ namespace Library_Management_System
 
                                 prevIDs = $"{readerBookInfo[0]}";
 
-                                for (int k = 0; k < Program.StoreLength.Length; k++)
+                                for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                 {
-                                    Console.Write($" {Repeat("═", Program.StoreLength[k])} ");
+                                    Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
                                 }
 
                                 string status = $"{readerBookInfo[7]}" != ""
@@ -569,9 +569,9 @@ namespace Library_Management_System
 
                             if (check)
                             {
-                                for (int k = 0; k < Program.StoreLength.Length; k++)
+                                for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                 {
-                                    Console.Write($"╚{Repeat("═", Program.StoreLength[k])}╝");
+                                    Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
                                 }
 
                                 Console.WriteLine("");
@@ -790,9 +790,9 @@ namespace Library_Management_System
                                     {
                                         if (!c1)
                                         {
-                                            for (int k = 0; k < Program.StoreLength.Length; k++)
+                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                             {
-                                                Console.Write($"╔{Repeat("═", Program.StoreLength[k])}╗");
+                                                Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
                                             }
 
                                             Console.WriteLine(
@@ -813,9 +813,9 @@ namespace Library_Management_System
 
                                         prevIDs = $"{readerBookInfo[0]}";
 
-                                        for (int k = 0; k < Program.StoreLength.Length; k++)
+                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                         {
-                                            Console.Write($" {Repeat("═", Program.StoreLength[k])} ");
+                                            Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
                                         }
 
                                         string status = $"{readerBookInfo[7]}" != ""
@@ -828,9 +828,9 @@ namespace Library_Management_System
 
                                     if (c1)
                                     {
-                                        for (int k = 0; k < Program.StoreLength.Length; k++)
+                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                         {
-                                            Console.Write($"╚{Repeat("═", Program.StoreLength[k])}╝");
+                                            Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
                                         }
 
                                         Console.WriteLine("");
@@ -870,9 +870,9 @@ namespace Library_Management_System
                                     {
                                         if (!c1)
                                         {
-                                            for (int k = 0; k < Program.StoreLength.Length; k++)
+                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                             {
-                                                Console.Write($"╔{Repeat("═", Program.StoreLength[k])}╗");
+                                                Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
                                             }
 
                                             Console.WriteLine(
@@ -893,9 +893,9 @@ namespace Library_Management_System
 
                                         prevIDs = $"{readerBookInfo[0]}";
 
-                                        for (int k = 0; k < Program.StoreLength.Length; k++)
+                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                         {
-                                            Console.Write($" {Repeat("═", Program.StoreLength[k])} ");
+                                            Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
                                         }
 
                                         string status = $"{readerBookInfo[7]}" != ""
@@ -908,9 +908,9 @@ namespace Library_Management_System
 
                                     if (c1)
                                     {
-                                        for (int k = 0; k < Program.StoreLength.Length; k++)
+                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                         {
-                                            Console.Write($"╚{Repeat("═", Program.StoreLength[k])}╝");
+                                            Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
                                         }
 
                                         Console.WriteLine("");
@@ -950,9 +950,9 @@ namespace Library_Management_System
                                     {
                                         if (!c1)
                                         {
-                                            for (int k = 0; k < Program.StoreLength.Length; k++)
+                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                             {
-                                                Console.Write($"╔{Repeat("═", Program.StoreLength[k])}╗");
+                                                Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
                                             }
 
                                             Console.WriteLine(
@@ -973,9 +973,9 @@ namespace Library_Management_System
 
                                         prevIDs = $"{readerBookInfo[0]}";
 
-                                        for (int k = 0; k < Program.StoreLength.Length; k++)
+                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                         {
-                                            Console.Write($" {Repeat("═", Program.StoreLength[k])} ");
+                                            Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
                                         }
 
                                         string status = $"{readerBookInfo[7]}" != ""
@@ -988,9 +988,9 @@ namespace Library_Management_System
 
                                     if (c1)
                                     {
-                                        for (int k = 0; k < Program.StoreLength.Length; k++)
+                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                         {
-                                            Console.Write($"╚{Repeat("═", Program.StoreLength[k])}╝");
+                                            Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
                                         }
 
                                         Console.WriteLine("");
@@ -1030,9 +1030,9 @@ namespace Library_Management_System
                                     {
                                         if (!c1)
                                         {
-                                            for (int k = 0; k < Program.StoreLength.Length; k++)
+                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                             {
-                                                Console.Write($"╔{Repeat("═", Program.StoreLength[k])}╗");
+                                                Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
                                             }
 
                                             Console.WriteLine(
@@ -1053,9 +1053,9 @@ namespace Library_Management_System
 
                                         prevIDs = $"{readerBookInfo[0]}";
 
-                                        for (int k = 0; k < Program.StoreLength.Length; k++)
+                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                         {
-                                            Console.Write($" {Repeat("═", Program.StoreLength[k])} ");
+                                            Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
                                         }
 
                                         string status = $"{readerBookInfo[7]}" != ""
@@ -1068,9 +1068,9 @@ namespace Library_Management_System
 
                                     if (c1)
                                     {
-                                        for (int k = 0; k < Program.StoreLength.Length; k++)
+                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                         {
-                                            Console.Write($"╚{Repeat("═", Program.StoreLength[k])}╝");
+                                            Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
                                         }
 
                                         Console.WriteLine("");
@@ -1112,9 +1112,9 @@ namespace Library_Management_System
                                     {
                                         if (!c1)
                                         {
-                                            for (int k = 0; k < Program.StoreLength.Length; k++)
+                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                             {
-                                                Console.Write($"╔{Repeat("═", Program.StoreLength[k])}╗");
+                                                Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
                                             }
 
                                             Console.WriteLine(
@@ -1135,9 +1135,9 @@ namespace Library_Management_System
 
                                         prevIDs = $"{readerBookInfo[0]}";
 
-                                        for (int k = 0; k < Program.StoreLength.Length; k++)
+                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                         {
-                                            Console.Write($" {Repeat("═", Program.StoreLength[k])} ");
+                                            Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
                                         }
 
                                         string status = $"{readerBookInfo[7]}" != ""
@@ -1150,9 +1150,9 @@ namespace Library_Management_System
 
                                     if (c1)
                                     {
-                                        for (int k = 0; k < Program.StoreLength.Length; k++)
+                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                         {
-                                            Console.Write($"╚{Repeat("═", Program.StoreLength[k])}╝");
+                                            Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
                                         }
 
                                         Console.WriteLine("");
@@ -1194,9 +1194,9 @@ namespace Library_Management_System
                                     {
                                         if (!c1)
                                         {
-                                            for (int k = 0; k < Program.StoreLength.Length; k++)
+                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                             {
-                                                Console.Write($"╔{Repeat("═", Program.StoreLength[k])}╗");
+                                                Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
                                             }
 
                                             Console.WriteLine(
@@ -1217,9 +1217,9 @@ namespace Library_Management_System
 
                                         prevIDs = $"{readerBookInfo[0]}";
 
-                                        for (int k = 0; k < Program.StoreLength.Length; k++)
+                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                         {
-                                            Console.Write($" {Repeat("═", Program.StoreLength[k])} ");
+                                            Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
                                         }
 
                                         string status = $"{readerBookInfo[7]}" != ""
@@ -1232,9 +1232,9 @@ namespace Library_Management_System
 
                                     if (c1)
                                     {
-                                        for (int k = 0; k < Program.StoreLength.Length; k++)
+                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                         {
-                                            Console.Write($"╚{Repeat("═", Program.StoreLength[k])}╝");
+                                            Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
                                         }
 
                                         Console.WriteLine("");
@@ -1276,9 +1276,9 @@ namespace Library_Management_System
                                     {
                                         if (!c1)
                                         {
-                                            for (int k = 0; k < Program.StoreLength.Length; k++)
+                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                             {
-                                                Console.Write($"╔{Repeat("═", Program.StoreLength[k])}╗");
+                                                Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
                                             }
 
                                             Console.WriteLine(
@@ -1299,9 +1299,9 @@ namespace Library_Management_System
 
                                         prevIDs = $"{readerBookInfo[0]}";
 
-                                        for (int k = 0; k < Program.StoreLength.Length; k++)
+                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                         {
-                                            Console.Write($" {Repeat("═", Program.StoreLength[k])} ");
+                                            Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
                                         }
 
                                         string status = $"{readerBookInfo[7]}" != ""
@@ -1314,9 +1314,9 @@ namespace Library_Management_System
 
                                     if (c1)
                                     {
-                                        for (int k = 0; k < Program.StoreLength.Length; k++)
+                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                         {
-                                            Console.Write($"╚{Repeat("═", Program.StoreLength[k])}╝");
+                                            Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
                                         }
 
                                         Console.WriteLine("");
@@ -1358,9 +1358,9 @@ namespace Library_Management_System
                                     {
                                         if (!c1)
                                         {
-                                            for (int k = 0; k < Program.StoreLength.Length; k++)
+                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                             {
-                                                Console.Write($"╔{Repeat("═", Program.StoreLength[k])}╗");
+                                                Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
                                             }
 
                                             Console.WriteLine(
@@ -1381,9 +1381,9 @@ namespace Library_Management_System
 
                                         prevIDs = $"{readerBookInfo[0]}";
 
-                                        for (int k = 0; k < Program.StoreLength.Length; k++)
+                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                         {
-                                            Console.Write($" {Repeat("═", Program.StoreLength[k])} ");
+                                            Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
                                         }
 
                                         string status = $"{readerBookInfo[7]}" != ""
@@ -1396,9 +1396,9 @@ namespace Library_Management_System
 
                                     if (c1)
                                     {
-                                        for (int k = 0; k < Program.StoreLength.Length; k++)
+                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                         {
-                                            Console.Write($"╚{Repeat("═", Program.StoreLength[k])}╝");
+                                            Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
                                         }
 
                                         Console.WriteLine("");
@@ -1484,9 +1484,9 @@ namespace Library_Management_System
                             {
                                 if (!check)
                                 {
-                                    for (int k = 0; k < Program.StoreLength.Length; k++)
+                                    for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                     {
-                                        Console.Write($"╔{Repeat("═", Program.StoreLength[k])}╗");
+                                        Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
                                     }
 
                                     Console.WriteLine(
@@ -1507,9 +1507,9 @@ namespace Library_Management_System
 
                                 prevIDs = $"{readerBookInfo[0]}";
 
-                                for (int k = 0; k < Program.StoreLength.Length; k++)
+                                for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                 {
-                                    Console.Write($" {Repeat("═", Program.StoreLength[k])} ");
+                                    Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
                                 }
 
                                 string status = $"{readerBookInfo[7]}" != ""
@@ -1522,9 +1522,9 @@ namespace Library_Management_System
 
                             if (check)
                             {
-                                for (int k = 0; k < Program.StoreLength.Length; k++)
+                                for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                 {
-                                    Console.Write($"╚{Repeat("═", Program.StoreLength[k])}╝");
+                                    Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
                                 }
 
                                 Console.WriteLine("");
@@ -1588,9 +1588,9 @@ namespace Library_Management_System
                             {
                                 if (!check)
                                 {
-                                    for (int k = 0; k < Program.StoreLength.Length; k++)
+                                    for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                     {
-                                        Console.Write($"╔{Repeat("═", Program.StoreLength[k])}╗");
+                                        Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
                                     }
 
                                     Console.WriteLine(
@@ -1611,9 +1611,9 @@ namespace Library_Management_System
 
                                 prevIDs = $"{readerBookInfo[0]}";
 
-                                for (int k = 0; k < Program.StoreLength.Length; k++)
+                                for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                 {
-                                    Console.Write($" {Repeat("═", Program.StoreLength[k])} ");
+                                    Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
                                 }
 
                                 string status = $"{readerBookInfo[7]}" != ""
@@ -1626,9 +1626,9 @@ namespace Library_Management_System
 
                             if (check)
                             {
-                                for (int k = 0; k < Program.StoreLength.Length; k++)
+                                for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                 {
-                                    Console.Write($"╚{Repeat("═", Program.StoreLength[k])}╝");
+                                    Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
                                 }
 
                                 Console.WriteLine("");
@@ -1782,16 +1782,16 @@ namespace Library_Management_System
         public void UpdateStatus()
         {
             Console.Write("Input IDs customer to borrow: ");
-            string ids = Console.ReadLine();
+            string cids = Console.ReadLine();
 
-            string getIDsQuery =
-                "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, CustomerIDs " +
-                "from (Books left join BookAmount on BookAmount.BookIDs = Books.BookIDs) " +
-                $"where Books.BookIDs = {ids}";
+            string getCustomerIDsQuery =
+                "select Customer.CustomerIDs, CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, BookIDs " +
+                "from (Customer left join BookAmount on Customer.CustomerIDs = BookAmount.CustomerIDs) " +
+                $"where Customer.CustomerIDs = {cids}";
 
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
-                SqlCommand command = new SqlCommand(getIDsQuery, connection);
+                SqlCommand command = new SqlCommand(getCustomerIDsQuery, connection);
 
                 connection.Open();
 
@@ -1804,13 +1804,13 @@ namespace Library_Management_System
                     {
                         if (!check)
                         {
-                            for (int k = 0; k < Program.StoreLength.Length; k++)
+                            for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
                             {
-                                Console.Write($"╔{Repeat("═", Program.StoreLength[k])}╗");
+                                Console.Write($"╔{Repeat("═", Program.StoreLengthCustomer[k])}╗");
                             }
 
                             Console.WriteLine(
-                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
+                                $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-28}║");
 
                             check = true;
                         }
@@ -1818,7 +1818,7 @@ namespace Library_Management_System
                         if (prevIDs == $"{readerBookInfo[0]}")
                         {
                             Console.WriteLine(
-                                $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║║{"",-1}{$"Customer's IDs: {readerBookInfo[7]}",-22}║");
+                                $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[5]}",-28}║");
 
                             prevIDs = $"{readerBookInfo[0]}";
 
@@ -1827,24 +1827,24 @@ namespace Library_Management_System
 
                         prevIDs = $"{readerBookInfo[0]}";
 
-                        for (int k = 0; k < Program.StoreLength.Length; k++)
+                        for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
                         {
-                            Console.Write($" {Repeat("═", Program.StoreLength[k])} ");
+                            Console.Write($" {Repeat("═", Program.StoreLengthCustomer[k])} ");
                         }
 
-                        string status = $"{readerBookInfo[7]}" != ""
-                            ? $"║{"",-1}{$"Customer's IDs: {readerBookInfo[7]}",-22}║\n"
-                            : $"║{"",-1}{"Empty",-22}║\n";
+                        string status = $"{readerBookInfo[5]}" != ""
+                            ? $"║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[5]}",-28}║\n"
+                            : $"║{"",-1}{"Empty",-28}║\n";
 
                         Console.Write(
-                            $"\n║{"",-1}{readerBookInfo[0],-4}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-40}║║{"",-1}{readerBookInfo[3],-20}║║{"",-1}{readerBookInfo[4],-10}║║{"",-1}{readerBookInfo[5],-10}║║{"",-1}{readerBookInfo[6],-22}║{status}");
+                            $"\n║{"",-1}{readerBookInfo[0],-10}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-5}║║{"",-1}{readerBookInfo[3],-6}║║{"",-1}{readerBookInfo[4],-15}║{status}");
                     }
 
                     if (check)
                     {
-                        for (int k = 0; k < Program.StoreLength.Length; k++)
+                        for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
                         {
-                            Console.Write($"╚{Repeat("═", Program.StoreLength[k])}╝");
+                            Console.Write($"╚{Repeat("═", Program.StoreLengthCustomer[k])}╝");
                         }
 
                         Console.WriteLine("");
@@ -1856,112 +1856,53 @@ namespace Library_Management_System
                 }
             }
 
-            // string[] bookData = File.ReadAllLines(@"D:\Dev\School\Library Management System\MyTest.txt");
-            // string[] customerData = File.ReadAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt");
-            // int[] storeLength = { 5, 61, 41, 21, 11, 16, 21, 61 };
-            // int[] storeLength1 = { 11, 61, 6, 7, 16, 49 };
-            //
-            // if (bookData.Length == 0 || customerData.Length == 0)
-            // {
-            //     Console.WriteLine("There are no data currently");
-            //     return;
-            // }
-            //
-            // Console.Write("Input IDs customer to borrow: ");
-            // string IDs = Console.ReadLine();
-            // int check = -1;
-            //
-            // for (int i = 0; i < customerData.Length; i++)
-            // {
-            //     string[] output = customerData[i].Split(',');
-            //     if (output[0] == IDs)
-            //     {
-            //         check = i;
-            //         break;
-            //     }
-            // }
-            //
-            // if (check == -1)
-            // {
-            //     Console.WriteLine($"There is no {IDs} in the database");
-            //     return;
-            // }
-            //
-            // string[] output1 = customerData[check].Split(',');
-            //
-            // for (int k = 0; k < storeLength1.Length; k++)
-            // {
-            //     Console.Write($"╔{Repeat("═", storeLength1[k])}╗");
-            // }
-            //
-            // Console.WriteLine(
-            //     $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║");
-            //
-            // for (int k = 0; k < storeLength1.Length; k++)
-            // {
-            //     Console.Write($" {Repeat("═", storeLength1[k])} ");
-            // }
-            //
-            // Console.WriteLine(
-            //     $"\n║{"",-1}{output1[0],-10}║║{"",-1}{output1[1],-60}║║{"",-1}{output1[2],-5}║║{"",-1}{output1[3],-6}║║{"",-1}{output1[4],-15}║║{"",-1}{output1[5],-48}║");
-            //
-            // for (int k = 0; k < storeLength1.Length; k++)
-            // {
-            //     Console.Write($"╚{Repeat("═", storeLength1[k])}╝");
-            // }
-            //
-            // while (true)
-            // {
-            //     Console.Write("\n");
-            //     Show();
-            //
-            //     Console.Write("\nInput ID book to borrow: ");
-            //     int number = int.Parse(Console.ReadLine());
-            //
-            //     if (number < 0 || number > bookData.Length)
-            //     {
-            //         Console.WriteLine("Invalid ID");
-            //         return;
-            //     }
-            //
-            //     string[] data = bookData[number - 1].Split(',');
-            //     string[] availableData = data[4].Split(' ');
-            //     string[] borrowedData = data[5].Split(' ');
-            //
-            //     if (int.Parse(availableData[1]) == 0)
-            //     {
-            //         Console.WriteLine("There are no available book to borrow");
-            //         return;
-            //     }
-            //
-            //     for (int i = 6; i <= output1.Length - 1; i++)
-            //     {
-            //         string[] bookBorrowed = output1[i].Split('"');
-            //         if (int.Parse(bookBorrowed[1]) == number)
-            //         {
-            //             Console.WriteLine($"The {IDs} has already borrowed the book");
-            //             return;
-            //         }
-            //     }
-            //
-            //     availableData[1] = $"{int.Parse(availableData[1]) - 1}";
-            //     borrowedData[1] = $"{int.Parse(borrowedData[1]) + 1}";
-            //
-            //     data[4] = string.Join(" ", availableData);
-            //     data[5] = string.Join(" ", borrowedData);
-            //
-            //     List<string> output2 = new List<string>(output1);
-            //     output2.Add($"Borrowed book's ID: \"{number}\" at {DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")}");
-            //     output1 = output2.ToArray();
-            //
-            //     List<string> data1 = new List<string>(data);
-            //     data1.Add($"{IDs} {DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")}");
-            //     data = data1.ToArray();
-            //
-            //     customerData[check] = string.Join(",", output1);
-            //     bookData[number - 1] = string.Join(",", data);
-            //     File.WriteAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt", customerData);
-            //     File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", bookData);
+            Console.Write("Input ID book to borrow: ");
+            int ids = int.Parse(Console.ReadLine());
+
+            string checkIDsQuery =
+                $"select BookAmountAvailable, BookAmountBorrowed from Books where BookIDs = {ids}";
+
+            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+            {
+                bool check = false;
+                SqlCommand command = new SqlCommand(checkIDsQuery, connection);
+
+                connection.Open();
+
+                using (SqlDataReader readerBookInfo = command.ExecuteReader())
+                {
+                    while (readerBookInfo.Read())
+                    {
+                        if ((int)readerBookInfo[0] > 1)
+                        {
+                            int newAmountAvailable = (int)readerBookInfo[0] - 1;
+                            int newAmountBorrowed = (int)readerBookInfo[1] + 1;
+                            check = true;
+
+                            string borrowedBookQuery =
+                                $"Insert into BookAmount (BookIDs, CustomerIDs, Date) values ({ids}, {cids}, '{DateTime.Now}')";
+
+                            SqlCommand b = new SqlCommand(borrowedBookQuery, connection);
+                            b.ExecuteNonQuery();
+
+                            string updateBookAmount =
+                                "Update Books " +
+                                $"set BookAmountAvailable = {newAmountAvailable}, BookAmountBorrowed = {newAmountBorrowed} " +
+                                $"where BookIDs = {ids}";
+
+                            SqlCommand u = new SqlCommand(updateBookAmount, connection);
+                            u.ExecuteNonQuery();
+                        }
+                    }
+
+                    if (!check)
+                    {
+                        Console.WriteLine("Invalid ID");
+                        return;
+                    }
+                }
+            }
+            
             Console.WriteLine("\t\t\t\t\t\t═════════ BORROWED SUCCESSFULLY ═════════\t\t\t\t\t");
         }
     }

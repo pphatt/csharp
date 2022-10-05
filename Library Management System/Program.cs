@@ -11,7 +11,8 @@ namespace Library_Management_System
     internal class Program
     {
         public static readonly string ConnectionString = @"data source=DESKTOP-0FQDJF2\SQLEXPRESS;initial catalog=Management_Library;trusted_connection=true;MultipleActiveResultSets=true";
-        public static readonly int[] StoreLength = { 5, 61, 41, 21, 11, 11, 23, 23 };
+        public static readonly int[] StoreLengthBooks = { 5, 61, 41, 21, 11, 11, 23, 23 };
+        public static readonly int[] StoreLengthCustomer = { 11, 61, 6, 7, 16, 29 };
 
         public static void Main(string[] args)
         {
@@ -58,19 +59,19 @@ namespace Library_Management_System
             // }
             
             Menu menu = new Menu();
-            // DateTime tDays = DateTime.Today.AddDays(-8);
+            // DateTime tDays = DateTime.Now;
 
             // DateTime t = new DateTime(2022, 10, 1);
-            
+
             // DateTime fDays = t.AddMonths(-1);
             // fDays = fDays.AddDays(-1);
-            
-            // Console.WriteLine(tDays.ToString("MM/dd/yyyy 23:59:59"));
+
+            // Console.WriteLine(tDays);
             // Console.WriteLine(fDays.ToString("MM/dd/yyyy HH:mm:ss"));
             // var yesterday = DateTime.Today.AddDays(-1);
             // DateTime today = DateTime.Parse("2022-10-03");
             // Console.WriteLine(yesterday);
-            
+
             // DateTime date = DateTime.Now;
             // DateTime d1 = DateTime.Parse("2022-10-03 19:48:52.000");
 

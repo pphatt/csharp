@@ -1086,7 +1086,7 @@ namespace Library_Management_System
                         case 5:
                             DateTime tMonth = DateTime.Today.AddMonths(-1);
                             tMonth = tMonth.AddDays(-1);
-                            
+
                             DateTime sMonth = DateTime.Today.AddMonths(-6);
 
                             string tm = tMonth.ToString("MM/dd/yyyy 23:59:59");
@@ -1168,7 +1168,7 @@ namespace Library_Management_System
                         case 6:
                             DateTime sM = DateTime.Today.AddMonths(-6);
                             sM = sM.AddDays(-1);
-                            
+
                             DateTime aY = DateTime.Today.AddYears(-1);
 
                             string smt = sM.ToString("MM/dd/yyyy 23:59:59");
@@ -1250,7 +1250,7 @@ namespace Library_Management_System
                         case 7:
                             DateTime aYr = DateTime.Today.AddYears(-1);
                             aYr = aYr.AddDays(-1);
-                            
+
                             DateTime tYr = DateTime.Today.AddYears(-2);
 
                             string ayr = aYr.ToString("MM/dd/yyyy 23:59:59");
@@ -1332,7 +1332,7 @@ namespace Library_Management_System
                         case 8:
                             DateTime tYrD = DateTime.Today.AddYears(-2);
                             tYrD = tYrD.AddDays(-1);
-                            
+
                             DateTime fYr = DateTime.Today.AddYears(-2);
 
                             string tyrd = tYrD.ToString("MM/dd/yyyy 23:59:59");
@@ -1427,68 +1427,251 @@ namespace Library_Management_System
 
         public void Delete()
         {
-            // if (data.Length == 0)
-            // {
-            //     Console.WriteLine("There are no data currently");
-            //     return;
-            // }
-            //
-            // Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
-            // Console.WriteLine("\t\t\t\t\t\t║ 1. DELETE BY ID                        ║\t\t\t\t\t");
-            // Console.WriteLine("\t\t\t\t\t\t║ 2. DELETE BY NAME                      ║\t\t\t\t\t");
-            // Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
-            // Console.Write("Input to use: ");
-            // int number1 = int.Parse(Console.ReadLine());
-            //
-            // switch (number1)
-            // {
-            //     case 1:
-            //         Console.Write("Input ID to delete: ");
-            //         int number2 = int.Parse(Console.ReadLine());
-            //
-            //         if (number2 < 0 || number2 > data.Length)
-            //         {
-            //             Console.WriteLine("Invalid ID");
-            //             return;
-            //         }
-            //
-            //         List<string> output = new List<string>(data);
-            //         output.RemoveAt(number2 - 1);
-            //         File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", output.ToArray());
-            //         Console.WriteLine("\t\t\t\t\t\t═══════════ DELETE SUCCESSFULLY ═══════════\t\t\t\t\t");
-            //
-            //         break;
-            //     case 2:
-            //         bool check = false;
-            //         Console.Write("Input Name to delete: ");
-            //         string name = Console.ReadLine();
-            //         List<string> output1 = new List<string>(data);
-            //
-            //         for (int i = 0; i < output1.Count; i++)
-            //         {
-            //             string[] output2 = output1[i].Split(',');
-            //             if (output2[0] == name)
-            //             {
-            //                 output1.RemoveAt(i);
-            //                 i--;
-            //                 check = true;
-            //             }
-            //         }
-            //
-            //         if (check == false)
-            //         {
-            //             Console.WriteLine($"There is no {name} in Name section in the database");
-            //             return;
-            //         }
-            //
-            //         File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", output1.ToArray());
-            //         Console.WriteLine("\t\t\t\t\t\t═══════════ DELETE SUCCESSFULLY ═══════════\t\t\t\t\t");
-            //
-            //         break;
-            //     default:
-            //         Console.WriteLine("Invalid number");
-            //         break;
-            // }
+            string getTableSize = "Select Count(BookIDs) from Books";
+
+            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+            {
+                SqlCommand getTableSizeCommand = new SqlCommand(getTableSize, connection);
+
+                connection.Open();
+
+                using (SqlDataReader reader = getTableSizeCommand.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        if ((int)reader[0] > 0)
+                        {
+                            Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
+                            Console.WriteLine("\t\t\t\t\t\t║ 1. DELETE BY ID                        ║\t\t\t\t\t");
+                            Console.WriteLine("\t\t\t\t\t\t║ 2. DELETE BY NAME                      ║\t\t\t\t\t");
+                            Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
+                            Console.Write("Input to use: ");
+                        }
+                        else
+                        {
+                            Console.WriteLine("There are no data currently");
+                            return;
+                        }
+                    }
+                }
+            }
+
+            int number = int.Parse(Console.ReadLine());
+
+            switch (number)
+            {
+                case 1:
+                    Console.Write("Input ID to delete: ");
+                    int ids = int.Parse(Console.ReadLine());
+
+                    string getIDsQuery =
+                        "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, CustomerIDs " +
+                        "from (Books left join BookAmount on BookAmount.BookIDs = Books.BookIDs) " +
+                        $"where Books.BookIDs = {ids}";
+
+                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+                    {
+                        SqlCommand command = new SqlCommand(getIDsQuery, connection);
+
+                        connection.Open();
+
+                        using (SqlDataReader readerBookInfo = command.ExecuteReader())
+                        {
+                            bool check = false;
+                            string prevIDs = "";
+
+                            while (readerBookInfo.Read())
+                            {
+                                if (!check)
+                                {
+                                    for (int k = 0; k < Program.StoreLength.Length; k++)
+                                    {
+                                        Console.Write($"╔{Repeat("═", Program.StoreLength[k])}╗");
+                                    }
+
+                                    Console.WriteLine(
+                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
+
+                                    check = true;
+                                }
+
+                                if (prevIDs == $"{readerBookInfo[0]}")
+                                {
+                                    Console.WriteLine(
+                                        $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║║{"",-1}{$"Customer's IDs: {readerBookInfo[7]}",-22}║");
+
+                                    prevIDs = $"{readerBookInfo[0]}";
+
+                                    continue;
+                                }
+
+                                prevIDs = $"{readerBookInfo[0]}";
+
+                                for (int k = 0; k < Program.StoreLength.Length; k++)
+                                {
+                                    Console.Write($" {Repeat("═", Program.StoreLength[k])} ");
+                                }
+
+                                string status = $"{readerBookInfo[7]}" != ""
+                                    ? $"║{"",-1}{$"Customer's IDs: {readerBookInfo[7]}",-22}║\n"
+                                    : $"║{"",-1}{"Empty",-22}║\n";
+
+                                Console.Write(
+                                    $"\n║{"",-1}{readerBookInfo[0],-4}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-40}║║{"",-1}{readerBookInfo[3],-20}║║{"",-1}{readerBookInfo[4],-10}║║{"",-1}{readerBookInfo[5],-10}║║{"",-1}{readerBookInfo[6],-22}║{status}");
+                            }
+
+                            if (check)
+                            {
+                                for (int k = 0; k < Program.StoreLength.Length; k++)
+                                {
+                                    Console.Write($"╚{Repeat("═", Program.StoreLength[k])}╝");
+                                }
+
+                                Console.WriteLine("");
+
+                                Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
+                                Console.WriteLine("\t\t\t\t\t\t║ 1. Confirm                             ║\t\t\t\t\t");
+                                Console.WriteLine("\t\t\t\t\t\t║ 2. Reject                              ║\t\t\t\t\t");
+                                Console.WriteLine("\t\t\t\t\t\t║ 3. Exit                                ║\t\t\t\t\t");
+                                Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
+                                Console.Write("Confirm that this is the book you want to delete: ");
+                                int isConfirm = int.Parse(Console.ReadLine());
+
+                                switch (isConfirm)
+                                {
+                                    case 1:
+                                        string delBookIDs = $"delete from Books where BookIDs = '{ids}'";
+                                        SqlCommand d = new SqlCommand(delBookIDs, connection);
+                                        d.ExecuteNonQuery();
+                                        Console.WriteLine(
+                                            "\t\t\t\t\t\t═══════════ DELETE SUCCESSFULLY ═══════════\t\t\t\t\t");
+                                        break;
+                                    case 2:
+                                        Console.WriteLine("Cancelled Successfully.");
+                                        break;
+                                    case 3:
+                                        return;
+                                    default:
+                                        Console.WriteLine("Invalid confirmation.");
+                                        return;
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid ID");
+                            }
+                        }
+                    }
+
+                    break;
+                case 2:
+                    Console.Write("Input Name to delete: ");
+                    string name = Console.ReadLine();
+
+                    string getNameQuery =
+                        "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, CustomerIDs " +
+                        "from (Books left join BookAmount on BookAmount.BookIDs = Books.BookIDs) " +
+                        $"where BookName = '{name}'";
+
+                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+                    {
+                        SqlCommand command = new SqlCommand(getNameQuery, connection);
+
+                        connection.Open();
+
+                        using (SqlDataReader readerBookInfo = command.ExecuteReader())
+                        {
+                            bool check = false;
+                            string prevIDs = "";
+
+                            while (readerBookInfo.Read())
+                            {
+                                if (!check)
+                                {
+                                    for (int k = 0; k < Program.StoreLength.Length; k++)
+                                    {
+                                        Console.Write($"╔{Repeat("═", Program.StoreLength[k])}╗");
+                                    }
+
+                                    Console.WriteLine(
+                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
+
+                                    check = true;
+                                }
+
+                                if (prevIDs == $"{readerBookInfo[0]}")
+                                {
+                                    Console.WriteLine(
+                                        $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║║{"",-1}{$"Customer's IDs: {readerBookInfo[7]}",-22}║");
+
+                                    prevIDs = $"{readerBookInfo[0]}";
+
+                                    continue;
+                                }
+
+                                prevIDs = $"{readerBookInfo[0]}";
+
+                                for (int k = 0; k < Program.StoreLength.Length; k++)
+                                {
+                                    Console.Write($" {Repeat("═", Program.StoreLength[k])} ");
+                                }
+
+                                string status = $"{readerBookInfo[7]}" != ""
+                                    ? $"║{"",-1}{$"Customer's IDs: {readerBookInfo[7]}",-22}║\n"
+                                    : $"║{"",-1}{"Empty",-22}║\n";
+
+                                Console.Write(
+                                    $"\n║{"",-1}{readerBookInfo[0],-4}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-40}║║{"",-1}{readerBookInfo[3],-20}║║{"",-1}{readerBookInfo[4],-10}║║{"",-1}{readerBookInfo[5],-10}║║{"",-1}{readerBookInfo[6],-22}║{status}");
+                            }
+
+                            if (check)
+                            {
+                                for (int k = 0; k < Program.StoreLength.Length; k++)
+                                {
+                                    Console.Write($"╚{Repeat("═", Program.StoreLength[k])}╝");
+                                }
+
+                                Console.WriteLine("");
+
+                                Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
+                                Console.WriteLine("\t\t\t\t\t\t║ 1. Confirm                             ║\t\t\t\t\t");
+                                Console.WriteLine("\t\t\t\t\t\t║ 2. Reject                              ║\t\t\t\t\t");
+                                Console.WriteLine("\t\t\t\t\t\t║ 3. Exit                                ║\t\t\t\t\t");
+                                Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
+                                Console.Write("Confirm that this is the book you want to delete: ");
+                                int isConfirm = int.Parse(Console.ReadLine());
+
+                                switch (isConfirm)
+                                {
+                                    case 1:
+                                        string delBookIDs = $"delete from Books where BookName = '{name}'";
+                                        SqlCommand d = new SqlCommand(delBookIDs, connection);
+                                        d.ExecuteNonQuery();
+                                        Console.WriteLine(
+                                            "\t\t\t\t\t\t═══════════ DELETE SUCCESSFULLY ═══════════\t\t\t\t\t");
+                                        break;
+                                    case 2:
+                                        Console.WriteLine("Cancelled Successfully.");
+                                        break;
+                                    case 3:
+                                        return;
+                                    default:
+                                        Console.WriteLine("Invalid confirmation.");
+                                        return;
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid ID");
+                            }
+                        }
+                    }
+
+                    break;
+                default:
+                    Console.WriteLine("Invalid number");
+                    break;
+            }
         }
 
         public void Edit()

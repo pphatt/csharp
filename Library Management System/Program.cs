@@ -57,16 +57,16 @@ namespace Library_Management_System
             //     }
             // }
             
-            // Menu menu = new Menu();
+            Menu menu = new Menu();
             // DateTime tDays = DateTime.Today.AddDays(-8);
 
-            DateTime t = new DateTime(2022, 10, 1);
+            // DateTime t = new DateTime(2022, 10, 1);
             
-            DateTime fDays = t.AddMonths(-1);
+            // DateTime fDays = t.AddMonths(-1);
             // fDays = fDays.AddDays(-1);
             
             // Console.WriteLine(tDays.ToString("MM/dd/yyyy 23:59:59"));
-            Console.WriteLine(fDays.ToString("MM/dd/yyyy HH:mm:ss"));
+            // Console.WriteLine(fDays.ToString("MM/dd/yyyy HH:mm:ss"));
             // var yesterday = DateTime.Today.AddDays(-1);
             // DateTime today = DateTime.Parse("2022-10-03");
             // Console.WriteLine(yesterday);

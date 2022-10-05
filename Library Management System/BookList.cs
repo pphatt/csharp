@@ -1676,172 +1676,293 @@ namespace Library_Management_System
 
         public void Edit()
         {
-            try
+            Show();
+
+            Console.Write("\nInput IDs to use: ");
+
+            int ids = int.Parse(Console.ReadLine());
+            string title = "";
+            string author = "";
+            string category = "";
+
+            string checkIDsQuery =
+                $"select BookName, BookAuthor, BookCategory from Books where BookIDs = {ids}";
+
+            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
-                string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\MyTest.txt");
-                if (data.Length == 0)
-                {
-                    Console.WriteLine("There are no data currently");
-                    return;
-                }
+                bool check = false;
+                SqlCommand command = new SqlCommand(checkIDsQuery, connection);
 
-                Show();
-                Console.Write("\nInput to use: ");
-                int number1 = int.Parse(Console.ReadLine());
-                if (number1 > 0 && number1 <= data.Length)
-                {
-                    Console.WriteLine($"\t\t\t\t\t\t          EDITING THE BOOK NO.{number1:D2} \t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t║ 1. EDIT TITLE                          ║\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t║ 2. EDIT AUTHOR                         ║\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t║ 3. EDIT CATEGORY                       ║\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
-                    Console.Write("Input to edit: ");
-                    int number2 = int.Parse(Console.ReadLine());
+                connection.Open();
 
-                    if (number2 > 0 && number2 <= 3)
-                    {
-                        string[] output = data[number1 - 1].Split(',');
-                        Console.Write($"Changing {output[number2 - 1]} to: ");
-                        string newText = Console.ReadLine();
-                        output[number2 - 1] = newText;
-                        data[number1 - 1] = string.Join(",", output);
-                        File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", data);
-                        Console.WriteLine("\t\t\t\t\t\t═══════════ UPDATE SUCCESSFULLY ═══════════\t\t\t\t\t");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid number");
-                    }
-                }
-                else
+                using (SqlDataReader readerBookInfo = command.ExecuteReader())
                 {
-                    Console.WriteLine("Invalid number");
+                    while (readerBookInfo.Read())
+                    {
+                        check = true;
+
+                        title = $"{readerBookInfo[0]}";
+                        author = $"{readerBookInfo[1]}";
+                        category = $"{readerBookInfo[2]}";
+                    }
+
+                    if (!check)
+                    {
+                        Console.WriteLine("Invalid ID");
+                        return;
+                    }
                 }
             }
-            catch (IOException)
+
+            Console.WriteLine($"\t\t\t\t\t\t          EDITING THE BOOK NO.{ids:D2} \t\t\t\t");
+            Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
+            Console.WriteLine("\t\t\t\t\t\t║ 1. EDIT TITLE                          ║\t\t\t\t\t");
+            Console.WriteLine("\t\t\t\t\t\t║ 2. EDIT AUTHOR                         ║\t\t\t\t\t");
+            Console.WriteLine("\t\t\t\t\t\t║ 3. EDIT CATEGORY                       ║\t\t\t\t\t");
+            Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
+            Console.Write("Input to edit: ");
+
+            int number = int.Parse(Console.ReadLine());
+
+            switch (number)
             {
-                Console.WriteLine("There are no data currently");
+                case 1:
+                    Console.Write($"Changing from {title} to: ");
+                    string newTitle = Console.ReadLine();
+
+                    string updateTitle = $"Update Books set BookName = '{newTitle}' where BookIDs = {ids}";
+
+                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+                    {
+                        connection.Open();
+                        SqlCommand command = new SqlCommand(updateTitle, connection);
+                        command.ExecuteNonQuery();
+                    }
+
+                    Console.WriteLine("\t\t\t\t\t\t═══════════ UPDATE SUCCESSFULLY ═══════════\t\t\t\t\t");
+
+                    break;
+                case 2:
+                    Console.Write($"Changing from {author} to: ");
+                    string newAuthor = Console.ReadLine();
+
+                    string updateAuthor = $"Update Books set BookAuthor = '{newAuthor}' where BookIDs = {ids}";
+
+                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+                    {
+                        connection.Open();
+                        SqlCommand command = new SqlCommand(updateAuthor, connection);
+                        command.ExecuteNonQuery();
+                    }
+
+                    Console.WriteLine("\t\t\t\t\t\t═══════════ UPDATE SUCCESSFULLY ═══════════\t\t\t\t\t");
+
+                    break;
+                case 3:
+                    Console.Write($"Changing from {category} to: ");
+                    string newCategory = Console.ReadLine();
+
+                    string updateCategory = $"Update Books set BookCategory = '{newCategory}' where BookIDs = {ids}";
+
+                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+                    {
+                        connection.Open();
+                        SqlCommand command = new SqlCommand(updateCategory, connection);
+                        command.ExecuteNonQuery();
+                    }
+
+                    Console.WriteLine("\t\t\t\t\t\t═══════════ UPDATE SUCCESSFULLY ═══════════\t\t\t\t\t");
+
+                    break;
+                default:
+                    return;
             }
         }
 
         public void UpdateStatus()
         {
-            try
+            Console.Write("Input IDs customer to borrow: ");
+            string ids = Console.ReadLine();
+
+            string getIDsQuery =
+                "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, CustomerIDs " +
+                "from (Books left join BookAmount on BookAmount.BookIDs = Books.BookIDs) " +
+                $"where Books.BookIDs = {ids}";
+
+            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
-                string[] bookData = File.ReadAllLines(@"D:\Dev\School\Library Management System\MyTest.txt");
-                string[] customerData = File.ReadAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt");
-                int[] storeLength = { 5, 61, 41, 21, 11, 16, 21, 61 };
-                int[] storeLength1 = { 11, 61, 6, 7, 16, 49 };
+                SqlCommand command = new SqlCommand(getIDsQuery, connection);
 
-                if (bookData.Length == 0 || customerData.Length == 0)
+                connection.Open();
+
+                using (SqlDataReader readerBookInfo = command.ExecuteReader())
                 {
-                    Console.WriteLine("There are no data currently");
-                    return;
-                }
+                    bool check = false;
+                    string prevIDs = "";
 
-                Console.Write("Input IDs customer to borrow: ");
-                string IDs = Console.ReadLine();
-                int check = -1;
-
-                for (int i = 0; i < customerData.Length; i++)
-                {
-                    string[] output = customerData[i].Split(',');
-                    if (output[0] == IDs)
+                    while (readerBookInfo.Read())
                     {
-                        check = i;
-                        break;
+                        if (!check)
+                        {
+                            for (int k = 0; k < Program.StoreLength.Length; k++)
+                            {
+                                Console.Write($"╔{Repeat("═", Program.StoreLength[k])}╗");
+                            }
+
+                            Console.WriteLine(
+                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
+
+                            check = true;
+                        }
+
+                        if (prevIDs == $"{readerBookInfo[0]}")
+                        {
+                            Console.WriteLine(
+                                $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║║{"",-1}{$"Customer's IDs: {readerBookInfo[7]}",-22}║");
+
+                            prevIDs = $"{readerBookInfo[0]}";
+
+                            continue;
+                        }
+
+                        prevIDs = $"{readerBookInfo[0]}";
+
+                        for (int k = 0; k < Program.StoreLength.Length; k++)
+                        {
+                            Console.Write($" {Repeat("═", Program.StoreLength[k])} ");
+                        }
+
+                        string status = $"{readerBookInfo[7]}" != ""
+                            ? $"║{"",-1}{$"Customer's IDs: {readerBookInfo[7]}",-22}║\n"
+                            : $"║{"",-1}{"Empty",-22}║\n";
+
+                        Console.Write(
+                            $"\n║{"",-1}{readerBookInfo[0],-4}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-40}║║{"",-1}{readerBookInfo[3],-20}║║{"",-1}{readerBookInfo[4],-10}║║{"",-1}{readerBookInfo[5],-10}║║{"",-1}{readerBookInfo[6],-22}║{status}");
                     }
-                }
 
-                if (check == -1)
-                {
-                    Console.WriteLine($"There is no {IDs} in the database");
-                    return;
-                }
+                    if (check)
+                    {
+                        for (int k = 0; k < Program.StoreLength.Length; k++)
+                        {
+                            Console.Write($"╚{Repeat("═", Program.StoreLength[k])}╝");
+                        }
 
-                string[] output1 = customerData[check].Split(',');
-
-                for (int k = 0; k < storeLength1.Length; k++)
-                {
-                    Console.Write($"╔{Repeat("═", storeLength1[k])}╗");
-                }
-
-                Console.WriteLine(
-                    $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║");
-
-                for (int k = 0; k < storeLength1.Length; k++)
-                {
-                    Console.Write($" {Repeat("═", storeLength1[k])} ");
-                }
-
-                Console.WriteLine(
-                    $"\n║{"",-1}{output1[0],-10}║║{"",-1}{output1[1],-60}║║{"",-1}{output1[2],-5}║║{"",-1}{output1[3],-6}║║{"",-1}{output1[4],-15}║║{"",-1}{output1[5],-48}║");
-
-                for (int k = 0; k < storeLength1.Length; k++)
-                {
-                    Console.Write($"╚{Repeat("═", storeLength1[k])}╝");
-                }
-
-                while (true)
-                {
-                    Console.Write("\n");
-                    Show();
-
-                    Console.Write("\nInput ID book to borrow: ");
-                    int number = int.Parse(Console.ReadLine());
-
-                    if (number < 0 || number > bookData.Length)
+                        Console.WriteLine("");
+                    }
+                    else
                     {
                         Console.WriteLine("Invalid ID");
-                        return;
                     }
-
-                    string[] data = bookData[number - 1].Split(',');
-                    string[] availableData = data[4].Split(' ');
-                    string[] borrowedData = data[5].Split(' ');
-
-                    if (int.Parse(availableData[1]) == 0)
-                    {
-                        Console.WriteLine("There are no available book to borrow");
-                        return;
-                    }
-
-                    for (int i = 6; i <= output1.Length - 1; i++)
-                    {
-                        string[] bookBorrowed = output1[i].Split('"');
-                        if (int.Parse(bookBorrowed[1]) == number)
-                        {
-                            Console.WriteLine($"The {IDs} has already borrowed the book");
-                            return;
-                        }
-                    }
-
-                    availableData[1] = $"{int.Parse(availableData[1]) - 1}";
-                    borrowedData[1] = $"{int.Parse(borrowedData[1]) + 1}";
-
-                    data[4] = string.Join(" ", availableData);
-                    data[5] = string.Join(" ", borrowedData);
-
-                    List<string> output2 = new List<string>(output1);
-                    output2.Add($"Borrowed book's ID: \"{number}\" at {DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")}");
-                    output1 = output2.ToArray();
-
-                    List<string> data1 = new List<string>(data);
-                    data1.Add($"{IDs} {DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")}");
-                    data = data1.ToArray();
-
-                    customerData[check] = string.Join(",", output1);
-                    bookData[number - 1] = string.Join(",", data);
-                    File.WriteAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt", customerData);
-                    File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", bookData);
-                    Console.WriteLine("\t\t\t\t\t\t═════════ BORROWED SUCCESSFULLY ═════════\t\t\t\t\t");
                 }
             }
-            catch (IOException)
-            {
-                Console.WriteLine("There are no data currently");
-            }
+
+            // string[] bookData = File.ReadAllLines(@"D:\Dev\School\Library Management System\MyTest.txt");
+            // string[] customerData = File.ReadAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt");
+            // int[] storeLength = { 5, 61, 41, 21, 11, 16, 21, 61 };
+            // int[] storeLength1 = { 11, 61, 6, 7, 16, 49 };
+            //
+            // if (bookData.Length == 0 || customerData.Length == 0)
+            // {
+            //     Console.WriteLine("There are no data currently");
+            //     return;
+            // }
+            //
+            // Console.Write("Input IDs customer to borrow: ");
+            // string IDs = Console.ReadLine();
+            // int check = -1;
+            //
+            // for (int i = 0; i < customerData.Length; i++)
+            // {
+            //     string[] output = customerData[i].Split(',');
+            //     if (output[0] == IDs)
+            //     {
+            //         check = i;
+            //         break;
+            //     }
+            // }
+            //
+            // if (check == -1)
+            // {
+            //     Console.WriteLine($"There is no {IDs} in the database");
+            //     return;
+            // }
+            //
+            // string[] output1 = customerData[check].Split(',');
+            //
+            // for (int k = 0; k < storeLength1.Length; k++)
+            // {
+            //     Console.Write($"╔{Repeat("═", storeLength1[k])}╗");
+            // }
+            //
+            // Console.WriteLine(
+            //     $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║");
+            //
+            // for (int k = 0; k < storeLength1.Length; k++)
+            // {
+            //     Console.Write($" {Repeat("═", storeLength1[k])} ");
+            // }
+            //
+            // Console.WriteLine(
+            //     $"\n║{"",-1}{output1[0],-10}║║{"",-1}{output1[1],-60}║║{"",-1}{output1[2],-5}║║{"",-1}{output1[3],-6}║║{"",-1}{output1[4],-15}║║{"",-1}{output1[5],-48}║");
+            //
+            // for (int k = 0; k < storeLength1.Length; k++)
+            // {
+            //     Console.Write($"╚{Repeat("═", storeLength1[k])}╝");
+            // }
+            //
+            // while (true)
+            // {
+            //     Console.Write("\n");
+            //     Show();
+            //
+            //     Console.Write("\nInput ID book to borrow: ");
+            //     int number = int.Parse(Console.ReadLine());
+            //
+            //     if (number < 0 || number > bookData.Length)
+            //     {
+            //         Console.WriteLine("Invalid ID");
+            //         return;
+            //     }
+            //
+            //     string[] data = bookData[number - 1].Split(',');
+            //     string[] availableData = data[4].Split(' ');
+            //     string[] borrowedData = data[5].Split(' ');
+            //
+            //     if (int.Parse(availableData[1]) == 0)
+            //     {
+            //         Console.WriteLine("There are no available book to borrow");
+            //         return;
+            //     }
+            //
+            //     for (int i = 6; i <= output1.Length - 1; i++)
+            //     {
+            //         string[] bookBorrowed = output1[i].Split('"');
+            //         if (int.Parse(bookBorrowed[1]) == number)
+            //         {
+            //             Console.WriteLine($"The {IDs} has already borrowed the book");
+            //             return;
+            //         }
+            //     }
+            //
+            //     availableData[1] = $"{int.Parse(availableData[1]) - 1}";
+            //     borrowedData[1] = $"{int.Parse(borrowedData[1]) + 1}";
+            //
+            //     data[4] = string.Join(" ", availableData);
+            //     data[5] = string.Join(" ", borrowedData);
+            //
+            //     List<string> output2 = new List<string>(output1);
+            //     output2.Add($"Borrowed book's ID: \"{number}\" at {DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")}");
+            //     output1 = output2.ToArray();
+            //
+            //     List<string> data1 = new List<string>(data);
+            //     data1.Add($"{IDs} {DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")}");
+            //     data = data1.ToArray();
+            //
+            //     customerData[check] = string.Join(",", output1);
+            //     bookData[number - 1] = string.Join(",", data);
+            //     File.WriteAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt", customerData);
+            //     File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", bookData);
+            Console.WriteLine("\t\t\t\t\t\t═════════ BORROWED SUCCESSFULLY ═════════\t\t\t\t\t");
         }
     }
 }

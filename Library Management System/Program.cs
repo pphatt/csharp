@@ -57,7 +57,40 @@ namespace Library_Management_System
             //     }
             // }
             
-            Menu menu = new Menu();
+            // Menu menu = new Menu();
+            // DateTime tDays = DateTime.Today.AddDays(-8);
+
+            DateTime t = new DateTime(2022, 10, 1);
+            
+            DateTime fDays = t.AddMonths(-1);
+            // fDays = fDays.AddDays(-1);
+            
+            // Console.WriteLine(tDays.ToString("MM/dd/yyyy 23:59:59"));
+            Console.WriteLine(fDays.ToString("MM/dd/yyyy HH:mm:ss"));
+            // var yesterday = DateTime.Today.AddDays(-1);
+            // DateTime today = DateTime.Parse("2022-10-03");
+            // Console.WriteLine(yesterday);
+            
+            // DateTime date = DateTime.Now;
+            // DateTime d1 = DateTime.Parse("2022-10-03 19:48:52.000");
+
+            // TimeSpan t = date - d1;
+            // Console.WriteLine(date);
+            // Console.WriteLine(date.Day);
+            // Console.WriteLine(date.Month);
+            // Console.WriteLine(d1.Day);
+            // Console.WriteLine(d1.Month);
+            // Console.WriteLine(t);
+
+            // string date1 = ;
+            // Console.WriteLine(date.Split('/'));
+
+            // DateTime date1 = new DateTime(1996, 6, 3, 22, 15, 0);
+            // DateTime date2 = new DateTime(1996, 12, 6, 13, 2, 0);
+            //
+            // TimeSpan res = date2.Subtract(date1);
+            // // returns equal to 0 since d1 is equal to d2
+            // Console.WriteLine(res);
             // string path = @"D:\Dev\School\Library Management System\MyTest.txt";
             //
             // try
@@ -69,7 +102,7 @@ namespace Library_Management_System
             // {
             //     StreamWriter sw = new StreamWriter(path);
             // }
-            
+
             // List<string> test = new List<string>(test1);
             // test1[1] = "2 2";
             // readText = string.Join("\n", test1);
@@ -206,7 +239,7 @@ namespace Library_Management_System
             // Console.WriteLine("└─┘");
             // Console.WriteLine(
             //     $"║{"",-12}║{"",-1}{"ID",-10}║{"",-1}{"Name",-60}║{"",-1}{"Age",-5}║{"",-1}{"Sex",-6}║{"",-1}{"Phone Number",-15}║{"",-1}{"Status",-48}║{"",-1}{"Shift",-48}║");
-            
+
             // int[] test = { 12, 11, 61, 6, 7, 16, 49, 49 };
             // for (int i = 0; i < test.Length; i++)
             // {

@@ -754,14 +754,15 @@ namespace Library_Management_System
                     break;
                 case 6:
                     Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t║ 1. One day                             ║\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t║ 2. Five days                           ║\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t║ 3. A Week                              ║\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t║ 4. A Month                             ║\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t║ 5. Six Months                          ║\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t║ 6. A Year                              ║\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t║ 7. Two Years                           ║\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t║ 8. Five Years                          ║\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t║ 1. Today                               ║\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t║ 2. Yesterday                           ║\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t║ 3. Five days                           ║\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t║ 4. A Week                              ║\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t║ 5. A Month                             ║\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t║ 6. Six Months                          ║\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t║ 7. A Year                              ║\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t║ 8. Two Years                           ║\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t║ 9. Five Years                          ║\t\t\t\t\t");
                     Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
                     Console.Write("Input to use: ");
                     int d = int.Parse(Console.ReadLine());
@@ -769,8 +770,85 @@ namespace Library_Management_System
                     switch (d)
                     {
                         case 1:
+                            DateTime today = DateTime.Today;
+                            string to = $"{today.Year}/{today.Day}/{today.Month}";
+
+                            string gettodayBooks =
+                                "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, CustomerIDs " +
+                                "from (Books left join BookAmount on BookAmount.BookIDs = Books.BookIDs) " +
+                                $"where cast(Books.Date as date) = '{to}' and Books.State = 0";
+
+                            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+                            {
+                                SqlCommand command = new SqlCommand(gettodayBooks, connection);
+
+                                connection.Open();
+
+                                using (SqlDataReader readerBookInfo = command.ExecuteReader())
+                                {
+                                    bool c1 = false;
+                                    string prevIDs = "";
+
+                                    while (readerBookInfo.Read())
+                                    {
+                                        if (!c1)
+                                        {
+                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
+                                            {
+                                                Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
+                                            }
+
+                                            Console.WriteLine(
+                                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
+
+                                            c1 = true;
+                                        }
+
+                                        if (prevIDs == $"{readerBookInfo[0]}")
+                                        {
+                                            Console.WriteLine(
+                                                $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║║{"",-1}{$"Customer's IDs: {readerBookInfo[7]}",-22}║");
+
+                                            prevIDs = $"{readerBookInfo[0]}";
+
+                                            continue;
+                                        }
+
+                                        prevIDs = $"{readerBookInfo[0]}";
+
+                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
+                                        {
+                                            Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
+                                        }
+
+                                        string status = $"{readerBookInfo[7]}" != ""
+                                            ? $"║{"",-1}{$"Customer's IDs: {readerBookInfo[7]}",-22}║\n"
+                                            : $"║{"",-1}{"Empty",-22}║\n";
+
+                                        Console.Write(
+                                            $"\n║{"",-1}{readerBookInfo[0],-4}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-40}║║{"",-1}{readerBookInfo[3],-20}║║{"",-1}{$"{readerBookInfo[4]}",-10}║║{"",-1}{$"{readerBookInfo[5]}",-10}║║{"",-1}{readerBookInfo[6],-22}║{status}");
+                                    }
+
+                                    if (c1)
+                                    {
+                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
+                                        {
+                                            Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
+                                        }
+
+                                        Console.WriteLine("");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("There was no BOOKs was added in the library.");
+                                    }
+                                }
+                            }
+
+                            break;
+                        case 2:
                             DateTime yesterday = DateTime.Today.AddDays(-1);
-                            string y = $"{yesterday.Year}/{yesterday.Month}/{yesterday.Day}";
+                            string y = $"{yesterday.Year}/{yesterday.Day}/{yesterday.Month}";
 
                             string getyesterdayBooks =
                                 "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, CustomerIDs " +
@@ -845,7 +923,7 @@ namespace Library_Management_System
                             }
 
                             break;
-                        case 2:
+                        case 3:
                             DateTime tDays = DateTime.Today.AddDays(-1);
                             DateTime fDays = DateTime.Today.AddDays(-5);
 
@@ -925,7 +1003,7 @@ namespace Library_Management_System
                             }
 
                             break;
-                        case 3:
+                        case 4:
                             DateTime sDays = DateTime.Today.AddDays(-6);
                             DateTime week = DateTime.Today.AddDays(-7);
 
@@ -1005,7 +1083,7 @@ namespace Library_Management_System
                             }
 
                             break;
-                        case 4:
+                        case 5:
                             DateTime tWeek = DateTime.Today.AddDays(-8);
                             DateTime month = DateTime.Today.AddMonths(-1);
 
@@ -1085,7 +1163,7 @@ namespace Library_Management_System
                             }
 
                             break;
-                        case 5:
+                        case 6:
                             DateTime tMonth = DateTime.Today.AddMonths(-1);
                             tMonth = tMonth.AddDays(-1);
 
@@ -1167,7 +1245,7 @@ namespace Library_Management_System
                             }
 
                             break;
-                        case 6:
+                        case 7:
                             DateTime sM = DateTime.Today.AddMonths(-6);
                             sM = sM.AddDays(-1);
 
@@ -1249,7 +1327,7 @@ namespace Library_Management_System
                             }
 
                             break;
-                        case 7:
+                        case 8:
                             DateTime aYr = DateTime.Today.AddYears(-1);
                             aYr = aYr.AddDays(-1);
 
@@ -1331,7 +1409,7 @@ namespace Library_Management_System
                             }
 
                             break;
-                        case 8:
+                        case 9:
                             DateTime tYrD = DateTime.Today.AddYears(-2);
                             tYrD = tYrD.AddDays(-1);
 

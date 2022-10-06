@@ -6,8 +6,6 @@ namespace Library_Management_System
 {
     public class CustomerData
     {
-        List<Customer> _customers = new List<Customer>();
-
         public void OutputForUniqueData(string name, string[] data, int index)
         {
             string section = name;
@@ -66,8 +64,6 @@ namespace Library_Management_System
 
         public void AddCustomer()
         {
-            string path = @"D:\Dev\School\Library Management System\CustomerData.txt";
-
             Console.Write("Enter customer's IDs: ");
             string ids = Console.ReadLine();
             Console.Write("Enter customer's name: ");
@@ -78,18 +74,8 @@ namespace Library_Management_System
             string sex = Console.ReadLine().ToLower();
             Console.Write("Enter customer's phone number: ");
             string phoneNumber = Console.ReadLine();
-            string status = "";
-
-            _customers.Add(new Customer(ids, name, age, sex, phoneNumber, status));
-            string output =
-                $"{_customers[0].getID()},{_customers[0].getName()},{_customers[0].getAge()},{_customers[0].getSex()},{_customers[0].getPhoneNumber()},{_customers[0].getStatus()}";
-
-            using (StreamWriter sw = new StreamWriter(path, true))
-            {
-                sw.WriteLine(output);
-            }
-
-            _customers = new List<Customer>();
+            
+            
         }
 
         public void ShowCustomer()

@@ -127,7 +127,7 @@ namespace Library_Management_System
             string date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
 
             string addDataQuery =
-                "INSERT INTO Books (BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Date) VALUES (@BookName, @BookAuthor, @BookCategory, @BookAmountAvailable, @BookAmountBorrowed, @Date)";
+                "INSERT INTO Books (BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Date, State) VALUES (@BookName, @BookAuthor, @BookCategory, @BookAmountAvailable, @BookAmountBorrowed, @Date, @State)";
 
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
@@ -141,6 +141,7 @@ namespace Library_Management_System
                 insertCommand.Parameters.AddWithValue("@BookAmountAvailable", amount);
                 insertCommand.Parameters.AddWithValue("@BookAmountBorrowed", 0);
                 insertCommand.Parameters.AddWithValue("@Date", date);
+                insertCommand.Parameters.AddWithValue("@State", 0);
                 insertCommand.ExecuteNonQuery();
             }
         }
@@ -149,7 +150,8 @@ namespace Library_Management_System
         {
             string queryString =
                 "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.date, CustomerIDs " +
-                "from (Books left join BookAmount on BookAmount.BookIDs = Books.BookIDs)";
+                "from (Books left join BookAmount on BookAmount.BookIDs = Books.BookIDs)" +
+                "where Books.State = 0";
 
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
@@ -229,7 +231,7 @@ namespace Library_Management_System
              * Otherwise we can't query the db because there is no books in the database currently.
              */
 
-            string getTableSize = "Select Count(BookIDs) from Books";
+            string getTableSize = "Select Count(BookIDs) from Books where Books.State = 0";
 
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
@@ -280,7 +282,7 @@ namespace Library_Management_System
                     string getIDsQuery =
                         "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, CustomerIDs " +
                         "from (Books left join BookAmount on BookAmount.BookIDs = Books.BookIDs) " +
-                        $"where Books.BookIDs = {ids}";
+                        $"where Books.BookIDs = {ids} and Books.State = 0";
 
                     using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                     {
@@ -358,7 +360,7 @@ namespace Library_Management_System
                     string getTitlesQuery =
                         "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, CustomerIDs " +
                         "from (Books left join BookAmount on BookAmount.BookIDs = Books.BookIDs) " +
-                        $"where BookName like '%{title}%'";
+                        $"where BookName like '%{title}%' and Books.State = 0";
 
                     using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                     {
@@ -436,7 +438,7 @@ namespace Library_Management_System
                     string getAuthorNamesQuery =
                         "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, CustomerIDs " +
                         "from (Books left join BookAmount on BookAmount.BookIDs = Books.BookIDs) " +
-                        $"where BookAuthor like '%{name}%'";
+                        $"where BookAuthor like '%{name}%' and Books.State = 0";
 
                     using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                     {
@@ -514,7 +516,7 @@ namespace Library_Management_System
                     string getCategoryQuery =
                         "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, CustomerIDs " +
                         "from (Books left join BookAmount on BookAmount.BookIDs = Books.BookIDs) " +
-                        $"where BookCategory like '%{category}%'";
+                        $"where BookCategory like '%{category}%' and Books.State = 0";
 
                     using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                     {
@@ -600,7 +602,7 @@ namespace Library_Management_System
                             string getStatusQueryAvailable =
                                 "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, CustomerIDs " +
                                 "from (Books left join BookAmount on BookAmount.BookIDs = Books.BookIDs) " +
-                                "where BookAmountAvailable > 0";
+                                "where BookAmountAvailable > 0 and Books.State = 0";
 
                             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                             {
@@ -674,7 +676,7 @@ namespace Library_Management_System
                             string getStatusQueryBorrowed =
                                 "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, CustomerIDs " +
                                 "from (Books left join BookAmount on BookAmount.BookIDs = Books.BookIDs) " +
-                                "where BookAmountBorrowed > 0";
+                                "where BookAmountBorrowed > 0 and Books.State = 0";
 
                             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                             {
@@ -773,7 +775,7 @@ namespace Library_Management_System
                             string getyesterdayBooks =
                                 "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, CustomerIDs " +
                                 "from (Books left join BookAmount on BookAmount.BookIDs = Books.BookIDs) " +
-                                $"where cast(Books.Date as date) = '{y}'";
+                                $"where cast(Books.Date as date) = '{y}' and Books.State = 0";
 
                             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                             {
@@ -853,7 +855,7 @@ namespace Library_Management_System
                             string getFDaysBooks =
                                 "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, CustomerIDs " +
                                 "from (Books left join BookAmount on BookAmount.BookIDs = Books.BookIDs) " +
-                                $"where Books.Date between '{t}' and '{f}' ";
+                                $"where Books.Date between '{t}' and '{f}' and Books.State = 0";
 
                             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                             {
@@ -933,7 +935,7 @@ namespace Library_Management_System
                             string getAWeekBooks =
                                 "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, CustomerIDs " +
                                 "from (Books left join BookAmount on BookAmount.BookIDs = Books.BookIDs) " +
-                                $"where Books.Date between '{sd}' and '{w}' ";
+                                $"where Books.Date between '{sd}' and '{w}' and Books.State = 0";
 
                             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                             {
@@ -1013,7 +1015,7 @@ namespace Library_Management_System
                             string getMonthBooks =
                                 "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, CustomerIDs " +
                                 "from (Books left join BookAmount on BookAmount.BookIDs = Books.BookIDs) " +
-                                $"where Books.Date between '{tw}' and '{m}' ";
+                                $"where Books.Date between '{tw}' and '{m}' and Books.State = 0";
 
                             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                             {
@@ -1095,7 +1097,7 @@ namespace Library_Management_System
                             string getSMonthBooks =
                                 "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, CustomerIDs " +
                                 "from (Books left join BookAmount on BookAmount.BookIDs = Books.BookIDs) " +
-                                $"where Books.Date between '{tm}' and '{sm}' ";
+                                $"where Books.Date between '{tm}' and '{sm}' and Books.State = 0";
 
                             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                             {
@@ -1177,7 +1179,7 @@ namespace Library_Management_System
                             string getAyBooks =
                                 "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, CustomerIDs " +
                                 "from (Books left join BookAmount on BookAmount.BookIDs = Books.BookIDs) " +
-                                $"where Books.Date between '{smt}' and '{ay}' ";
+                                $"where Books.Date between '{smt}' and '{ay}' and Books.State = 0";
 
                             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                             {
@@ -1259,7 +1261,7 @@ namespace Library_Management_System
                             string getTyBooks =
                                 "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, CustomerIDs " +
                                 "from (Books left join BookAmount on BookAmount.BookIDs = Books.BookIDs) " +
-                                $"where Books.Date between '{ayr}' and '{tyr}' ";
+                                $"where Books.Date between '{ayr}' and '{tyr}' and Books.State = 0";
 
                             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                             {
@@ -1341,7 +1343,7 @@ namespace Library_Management_System
                             string getFyBooks =
                                 "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, CustomerIDs " +
                                 "from (Books left join BookAmount on BookAmount.BookIDs = Books.BookIDs) " +
-                                $"where Books.Date between '{tyrd}' and '{fyr}' ";
+                                $"where Books.Date between '{tyrd}' and '{fyr}' and Books.State = 0";
 
                             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                             {
@@ -1427,7 +1429,7 @@ namespace Library_Management_System
 
         public void Delete()
         {
-            string getTableSize = "Select Count(BookIDs) from Books";
+            string getTableSize = "Select Count(BookIDs) from Books where Books.State = 0";
 
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
@@ -1467,7 +1469,7 @@ namespace Library_Management_System
                     string getIDsQuery =
                         "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, CustomerIDs " +
                         "from (Books left join BookAmount on BookAmount.BookIDs = Books.BookIDs) " +
-                        $"where Books.BookIDs = {ids}";
+                        $"where Books.BookIDs = {ids} and Books.State = 0";
 
                     using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                     {
@@ -1540,7 +1542,7 @@ namespace Library_Management_System
                                 switch (isConfirm)
                                 {
                                     case 1:
-                                        string delBookIDs = $"delete from Books where BookIDs = '{ids}'";
+                                        string delBookIDs = $"update Books set Books.State = 1 where BookIDs = '{ids}'";
                                         SqlCommand d = new SqlCommand(delBookIDs, connection);
                                         d.ExecuteNonQuery();
                                         Console.WriteLine(
@@ -1571,7 +1573,7 @@ namespace Library_Management_System
                     string getNameQuery =
                         "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, CustomerIDs " +
                         "from (Books left join BookAmount on BookAmount.BookIDs = Books.BookIDs) " +
-                        $"where BookName = '{name}'";
+                        $"where BookName = '{name}' and Books.State = 0";
 
                     using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                     {
@@ -1644,7 +1646,8 @@ namespace Library_Management_System
                                 switch (isConfirm)
                                 {
                                     case 1:
-                                        string delBookIDs = $"delete from Books where BookName = '{name}'";
+                                        string delBookIDs =
+                                            $"update Books set Books.State = 1 where BookName = '{name}'";
                                         SqlCommand d = new SqlCommand(delBookIDs, connection);
                                         d.ExecuteNonQuery();
                                         Console.WriteLine(
@@ -1686,7 +1689,7 @@ namespace Library_Management_System
             string category = "";
 
             string checkIDsQuery =
-                $"select BookName, BookAuthor, BookCategory from Books where BookIDs = {ids}";
+                $"select BookName, BookAuthor, BookCategory from Books where BookIDs = {ids} and Books.State = 0";
 
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
@@ -1852,6 +1855,7 @@ namespace Library_Management_System
                     else
                     {
                         Console.WriteLine("Invalid ID");
+                        return;
                     }
                 }
             }
@@ -1860,7 +1864,7 @@ namespace Library_Management_System
             int ids = int.Parse(Console.ReadLine());
 
             string checkIDsQuery =
-                $"select BookAmountAvailable, BookAmountBorrowed from Books where BookIDs = {ids}";
+                $"select BookAmountAvailable, BookAmountBorrowed from Books where BookIDs = {ids} and Books.State = 0";
 
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
@@ -1902,7 +1906,7 @@ namespace Library_Management_System
                     }
                 }
             }
-            
+
             Console.WriteLine("\t\t\t\t\t\t═════════ BORROWED SUCCESSFULLY ═════════\t\t\t\t\t");
         }
     }

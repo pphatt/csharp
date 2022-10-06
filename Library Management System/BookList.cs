@@ -125,7 +125,7 @@ namespace Library_Management_System
             Console.Write("Enter amount: ");
             int amount = int.Parse(Console.ReadLine());
             string date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-            
+
             string[] bna = bookName.Split(' ');
             StringBuilder bn = new StringBuilder();
 
@@ -133,15 +133,15 @@ namespace Library_Management_System
             {
                 string o = "";
                 string nn = bna[i][0].ToString().ToUpper() + bna[i].Substring(1);
-                
+
                 if (i != bna.Length - 1)
                 {
                     o = " ";
                 }
-                
+
                 bn.Append(nn + o);
             }
-            
+
             string[] aut = bookName.Split(' ');
             StringBuilder au = new StringBuilder();
 
@@ -149,12 +149,12 @@ namespace Library_Management_System
             {
                 string o = "";
                 string nn = aut[i][0].ToString().ToUpper() + aut[i].Substring(1);
-                
+
                 if (i != aut.Length - 1)
                 {
                     o = " ";
                 }
-                
+
                 au.Append(nn + o);
             }
 
@@ -1653,8 +1653,15 @@ namespace Library_Management_System
                                 {
                                     case 1:
                                         string delBookIDs = $"update Books set Books.State = 1 where BookIDs = '{ids}'";
+                                        string updateBookFromBookAmount =
+                                            $"update BookAmount set State = 1 where BookIDs = '{ids}' ";
+
                                         SqlCommand d = new SqlCommand(delBookIDs, connection);
                                         d.ExecuteNonQuery();
+
+                                        SqlCommand u = new SqlCommand(updateBookFromBookAmount, connection);
+                                        u.ExecuteNonQuery();
+
                                         Console.WriteLine(
                                             "\t\t\t\t\t\t═══════════ DELETE SUCCESSFULLY ═══════════\t\t\t\t\t");
                                         break;
@@ -1679,6 +1686,7 @@ namespace Library_Management_System
                 case 2:
                     Console.Write("Input Name to delete: ");
                     string name = Console.ReadLine();
+                    int i = 0;
 
                     string getNameQuery =
                         "select Books.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Books.Date, CustomerIDs " +
@@ -1700,6 +1708,8 @@ namespace Library_Management_System
                             {
                                 if (!check)
                                 {
+                                    i = (int)readerBookInfo[0];
+
                                     for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                     {
                                         Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
@@ -1758,8 +1768,16 @@ namespace Library_Management_System
                                     case 1:
                                         string delBookIDs =
                                             $"update Books set Books.State = 1 where BookName = '{name}'";
+
+                                        string updateBookFromBookAmount =
+                                            $"update BookAmount set State = 1 where BookIDs = '{i}' ";
+
                                         SqlCommand d = new SqlCommand(delBookIDs, connection);
                                         d.ExecuteNonQuery();
+
+                                        SqlCommand u = new SqlCommand(updateBookFromBookAmount, connection);
+                                        u.ExecuteNonQuery();
+
                                         Console.WriteLine(
                                             "\t\t\t\t\t\t═══════════ DELETE SUCCESSFULLY ═══════════\t\t\t\t\t");
                                         break;
@@ -1892,7 +1910,7 @@ namespace Library_Management_System
             }
         }
 
-        public void UpdateStatus()
+        public void Borrowed()
         {
             Console.Write("Input IDs customer to borrow: ");
             string cids = Console.ReadLine();

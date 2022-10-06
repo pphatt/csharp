@@ -598,65 +598,6 @@ namespace Library_Management_System
             switch (n)
             {
                 case 1:
-                    // bool check = false;
-                    // Console.Write("Input IDs to delete: ");
-                    // string ids = Console.ReadLine();
-                    // List<string> output1 = new List<string>(data);
-                    // List<string> bookData = new List<string>(data1);
-                    //
-                    // for (int i = 0; i < output1.Count; i++)
-                    // {
-                    //     string[] output2 = output1[i].Split(',');
-                    //     if (output2[0] == ids)
-                    //     {
-                    //         output1.RemoveAt(i);
-                    //         check = true;
-                    //         break;
-                    //     }
-                    // }
-                    //
-                    // if (check == false)
-                    // {
-                    //     Console.WriteLine($"There is no {ids} in IDs section in the database");
-                    //     return;
-                    // }
-                    //
-                    // for (int i = 0; i < bookData.Count; i++)
-                    // {
-                    //     string[] aOutput = bookData[i].Split(',');
-                    //     List<string> aOutputList = new List<string>(aOutput);
-                    //     bool checkIng = false;
-                    //
-                    //     for (int j = 7; j <= aOutputList.Count - 1; j++)
-                    //     {
-                    //         string[] checkIDs = aOutputList[j].Split(' ');
-                    //         string[] checkAvailable = aOutputList[4].Split(' ');
-                    //         string[] checkBorrowed = aOutputList[5].Split(' ');
-                    //
-                    //         if (checkIDs[0] == ids)
-                    //         {
-                    //             aOutputList.RemoveAt(j);
-                    //             checkAvailable[1] = $"{int.Parse(checkAvailable[1]) + 1}";
-                    //             aOutputList[4] = string.Join(" ", checkAvailable);
-                    //             checkBorrowed[1] = $"{int.Parse(checkBorrowed[1]) - 1}";
-                    //             aOutputList[5] = string.Join(" ", checkBorrowed);
-                    //             checkIng = true;
-                    //             break;
-                    //         }
-                    //     }
-                    //
-                    //     if (checkIng)
-                    //     {
-                    //         bookData[i] = string.Join(",", aOutputList.ToArray());
-                    //     }
-                    // }
-                    //
-                    // File.WriteAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt",
-                    //     output1.ToArray());
-                    // File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", bookData.ToArray());
-                    // Console.WriteLine("\t\t\t\t\t\t═══════════ DELETE SUCCESSFULLY ═══════════\t\t\t\t\t");
-                    //
-
                     Console.Write("Input IDs to delete: ");
                     string ids = Console.ReadLine();
 
@@ -738,8 +679,16 @@ namespace Library_Management_System
                                     case 1:
                                         string delCustomer =
                                             $"update Customer set State = 1 where CustomerIDs = '{ids}'";
+
+                                        string ud =
+                                            $"update BookAmount set State = 1 where CustomerIDs = '{ids}'";
+
                                         SqlCommand d = new SqlCommand(delCustomer, connection);
                                         d.ExecuteNonQuery();
+
+                                        SqlCommand u = new SqlCommand(ud, connection);
+                                        u.ExecuteNonQuery();
+
                                         Console.WriteLine(
                                             "\t\t\t\t\t\t═══════════ DELETE SUCCESSFULLY ═══════════\t\t\t\t\t");
                                         break;
@@ -762,8 +711,9 @@ namespace Library_Management_System
 
                     break;
                 case 2:
-                    Console.Write("Input IDs to delete: ");
+                    Console.Write("Input Name to delete: ");
                     string name = Console.ReadLine();
+                    int i = 0;
 
                     string getCustomerInfoByName =
                         "select Customer.CustomerIDs, CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Customer.Date, BookAmount.BookIDs " +
@@ -785,6 +735,8 @@ namespace Library_Management_System
                             {
                                 if (!check)
                                 {
+                                    i = (int)readerBookInfo[0];
+
                                     for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
                                     {
                                         Console.Write($"╔{BookList.Repeat("═", Program.StoreLengthCustomer[k])}╗");
@@ -843,8 +795,16 @@ namespace Library_Management_System
                                     case 1:
                                         string delCustomer =
                                             $"update Customer set State = 1 where CustomerName = '{name}'";
+
+                                        string ud =
+                                            $"update BooksAmount set State = 1 where CustomerIDs = '{i}'";
+
                                         SqlCommand d = new SqlCommand(delCustomer, connection);
                                         d.ExecuteNonQuery();
+
+                                        SqlCommand u = new SqlCommand(ud, connection);
+                                        u.ExecuteNonQuery();
+
                                         Console.WriteLine(
                                             "\t\t\t\t\t\t═══════════ DELETE SUCCESSFULLY ═══════════\t\t\t\t\t");
                                         break;

@@ -55,7 +55,7 @@ namespace Library_Management_System
                     Console.ReadKey();
                 } else if (number == 5)
                 {
-                    _book.UpdateStatus();
+                    _book.Borrowed();
                     Console.ReadKey();
                 } else if (number == 6)
                 {

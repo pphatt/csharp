@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Data.SqlClient;
+using System.Text;
 
 namespace Library_Management_System
 {
@@ -20,26 +22,27 @@ namespace Library_Management_System
                 if (output[index] == $"{name}")
                 {
                     // Console.WriteLine(BookList.Repeat("-", 151));
-                    
+
                     for (int j = 0; j < storeLength.Length; j++)
                     {
-                        Console.Write($"╔{BookList.Repeat("═",storeLength[j])}╗");
+                        Console.Write($"╔{BookList.Repeat("═", storeLength[j])}╗");
                     }
-                    
+
                     Console.WriteLine(
                         $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║");
-                    
+
                     for (int j = 0; j < storeLength.Length; j++)
                     {
-                        Console.Write($" {BookList.Repeat("═",storeLength[j])} ");
+                        Console.Write($" {BookList.Repeat("═", storeLength[j])} ");
                     }
+
                     Console.Write("\n");
-                    
-                    string x = (output.Length > 6) 
-                        ? $"║{"",-1}{output[0],-10}║║{"",-1}{output[1],-60}║║{"",-1}{output[2],-5}║║{"",-1}{output[3],-6}║║{"",-1}{output[4],-15}║║{"",-1}{output[6],-48}║" 
+
+                    string x = (output.Length > 6)
+                        ? $"║{"",-1}{output[0],-10}║║{"",-1}{output[1],-60}║║{"",-1}{output[2],-5}║║{"",-1}{output[3],-6}║║{"",-1}{output[4],-15}║║{"",-1}{output[6],-48}║"
                         : $"║{"",-1}{output[0],-10}║║{"",-1}{output[1],-60}║║{"",-1}{output[2],-5}║║{"",-1}{output[3],-6}║║{"",-1}{output[4],-15}║║{"",-1}{output[5],-48}║";
                     Console.WriteLine(x);
-                    
+
                     if (output.Length >= 8)
                     {
                         for (int j = 7; j <= output.Length - 1; j++)
@@ -48,12 +51,12 @@ namespace Library_Management_System
                                 $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-1}{output[j],-48}║");
                         }
                     }
-                    
+
                     for (int j = 0; j < storeLength.Length; j++)
                     {
-                        Console.Write($"╚{BookList.Repeat("═",storeLength[j])}╝");
+                        Console.Write($"╚{BookList.Repeat("═", storeLength[j])}╝");
                     }
-                    
+
                     // Console.WriteLine(BookList.Repeat("-", 151));
                     return;
                 }
@@ -64,75 +67,146 @@ namespace Library_Management_System
 
         public void AddCustomer()
         {
-            Console.Write("Enter customer's IDs: ");
-            string ids = Console.ReadLine();
             Console.Write("Enter customer's name: ");
             string name = Console.ReadLine();
             Console.Write("Enter customer's age: ");
             string age = Console.ReadLine();
             Console.Write("Enter customer's sex: ");
-            string sex = Console.ReadLine().ToLower();
+            string sex = Console.ReadLine();
             Console.Write("Enter customer's phone number: ");
             string phoneNumber = Console.ReadLine();
+            string date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+
+            string[] na = name.Split(' ');
+            StringBuilder n = new StringBuilder();
+
+            for (int i = 0; i < na.Length; i++)
+            {
+                string o = "";
+                string nn = na[i][0].ToString().ToUpper() + na[i].Substring(1);
+                
+                if (i != na.Length - 1)
+                {
+                    o = " ";
+                }
+                
+                n.Append(nn + o);
+            }
             
-            
+            string addDataQuery =
+                "INSERT INTO Customer (CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Date, State) VALUES (@CustomerName, @CustomerAge, @CustomerSex, @CustomerPhoneNumber, @Date, @State)";
+
+            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    SqlCommand insertCommand = new SqlCommand(addDataQuery, connection);
+
+                    insertCommand.Parameters.AddWithValue("@CustomerName", n.ToString());
+                    insertCommand.Parameters.AddWithValue("@CustomerAge", age);
+                    insertCommand.Parameters.AddWithValue("@CustomerSex", sex[0].ToString().ToUpper() + sex.Substring(1));
+                    insertCommand.Parameters.AddWithValue("@CustomerPhoneNumber", phoneNumber);
+                    insertCommand.Parameters.AddWithValue("@Date", date);
+                    insertCommand.Parameters.AddWithValue("@State", 0);
+                    insertCommand.ExecuteNonQuery();
+                    Console.WriteLine("\t\t\t\t\t\t═══════════ ADDED SUCCESSFULLY ═══════════\t\t\t\t\t");
+                }
+                catch (SqlException ex)
+                {
+                    string[] t = ex.Errors[0].Message.Split(' ');
+                    string t1 = t[t.Length - 1];
+                    string error = t1.Substring(1, t1.Length - 3);
+
+                    switch (error)
+                    {
+                        case "CustomerAge":
+                            Console.WriteLine("Errors at Customer's Age. Invalid Age");
+                            break;
+                        case "CustomerSex":
+                            Console.WriteLine("Errors at Customer's Sex. Invalid Sex (just Male and Female).");
+                            break;
+                        case "CustomerPhoneNumber":
+                            Console.WriteLine("Errors at Customer's PhoneNumber. Invalid PhoneNumber");
+                            break;
+                    }
+                }
+            }
         }
 
         public void ShowCustomer()
         {
-            try
+            string queryString =
+                "select Customer.CustomerIDs, CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Customer.Date, BookAmount.BookIDs " +
+                "from (Customer left join BookAmount on Customer.CustomerIDs = BookAmount.CustomerIDs) " +
+                "where Customer.State = 0";
+
+            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
-                string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt");
-                int[] storeLength = { 11, 61, 6, 7, 16, 49 };
-                
-                if (data.Length == 0)
-                {
-                    Console.WriteLine("There are no data currently");
-                    return;
-                }
+                SqlCommand command = new SqlCommand(queryString, connection);
 
-                for (int j = 0; j < storeLength.Length; j++)
-                {
-                    Console.Write($"╔{BookList.Repeat("═",storeLength[j])}╗");
-                }
-                
-                Console.WriteLine(
-                    $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║");
+                connection.Open();
 
-                for (int i = 0; i < data.Length; i++)
+                using (SqlDataReader readerBookInfo = command.ExecuteReader())
                 {
-                    for (int j = 0; j < storeLength.Length; j++)
+                    bool check = false;
+                    string prevIDs = "";
+
+                    while (readerBookInfo.Read())
                     {
-                        Console.Write($" {BookList.Repeat("═",storeLength[j])} ");
-                    }
-                    
-                    Console.Write("\n");
-                    
-                    string[] output = data[i].Split(',');
+                        if (!check)
+                        {
+                            for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
+                            {
+                                Console.Write($"╔{BookList.Repeat("═", Program.StoreLengthCustomer[k])}╗");
+                            }
+                            
+                            Console.WriteLine(
+                                $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
 
-                    string x = (output.Length > 6) 
-                        ? $"║{"",-1}{output[0],-10}║║{"",-1}{output[1],-60}║║{"",-1}{output[2],-5}║║{"",-1}{output[3],-6}║║{"",-1}{output[4],-15}║║{"",-1}{output[6],-48}║" 
-                        : $"║{"",-1}{output[0],-10}║║{"",-1}{output[1],-60}║║{"",-1}{output[2],-5}║║{"",-1}{output[3],-6}║║{"",-1}{output[4],-15}║║{"",-1}{output[5],-48}║";
-                    Console.WriteLine(x);
-                    
-                    if (output.Length >= 8)
-                    {
-                        for (int j = 7; j <= output.Length - 1; j++)
+                            check = true;
+                        }
+
+                        if (prevIDs == $"{readerBookInfo[0]}")
                         {
                             Console.WriteLine(
-                                $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-1}{output[j],-48}║");
+                                $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║");
+
+                            prevIDs = $"{readerBookInfo[0]}";
+
+                            continue;
                         }
+
+                        prevIDs = $"{readerBookInfo[0]}";
+
+                        for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
+                        {
+                            Console.Write($" {BookList.Repeat("═", Program.StoreLengthCustomer[k])} ");
+                        }
+
+                        string status = $"{readerBookInfo[6]}" != ""
+                            ? $"║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║\n"
+                            : $"║{"",-1}{"Empty",-25}║\n";
+
+                        Console.Write(
+                            $"\n║{"",-1}{readerBookInfo[0],-10}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-5}║║{"",-1}{readerBookInfo[3],-6}║║{"",-1}{readerBookInfo[4],-15}║║{"",-1}{readerBookInfo[5],-23}║{status}");
+                    }
+
+                    if (check)
+                    {
+                        for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
+                        {
+                            Console.Write($"╚{BookList.Repeat("═", Program.StoreLengthCustomer[k])}╝");
+                        }
+
+                        Console.WriteLine("");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid ID");
                     }
                 }
-                
-                for (int j = 0; j < storeLength.Length; j++)
-                {
-                    Console.Write($"╚{BookList.Repeat("═",storeLength[j])}╝");
-                }
-            }
-            catch (IOException)
-            {
-                Console.WriteLine("There are no data currently");
             }
         }
 
@@ -142,7 +216,7 @@ namespace Library_Management_System
             {
                 string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt");
                 int[] storeLength = { 11, 61, 6, 7, 16, 49 };
-                
+
                 if (data.Length == 0)
                 {
                     Console.WriteLine("There are no data currently");
@@ -194,9 +268,9 @@ namespace Library_Management_System
 
                         for (int j = 0; j < storeLength.Length; j++)
                         {
-                            Console.Write($"╔{BookList.Repeat("═",storeLength[j])}╗");
+                            Console.Write($"╔{BookList.Repeat("═", storeLength[j])}╗");
                         }
-                
+
                         Console.WriteLine(
                             $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║");
 
@@ -208,17 +282,17 @@ namespace Library_Management_System
                             {
                                 for (int j = 0; j < storeLength.Length; j++)
                                 {
-                                    Console.Write($" {BookList.Repeat("═",storeLength[j])} ");
+                                    Console.Write($" {BookList.Repeat("═", storeLength[j])} ");
                                 }
-                    
+
                                 Console.Write("\n");
-                                
-                                string x = (output1.Length > 6) 
-                                    ? $"║{"",-1}{output1[0],-10}║║{"",-1}{output1[1],-60}║║{"",-1}{output1[2],-5}║║{"",-1}{output1[3],-6}║║{"",-1}{output1[4],-15}║║{"",-1}{output1[6],-48}║" 
+
+                                string x = (output1.Length > 6)
+                                    ? $"║{"",-1}{output1[0],-10}║║{"",-1}{output1[1],-60}║║{"",-1}{output1[2],-5}║║{"",-1}{output1[3],-6}║║{"",-1}{output1[4],-15}║║{"",-1}{output1[6],-48}║"
                                     : $"║{"",-1}{output1[0],-10}║║{"",-1}{output1[1],-60}║║{"",-1}{output1[2],-5}║║{"",-1}{output1[3],-6}║║{"",-1}{output1[4],-15}║║{"",-1}{output1[5],-48}║";
-                                
+
                                 Console.WriteLine(x);
-                                
+
                                 if (output1.Length >= 8)
                                 {
                                     for (int j = 7; j <= output1.Length - 1; j++)
@@ -229,10 +303,10 @@ namespace Library_Management_System
                                 }
                             }
                         }
-                        
+
                         for (int j = 0; j < storeLength.Length; j++)
                         {
-                            Console.Write($"╚{BookList.Repeat("═",storeLength[j])}╝");
+                            Console.Write($"╚{BookList.Repeat("═", storeLength[j])}╝");
                         }
 
                         break;
@@ -244,9 +318,9 @@ namespace Library_Management_System
                         {
                             for (int j = 0; j < storeLength.Length; j++)
                             {
-                                Console.Write($"╔{BookList.Repeat("═",storeLength[j])}╗");
+                                Console.Write($"╔{BookList.Repeat("═", storeLength[j])}╗");
                             }
-                
+
                             Console.WriteLine(
                                 $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║");
 
@@ -258,17 +332,17 @@ namespace Library_Management_System
                                 {
                                     for (int j = 0; j < storeLength.Length; j++)
                                     {
-                                        Console.Write($" {BookList.Repeat("═",storeLength[j])} ");
+                                        Console.Write($" {BookList.Repeat("═", storeLength[j])} ");
                                     }
-                    
+
                                     Console.Write("\n");
-                                    
-                                    string x = (output1.Length > 6) 
-                                        ? $"║{"",-1}{output1[0],-10}║║{"",-1}{output1[1],-60}║║{"",-1}{output1[2],-5}║║{"",-1}{output1[3],-6}║║{"",-1}{output1[4],-15}║║{"",-1}{output1[6],-48}║" 
+
+                                    string x = (output1.Length > 6)
+                                        ? $"║{"",-1}{output1[0],-10}║║{"",-1}{output1[1],-60}║║{"",-1}{output1[2],-5}║║{"",-1}{output1[3],-6}║║{"",-1}{output1[4],-15}║║{"",-1}{output1[6],-48}║"
                                         : $"║{"",-1}{output1[0],-10}║║{"",-1}{output1[1],-60}║║{"",-1}{output1[2],-5}║║{"",-1}{output1[3],-6}║║{"",-1}{output1[4],-15}║║{"",-1}{output1[5],-48}║";
-                                
+
                                     Console.WriteLine(x);
-                                    
+
                                     if (output1.Length >= 8)
                                     {
                                         for (int j = 7; j <= output1.Length - 1; j++)
@@ -279,10 +353,10 @@ namespace Library_Management_System
                                     }
                                 }
                             }
-                            
+
                             for (int j = 0; j < storeLength.Length; j++)
                             {
-                                Console.Write($"╚{BookList.Repeat("═",storeLength[j])}╝");
+                                Console.Write($"╚{BookList.Repeat("═", storeLength[j])}╝");
                             }
                         }
 
@@ -312,9 +386,9 @@ namespace Library_Management_System
 
                         for (int j = 0; j < storeLength.Length; j++)
                         {
-                            Console.Write($"╔{BookList.Repeat("═",storeLength[j])}╗");
+                            Console.Write($"╔{BookList.Repeat("═", storeLength[j])}╗");
                         }
-                
+
                         Console.WriteLine(
                             $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║");
 
@@ -326,17 +400,17 @@ namespace Library_Management_System
                             {
                                 for (int j = 0; j < storeLength.Length; j++)
                                 {
-                                    Console.Write($" {BookList.Repeat("═",storeLength[j])} ");
+                                    Console.Write($" {BookList.Repeat("═", storeLength[j])} ");
                                 }
-                    
+
                                 Console.Write("\n");
-                                
-                                string x = (output1.Length > 6) 
-                                    ? $"║{"",-1}{output1[0],-10}║║{"",-1}{output1[1],-60}║║{"",-1}{output1[2],-5}║║{"",-1}{output1[3],-6}║║{"",-1}{output1[4],-15}║║{"",-1}{output1[6],-48}║" 
+
+                                string x = (output1.Length > 6)
+                                    ? $"║{"",-1}{output1[0],-10}║║{"",-1}{output1[1],-60}║║{"",-1}{output1[2],-5}║║{"",-1}{output1[3],-6}║║{"",-1}{output1[4],-15}║║{"",-1}{output1[6],-48}║"
                                     : $"║{"",-1}{output1[0],-10}║║{"",-1}{output1[1],-60}║║{"",-1}{output1[2],-5}║║{"",-1}{output1[3],-6}║║{"",-1}{output1[4],-15}║║{"",-1}{output1[5],-48}║";
-                                
+
                                 Console.WriteLine(x);
-                                
+
                                 if (output1.Length >= 8)
                                 {
                                     for (int j = 7; j <= output1.Length - 1; j++)
@@ -347,10 +421,10 @@ namespace Library_Management_System
                                 }
                             }
                         }
-                        
+
                         for (int j = 0; j < storeLength.Length; j++)
                         {
-                            Console.Write($"╚{BookList.Repeat("═",storeLength[j])}╝");
+                            Console.Write($"╚{BookList.Repeat("═", storeLength[j])}╝");
                         }
 
                         break;
@@ -376,13 +450,13 @@ namespace Library_Management_System
             {
                 string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt");
                 string[] data1 = File.ReadAllLines(@"D:\Dev\School\Library Management System\MyTest.txt");
-                
+
                 if (data.Length == 0)
                 {
                     Console.WriteLine("There are no data currently");
                     return;
                 }
-                
+
                 Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
                 Console.WriteLine("\t\t\t\t\t\t║ 1. DELETE BY ID                        ║\t\t\t\t\t");
                 Console.WriteLine("\t\t\t\t\t\t║ 2. DELETE BY NAME                      ║\t\t\t\t\t");
@@ -421,13 +495,13 @@ namespace Library_Management_System
                             string[] aOutput = bookData[i].Split(',');
                             List<string> aOutputList = new List<string>(aOutput);
                             bool checkIng = false;
-                            
+
                             for (int j = 7; j <= aOutputList.Count - 1; j++)
                             {
                                 string[] checkIDs = aOutputList[j].Split(' ');
                                 string[] checkAvailable = aOutputList[4].Split(' ');
                                 string[] checkBorrowed = aOutputList[5].Split(' ');
-                                
+
                                 if (checkIDs[0] == ids)
                                 {
                                     aOutputList.RemoveAt(j);
@@ -439,14 +513,15 @@ namespace Library_Management_System
                                     break;
                                 }
                             }
-                            
+
                             if (checkIng)
                             {
                                 bookData[i] = string.Join(",", aOutputList.ToArray());
                             }
                         }
-                        
-                        File.WriteAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt", output1.ToArray());
+
+                        File.WriteAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt",
+                            output1.ToArray());
                         File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", bookData.ToArray());
                         Console.WriteLine("\t\t\t\t\t\t═══════════ DELETE SUCCESSFULLY ═══════════\t\t\t\t\t");
 
@@ -458,7 +533,7 @@ namespace Library_Management_System
                         List<string> output3 = new List<string>(data);
                         List<string> bookData1 = new List<string>(data1);
                         string checkID = "";
-                        
+
                         for (int i = 0; i < output3.Count; i++)
                         {
                             string[] output2 = output3[i].Split(',');
@@ -476,19 +551,19 @@ namespace Library_Management_System
                             Console.WriteLine($"There is no {name} in Name section in the database");
                             return;
                         }
-                        
+
                         for (int i = 0; i < bookData1.Count; i++)
                         {
                             string[] aOutput = bookData1[i].Split(',');
                             List<string> aOutputList = new List<string>(aOutput);
                             bool checkIng = false;
-                            
+
                             for (int j = 7; j <= aOutputList.Count - 1; j++)
                             {
                                 string[] checkIDs = aOutputList[j].Split(' ');
                                 string[] checkAvailable = aOutputList[4].Split(' ');
                                 string[] checkBorrowed = aOutputList[5].Split(' ');
-                                
+
                                 if (checkIDs[0] == checkID)
                                 {
                                     aOutputList.RemoveAt(j);
@@ -500,14 +575,15 @@ namespace Library_Management_System
                                     break;
                                 }
                             }
-                            
+
                             if (checkIng)
                             {
                                 bookData1[i] = string.Join(",", aOutputList.ToArray());
                             }
                         }
 
-                        File.WriteAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt", output3.ToArray());
+                        File.WriteAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt",
+                            output3.ToArray());
                         File.WriteAllLines(@"D:\Dev\School\Library Management System\MyTest.txt", bookData1.ToArray());
                         Console.WriteLine("\t\t\t\t\t\t═══════════ DELETE SUCCESSFULLY ═══════════\t\t\t\t\t");
 
@@ -537,7 +613,7 @@ namespace Library_Management_System
                 ShowCustomer();
                 Console.Write("\nInput IDs to edit: ");
                 string ids = Console.ReadLine();
-                
+
                 for (int i = 0; i < data.Length; i++)
                 {
                     string[] output = data[i].Split(',');
@@ -566,7 +642,6 @@ namespace Library_Management_System
                         }
                         else if (number2 == 6)
                         {
-
                         }
                         else
                         {

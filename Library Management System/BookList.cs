@@ -125,6 +125,38 @@ namespace Library_Management_System
             Console.Write("Enter amount: ");
             int amount = int.Parse(Console.ReadLine());
             string date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+            
+            string[] bna = bookName.Split(' ');
+            StringBuilder bn = new StringBuilder();
+
+            for (int i = 0; i < bna.Length; i++)
+            {
+                string o = "";
+                string nn = bna[i][0].ToString().ToUpper() + bna[i].Substring(1);
+                
+                if (i != bna.Length - 1)
+                {
+                    o = " ";
+                }
+                
+                bn.Append(nn + o);
+            }
+            
+            string[] aut = bookName.Split(' ');
+            StringBuilder au = new StringBuilder();
+
+            for (int i = 0; i < aut.Length; i++)
+            {
+                string o = "";
+                string nn = aut[i][0].ToString().ToUpper() + aut[i].Substring(1);
+                
+                if (i != aut.Length - 1)
+                {
+                    o = " ";
+                }
+                
+                au.Append(nn + o);
+            }
 
             string addDataQuery =
                 "INSERT INTO Books (BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Date, State) VALUES (@BookName, @BookAuthor, @BookCategory, @BookAmountAvailable, @BookAmountBorrowed, @Date, @State)";
@@ -135,8 +167,8 @@ namespace Library_Management_System
 
                 SqlCommand insertCommand = new SqlCommand(addDataQuery, connection);
 
-                insertCommand.Parameters.AddWithValue("@BookName", bookName);
-                insertCommand.Parameters.AddWithValue("@BookAuthor", author);
+                insertCommand.Parameters.AddWithValue("@BookName", bn.ToString());
+                insertCommand.Parameters.AddWithValue("@BookAuthor", au.ToString());
                 insertCommand.Parameters.AddWithValue("@BookCategory", subject);
                 insertCommand.Parameters.AddWithValue("@BookAmountAvailable", amount);
                 insertCommand.Parameters.AddWithValue("@BookAmountBorrowed", 0);

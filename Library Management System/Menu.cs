@@ -65,7 +65,6 @@ namespace Library_Management_System
                 {
                     Console.WriteLine("\t\t\t\t\t\t═══════════ ADDING NEW CUSTOMER ══════════\t\t\t\t\t");
                     _customer.AddCustomer();
-                    Console.WriteLine("\t\t\t\t\t\t═══════════ ADDED SUCCESSFULLY ═══════════\t\t\t\t\t");
                     Console.ReadKey();
                 } else if (number == 8)
                 {

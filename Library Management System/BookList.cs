@@ -1537,6 +1537,10 @@ namespace Library_Management_System
             }
         }
 
+        /*
+         * When delete we should have a log for record action and next is librarian and schedule.
+         */
+        
         public void Delete()
         {
             string getTableSize = "Select Count(BookIDs) from Books where Books.State = 0";

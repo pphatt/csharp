@@ -563,7 +563,6 @@ namespace Library_Management_System
         }
 
         /*
-         * When delete a user, that user have to return all the borrowed books first.
          * return date and borrowed date.
          *
          * rename readerbookinfo
@@ -664,7 +663,9 @@ namespace Library_Management_System
                                     string idb = Console.ReadLine();
 
                                     string s =
-                                        $"Select BookIDs, CustomerIDs from BookAmount where BookIDs = '{idb}' and CustomerIDs = '{ids}'";
+                                        "Select BookAmount.BookIDs, CustomerIDs, BookAmountAvailable, BookAmountBorrowed " +
+                                        "from (BookAmount left join Books on Books.BookIDs = BookAmount.BookIDs) " +
+                                        $"where BookAmount.BookIDs = '{idb}' and CustomerIDs = '{ids}'";
 
                                     SqlCommand c = new SqlCommand(s, connection);
 
@@ -679,8 +680,20 @@ namespace Library_Management_System
                                             string ud =
                                                 $"update BookAmount set State = 1 where CustomerIDs = '{ids}' and BookIDs = '{idb}'";
 
+                                            int ab = (int)t[2];
+                                            int bb = (int)t[3];
+                                            
+                                            string a = $"update Books set BookAmountAvailable = {ab + 1} where BookIDs = '{idb}'";
+                                            string b = $"update Books set BookAmountBorrowed = {bb + 1} where BookIDs = '{idb}'";
+
                                             SqlCommand u = new SqlCommand(ud, connection);
                                             u.ExecuteNonQuery();
+                                            
+                                            SqlCommand abq = new SqlCommand(a, connection);
+                                            abq.ExecuteNonQuery();
+                                            
+                                            SqlCommand bbq = new SqlCommand(b, connection);
+                                            bbq.ExecuteNonQuery();
 
                                             Console.WriteLine(
                                                 "\t\t\t\t\t\t═══════════ RETURN SUCCESSFULLY ═══════════\t\t\t\t\t");

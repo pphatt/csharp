@@ -668,7 +668,7 @@ namespace Library_Management_System
                                         while (t.Read())
                                         {
                                             ch = true;
-                                            
+
                                             string date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
 
                                             string ud =
@@ -676,16 +676,18 @@ namespace Library_Management_System
 
                                             int ab = (int)t[2];
                                             int bb = (int)t[3];
-                                            
-                                            string a = $"update Books set BookAmountAvailable = {ab + 1} where BookIDs = '{idb}'";
-                                            string b = $"update Books set BookAmountBorrowed = {bb + 1} where BookIDs = '{idb}'";
+
+                                            string a =
+                                                $"update Books set BookAmountAvailable = {ab + 1} where BookIDs = '{idb}'";
+                                            string b =
+                                                $"update Books set BookAmountBorrowed = {bb + 1} where BookIDs = '{idb}'";
 
                                             SqlCommand u = new SqlCommand(ud, connection);
                                             u.ExecuteNonQuery();
-                                            
+
                                             SqlCommand abq = new SqlCommand(a, connection);
                                             abq.ExecuteNonQuery();
-                                            
+
                                             SqlCommand bbq = new SqlCommand(b, connection);
                                             bbq.ExecuteNonQuery();
 
@@ -1062,56 +1064,200 @@ namespace Library_Management_System
 
         public void EditCustomer()
         {
-            string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt");
-            if (data.Length == 0)
-            {
-                Console.WriteLine("There are no data currently");
-                return;
-            }
-
             ShowCustomer();
             Console.Write("\nInput IDs to edit: ");
             string ids = Console.ReadLine();
 
-            for (int i = 0; i < data.Length; i++)
+            // for (int i = 0; i < data.Length; i++)
+            // {
+            //     string[] output = data[i].Split(',');
+            //     if (output[0] == ids)
+            //     {
+            //         Console.WriteLine($"\t\t\t\t\t\t          EDITING THE BOOK NO.{ids} \t\t\t\t");
+            //         Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
+            //         Console.WriteLine("\t\t\t\t\t\t║ 1. EDIT IDs                            ║\t\t\t\t\t");
+            //         Console.WriteLine("\t\t\t\t\t\t║ 2. EDIT NAME                           ║\t\t\t\t\t");
+            //         Console.WriteLine("\t\t\t\t\t\t║ 3. EDIT AGE                            ║\t\t\t\t\t");
+            //         Console.WriteLine("\t\t\t\t\t\t║ 4. EDIT SEX                            ║\t\t\t\t\t");
+            //         Console.WriteLine("\t\t\t\t\t\t║ 5. EDIT PHONE NUMBER                   ║\t\t\t\t\t");
+            //         Console.WriteLine("\t\t\t\t\t\t║ 6. EXIT                                ║\t\t\t\t\t");
+            //         Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
+            //         Console.Write("Input to edit: ");
+            //         int number2 = int.Parse(Console.ReadLine());
+            //
+            //         if (number2 > 0 && number2 <= 5)
+            //         {
+            //             Console.Write($"Changing {output[number2 - 1]} to: ");
+            //             string newText = Console.ReadLine();
+            //             output[number2 - 1] = newText;
+            //             data[i] = string.Join(",", output);
+            //             File.WriteAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt", data);
+            //             Console.WriteLine("\t\t\t\t\t\t═══════════ UPDATE SUCCESSFULLY ═══════════\t\t\t\t\t");
+            //         }
+            //         else if (number2 == 6)
+            //         {
+            //         }
+            //         else
+            //         {
+            //             Console.WriteLine("Invalid number");
+            //         }
+            //
+            //         return;
+            //     }
+            // }
+            //
+            // Console.WriteLine($"There is no {ids} in IDs section in database!");
+
+            string name = "";
+            string age = "";
+            string sex = "";
+            string pn = "";
+
+            string checkIDsQuery =
+                $"select CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber from Customer where CustomerIDs = '{ids}'";
+
+            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
-                string[] output = data[i].Split(',');
-                if (output[0] == ids)
+                bool check = false;
+                SqlCommand command = new SqlCommand(checkIDsQuery, connection);
+
+                connection.Open();
+
+                using (SqlDataReader readerBookInfo = command.ExecuteReader())
                 {
-                    Console.WriteLine($"\t\t\t\t\t\t          EDITING THE BOOK NO.{ids} \t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t║ 1. EDIT IDs                            ║\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t║ 2. EDIT NAME                           ║\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t║ 3. EDIT AGE                            ║\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t║ 4. EDIT SEX                            ║\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t║ 5. EDIT PHONE NUMBER                   ║\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t║ 6. EXIT                                ║\t\t\t\t\t");
-                    Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
-                    Console.Write("Input to edit: ");
-                    int number2 = int.Parse(Console.ReadLine());
+                    while (readerBookInfo.Read())
+                    {
+                        check = true;
 
-                    if (number2 > 0 && number2 <= 5)
-                    {
-                        Console.Write($"Changing {output[number2 - 1]} to: ");
-                        string newText = Console.ReadLine();
-                        output[number2 - 1] = newText;
-                        data[i] = string.Join(",", output);
-                        File.WriteAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt", data);
-                        Console.WriteLine("\t\t\t\t\t\t═══════════ UPDATE SUCCESSFULLY ═══════════\t\t\t\t\t");
-                    }
-                    else if (number2 == 6)
-                    {
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid number");
+                        name = $"{readerBookInfo[0]}";
+                        age = $"{readerBookInfo[1]}";
+                        sex = $"{readerBookInfo[2]}";
+                        pn = $"{readerBookInfo[3]}";
                     }
 
-                    return;
+                    if (!check)
+                    {
+                        Console.WriteLine("Invalid ID");
+                        return;
+                    }
                 }
             }
 
-            Console.WriteLine($"There is no {ids} in IDs section in database!");
+            Console.WriteLine($"\t\t\t\t\t\t          EDITING THE BOOK NO.{ids} \t\t\t\t");
+            Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
+            Console.WriteLine("\t\t\t\t\t\t║ 1. EDIT NAME                           ║\t\t\t\t\t");
+            Console.WriteLine("\t\t\t\t\t\t║ 2. EDIT AGE                            ║\t\t\t\t\t");
+            Console.WriteLine("\t\t\t\t\t\t║ 3. EDIT SEX                            ║\t\t\t\t\t");
+            Console.WriteLine("\t\t\t\t\t\t║ 4. EDIT PHONE NUMBER                   ║\t\t\t\t\t");
+            Console.WriteLine("\t\t\t\t\t\t║ 5. EXIT                                ║\t\t\t\t\t");
+            Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
+            Console.Write("Input to edit: ");
+            int n = int.Parse(Console.ReadLine());
+
+            switch (n)
+            {
+                case 1:
+                    Console.Write($"Changing Name from {name} to: ");
+                    string newName = Console.ReadLine();
+
+                    string[] na = newName.Split(' ');
+                    StringBuilder nn = new StringBuilder();
+
+                    for (int i = 0; i < na.Length; i++)
+                    {
+                        string o = "";
+                        string nc = na[i][0].ToString().ToUpper() + na[i].Substring(1);
+
+                        if (i != na.Length - 1)
+                        {
+                            o = " ";
+                        }
+
+                        nn.Append(nc + o);
+                    }
+
+                    string updateName = $"Update Customer set CustomerName = '{newName}' where CustomerIDs = {ids}";
+
+                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+                    {
+                        connection.Open();
+                        SqlCommand command = new SqlCommand(updateName, connection);
+                        command.ExecuteNonQuery();
+                    }
+
+                    Console.WriteLine("\t\t\t\t\t\t═══════════ UPDATE SUCCESSFULLY ═══════════\t\t\t\t\t");
+
+                    break;
+                case 2:
+                    Console.Write($"Changing Age from {age} to: ");
+                    int newAge = int.Parse(Console.ReadLine());
+
+                    if (newAge <= 18 || newAge >= 80)
+                    {
+                        Console.WriteLine("Invalid Age");
+                        return;
+                    }
+
+                    string updateAge = $"Update Customer set CustomerAge = '{newAge}' where CustomerIDs = {ids}";
+
+                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+                    {
+                        connection.Open();
+                        SqlCommand command = new SqlCommand(updateAge, connection);
+                        command.ExecuteNonQuery();
+                    }
+
+                    Console.WriteLine("\t\t\t\t\t\t═══════════ UPDATE SUCCESSFULLY ═══════════\t\t\t\t\t");
+
+                    break;
+                case 3:
+                    Console.Write($"Changing Sex from {sex} to: ");
+                    string newSex = Console.ReadLine();
+
+                    if (newSex != "Male" || newSex != "Female")
+                    {
+                        Console.WriteLine("Invalid Sex");
+                        return;
+                    }
+
+                    string updateSex =
+                        $"Update Customer set CustomerAge = '{newSex[0].ToString().ToUpper() + sex.Substring(1)}' where CustomerIDs = {ids}";
+
+                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+                    {
+                        connection.Open();
+                        SqlCommand command = new SqlCommand(updateSex, connection);
+                        command.ExecuteNonQuery();
+                    }
+
+                    Console.WriteLine("\t\t\t\t\t\t═══════════ UPDATE SUCCESSFULLY ═══════════\t\t\t\t\t");
+
+                    break;
+                case 4:
+                    Console.Write($"Changing PhoneNumber from {pn} to: ");
+                    string newPn = Console.ReadLine();
+
+                    if (newPn.Length < 10 || newPn.Length > 11)
+                    {
+                        Console.WriteLine("Invalid Phone Number");
+                        return;
+                    }
+
+                    string updatePn = $"Update Customer set CustomerPhoneNumber = '{newPn}' where CustomerIDs = {ids}";
+
+                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+                    {
+                        connection.Open();
+                        SqlCommand command = new SqlCommand(updatePn, connection);
+                        command.ExecuteNonQuery();
+                    }
+
+                    Console.WriteLine("\t\t\t\t\t\t═══════════ UPDATE SUCCESSFULLY ═══════════\t\t\t\t\t");
+
+                    break;
+                default:
+                    return;
+            }
         }
     }
 }

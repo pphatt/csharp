@@ -657,7 +657,7 @@ namespace Library_Management_System
                                     string s =
                                         "Select BookLog.BookIDs, CustomerIDs, BookAmountAvailable, BookAmountBorrowed " +
                                         "from (BookLog left join Book on Book.BookIDs = BookLog.BookIDs) " +
-                                        $"where BookLog.BookIDs = '{idb}' and CustomerIDs = '{ids}'";
+                                        $"where BookLog.BookIDs = '{idb}' and CustomerIDs = '{ids}' and BookLog.State = 0";
 
                                     SqlCommand c = new SqlCommand(s, connection);
 
@@ -700,6 +700,7 @@ namespace Library_Management_System
                                         if (!ch)
                                         {
                                             Console.WriteLine("Invalid Books IDs.");
+                                            return;
                                         }
 
                                         Console.WriteLine(

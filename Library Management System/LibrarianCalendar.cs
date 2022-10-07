@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace Library_Management_System
 {
@@ -10,49 +12,56 @@ namespace Library_Management_System
         public void AddLibrarian()
         {
             /*
-             * Make a librarian table
-             * Make a schedule table
-             * 
              * make a book column named it librarian for each schedule
              * make a customer column named it librarian for each schedule
              * 
              * make a customer column named it librarian for each schedule
              */
-            
-            
-            // if (File.Exists(@"D:\Dev\School\Library Management System\LibrarianData.txt"))
-            // {
-            //     string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\LibrarianData.txt");
-            //     if (data.Length > 6)
-            //     {
-            //         Console.WriteLine("No more librarian need to be recruited");
-            //         return;
-            //     }
-            // }
-            //
-            // Console.Write("Enter Librarian's IDs: ");
-            // string ids = Console.ReadLine();
-            // Console.Write("Enter Librarian's name: ");
-            // string name = Console.ReadLine();
-            // Console.Write("Enter Librarian's age: ");
-            // string age = Console.ReadLine();
-            // Console.Write("Enter Librarian's sex: ");
-            // string sex = Console.ReadLine().ToLower();
-            // Console.Write("Enter Librarian's phone number: ");
-            // string phoneNumber = Console.ReadLine();
-            // string status = "";
-            // string calendar = "";
-            //
-            // _librarians.Add(new Librarian(ids, name, age, sex, phoneNumber, status, calendar));
-            // string output =
-            //     $"{_librarians[0].getID()},{_librarians[0].getName()},{_librarians[0].getAge()},{_librarians[0].getSex()},{_librarians[0].getPhoneNumber()},{_librarians[0].getStatus()},{_librarians[0].getCalendar()}";
-            //
-            // using (StreamWriter sw = new StreamWriter(path, true))
-            // {
-            //     sw.WriteLine(output);
-            // }
-            
-            
+
+            Console.Write("Enter Librarian's name: ");
+            string name = Console.ReadLine();
+            Console.Write("Enter Librarian's age: ");
+            string age = Console.ReadLine();
+            Console.Write("Enter Librarian's sex: ");
+            string sex = Console.ReadLine().ToLower();
+            Console.Write("Enter Librarian's phone number: ");
+            string pn = Console.ReadLine();
+            string date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+
+            string[] lna = name.Split(' ');
+            StringBuilder ln = new StringBuilder();
+
+            for (int i = 0; i < lna.Length; i++)
+            {
+                string o = "";
+                string nn = lna[i][0].ToString().ToUpper() + lna[i].Substring(1);
+
+                if (i != lna.Length - 1)
+                {
+                    o = " ";
+                }
+
+                ln.Append(nn + o);
+            }
+
+            string addDataQuery =
+                "INSERT INTO Librarian (LibrarianName, LibrarianAge, LibrarianSex, LibrarianPhoneNumber, DateEnrol, DateRetire, State) VALUES (@LibrarianName, @LibrarianAge, @LibrarianSex, @LibrarianPhoneNumber, @DateEnrol, @DateRetire, @State)";
+
+            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+            {
+                connection.Open();
+
+                SqlCommand insertCommand = new SqlCommand(addDataQuery, connection);
+
+                insertCommand.Parameters.AddWithValue("@LibrarianName", ln.ToString());
+                insertCommand.Parameters.AddWithValue("@LibrarianAge", age);
+                insertCommand.Parameters.AddWithValue("@LibrarianSex", sex);
+                insertCommand.Parameters.AddWithValue("@LibrarianPhoneNumber", pn);
+                insertCommand.Parameters.AddWithValue("@DateEnrol", date);
+                insertCommand.Parameters.AddWithValue("@DateRetire", null);
+                insertCommand.Parameters.AddWithValue("@State", 0);
+                insertCommand.ExecuteNonQuery();
+            }
         }
 
         public void ShowLibrarian()
@@ -116,7 +125,7 @@ namespace Library_Management_System
                         return;
                     }
                 }
-                
+
                 string[] day = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
                 string[] routineDay = new string[7];
                 string[] employeeDay = new string[7];
@@ -187,7 +196,7 @@ namespace Library_Management_System
         {
             string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\LibrarianData.txt");
             string[] days = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
-            
+
             for (int i = 0; i < data.Length; i++)
             {
                 int check = Array.IndexOf(days, data[i].Split(',')[6]);
@@ -196,11 +205,11 @@ namespace Library_Management_System
                     days = days.Where((val, indx) => indx != check).ToArray();
                 }
             }
-            
+
             ShowLibrarian();
             Console.Write("\nInput to use: ");
             int number = int.Parse(Console.ReadLine());
-            
+
             if (number > 0 && number <= data.Length && days.Length > 0)
             {
                 string[] librarianCheck = data[number - 1].Split(',');
@@ -211,7 +220,7 @@ namespace Library_Management_System
                     {
                         Console.Write($"|{day}|");
                     }
-                    
+
                     Console.Write("\nInput to use: ");
                     int number1 = int.Parse(Console.ReadLine());
                     librarianCheck[6] = $"{days[number1 - 1]}";

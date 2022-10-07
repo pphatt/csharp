@@ -66,7 +66,7 @@ namespace Library_Management_System
             // DateTime fDays = t.AddMonths(-1);
             // fDays = fDays.AddDays(-1);
 
-            // Console.WriteLine(tDays);
+            // Console.WriteLine(tDays.DayOfWeek);
             // Console.WriteLine(fDays.ToString("MM/dd/yyyy HH:mm:ss"));
             // var yesterday = DateTime.Today.AddDays(-1);
             // DateTime today = DateTime.Parse("2022-10-03");

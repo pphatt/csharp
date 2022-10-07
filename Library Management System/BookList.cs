@@ -142,7 +142,7 @@ namespace Library_Management_System
                 bn.Append(nn + o);
             }
 
-            string[] aut = bookName.Split(' ');
+            string[] aut = author.Split(' ');
             StringBuilder au = new StringBuilder();
 
             for (int i = 0; i < aut.Length; i++)
@@ -1863,8 +1863,24 @@ namespace Library_Management_System
                 case 1:
                     Console.Write($"Changing from {title} to: ");
                     string newTitle = Console.ReadLine();
+                    
+                    string[] bna = newTitle.Split(' ');
+                    StringBuilder bn = new StringBuilder();
 
-                    string updateTitle = $"Update Book set BookName = '{newTitle}' where BookIDs = {ids}";
+                    for (int i = 0; i < bna.Length; i++)
+                    {
+                        string o = "";
+                        string nn = bna[i][0].ToString().ToUpper() + bna[i].Substring(1);
+
+                        if (i != bna.Length - 1)
+                        {
+                            o = " ";
+                        }
+
+                        bn.Append(nn + o);
+                    }
+
+                    string updateTitle = $"Update Book set BookName = '{bn}' where BookIDs = {ids}";
 
                     using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                     {
@@ -1879,8 +1895,24 @@ namespace Library_Management_System
                 case 2:
                     Console.Write($"Changing from {author} to: ");
                     string newAuthor = Console.ReadLine();
+                    
+                    string[] aut = newAuthor.Split(' ');
+                    StringBuilder au = new StringBuilder();
 
-                    string updateAuthor = $"Update Book set BookAuthor = '{newAuthor}' where BookIDs = {ids}";
+                    for (int i = 0; i < aut.Length; i++)
+                    {
+                        string o = "";
+                        string nn = aut[i][0].ToString().ToUpper() + aut[i].Substring(1);
+
+                        if (i != aut.Length - 1)
+                        {
+                            o = " ";
+                        }
+
+                        au.Append(nn + o);
+                    }
+
+                    string updateAuthor = $"Update Book set BookAuthor = '{au}' where BookIDs = {ids}";
 
                     using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                     {

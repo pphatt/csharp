@@ -92,12 +92,12 @@ namespace Library_Management_System
 
                 connection.Open();
 
-                using (SqlDataReader readerBookInfo = command.ExecuteReader())
+                using (SqlDataReader readCustomerInfo = command.ExecuteReader())
                 {
                     bool check = false;
                     string prevIDs = "";
 
-                    while (readerBookInfo.Read())
+                    while (readCustomerInfo.Read())
                     {
                         if (!check)
                         {
@@ -112,29 +112,29 @@ namespace Library_Management_System
                             check = true;
                         }
 
-                        if (prevIDs == $"{readerBookInfo[0]}")
+                        if (prevIDs == $"{readCustomerInfo[0]}")
                         {
                             Console.WriteLine(
-                                $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║");
+                                $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
 
-                            prevIDs = $"{readerBookInfo[0]}";
+                            prevIDs = $"{readCustomerInfo[0]}";
 
                             continue;
                         }
 
-                        prevIDs = $"{readerBookInfo[0]}";
+                        prevIDs = $"{readCustomerInfo[0]}";
 
                         for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
                         {
                             Console.Write($" {BookList.Repeat("═", Program.StoreLengthCustomer[k])} ");
                         }
 
-                        string status = $"{readerBookInfo[6]}" != ""
-                            ? $"║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║\n"
+                        string status = $"{readCustomerInfo[6]}" != ""
+                            ? $"║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║\n"
                             : $"║{"",-1}{"Empty",-25}║\n";
 
                         Console.Write(
-                            $"\n║{"",-1}{readerBookInfo[0],-10}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-5}║║{"",-1}{readerBookInfo[3],-6}║║{"",-1}{readerBookInfo[4],-15}║║{"",-1}{readerBookInfo[5],-23}║{status}");
+                            $"\n║{"",-1}{readCustomerInfo[0],-10}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-6}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
                     }
 
                     if (check)
@@ -184,12 +184,12 @@ namespace Library_Management_System
 
                         connection.Open();
 
-                        using (SqlDataReader readerBookInfo = command.ExecuteReader())
+                        using (SqlDataReader readCustomerInfo = command.ExecuteReader())
                         {
                             bool check = false;
                             string prevIDs = "";
 
-                            while (readerBookInfo.Read())
+                            while (readCustomerInfo.Read())
                             {
                                 if (!check)
                                 {
@@ -204,29 +204,29 @@ namespace Library_Management_System
                                     check = true;
                                 }
 
-                                if (prevIDs == $"{readerBookInfo[0]}")
+                                if (prevIDs == $"{readCustomerInfo[0]}")
                                 {
                                     Console.WriteLine(
-                                        $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║");
+                                        $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
 
-                                    prevIDs = $"{readerBookInfo[0]}";
+                                    prevIDs = $"{readCustomerInfo[0]}";
 
                                     continue;
                                 }
 
-                                prevIDs = $"{readerBookInfo[0]}";
+                                prevIDs = $"{readCustomerInfo[0]}";
 
                                 for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
                                 {
                                     Console.Write($" {BookList.Repeat("═", Program.StoreLengthCustomer[k])} ");
                                 }
 
-                                string status = $"{readerBookInfo[6]}" != ""
-                                    ? $"║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║\n"
+                                string status = $"{readCustomerInfo[6]}" != ""
+                                    ? $"║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║\n"
                                     : $"║{"",-1}{"Empty",-25}║\n";
 
                                 Console.Write(
-                                    $"\n║{"",-1}{readerBookInfo[0],-10}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-5}║║{"",-1}{readerBookInfo[3],-6}║║{"",-1}{readerBookInfo[4],-15}║║{"",-1}{readerBookInfo[5],-23}║{status}");
+                                    $"\n║{"",-1}{readCustomerInfo[0],-10}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-6}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
                             }
 
                             if (check)
@@ -261,12 +261,12 @@ namespace Library_Management_System
 
                         connection.Open();
 
-                        using (SqlDataReader readerBookInfo = command.ExecuteReader())
+                        using (SqlDataReader readCustomerInfo = command.ExecuteReader())
                         {
                             bool check = false;
                             string prevIDs = "";
 
-                            while (readerBookInfo.Read())
+                            while (readCustomerInfo.Read())
                             {
                                 if (!check)
                                 {
@@ -281,29 +281,29 @@ namespace Library_Management_System
                                     check = true;
                                 }
 
-                                if (prevIDs == $"{readerBookInfo[0]}")
+                                if (prevIDs == $"{readCustomerInfo[0]}")
                                 {
                                     Console.WriteLine(
-                                        $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║");
+                                        $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
 
-                                    prevIDs = $"{readerBookInfo[0]}";
+                                    prevIDs = $"{readCustomerInfo[0]}";
 
                                     continue;
                                 }
 
-                                prevIDs = $"{readerBookInfo[0]}";
+                                prevIDs = $"{readCustomerInfo[0]}";
 
                                 for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
                                 {
                                     Console.Write($" {BookList.Repeat("═", Program.StoreLengthCustomer[k])} ");
                                 }
 
-                                string status = $"{readerBookInfo[6]}" != ""
-                                    ? $"║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║\n"
+                                string status = $"{readCustomerInfo[6]}" != ""
+                                    ? $"║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║\n"
                                     : $"║{"",-1}{"Empty",-25}║\n";
 
                                 Console.Write(
-                                    $"\n║{"",-1}{readerBookInfo[0],-10}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-5}║║{"",-1}{readerBookInfo[3],-6}║║{"",-1}{readerBookInfo[4],-15}║║{"",-1}{readerBookInfo[5],-23}║{status}");
+                                    $"\n║{"",-1}{readCustomerInfo[0],-10}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-6}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
                             }
 
                             if (check)
@@ -338,12 +338,12 @@ namespace Library_Management_System
 
                         connection.Open();
 
-                        using (SqlDataReader readerBookInfo = command.ExecuteReader())
+                        using (SqlDataReader readCustomerInfo = command.ExecuteReader())
                         {
                             bool check = false;
                             string prevIDs = "";
 
-                            while (readerBookInfo.Read())
+                            while (readCustomerInfo.Read())
                             {
                                 if (!check)
                                 {
@@ -358,29 +358,29 @@ namespace Library_Management_System
                                     check = true;
                                 }
 
-                                if (prevIDs == $"{readerBookInfo[0]}")
+                                if (prevIDs == $"{readCustomerInfo[0]}")
                                 {
                                     Console.WriteLine(
-                                        $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║");
+                                        $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
 
-                                    prevIDs = $"{readerBookInfo[0]}";
+                                    prevIDs = $"{readCustomerInfo[0]}";
 
                                     continue;
                                 }
 
-                                prevIDs = $"{readerBookInfo[0]}";
+                                prevIDs = $"{readCustomerInfo[0]}";
 
                                 for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
                                 {
                                     Console.Write($" {BookList.Repeat("═", Program.StoreLengthCustomer[k])} ");
                                 }
 
-                                string status = $"{readerBookInfo[6]}" != ""
-                                    ? $"║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║\n"
+                                string status = $"{readCustomerInfo[6]}" != ""
+                                    ? $"║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║\n"
                                     : $"║{"",-1}{"Empty",-25}║\n";
 
                                 Console.Write(
-                                    $"\n║{"",-1}{readerBookInfo[0],-10}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-5}║║{"",-1}{readerBookInfo[3],-6}║║{"",-1}{readerBookInfo[4],-15}║║{"",-1}{readerBookInfo[5],-23}║{status}");
+                                    $"\n║{"",-1}{readCustomerInfo[0],-10}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-6}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
                             }
 
                             if (check)
@@ -415,12 +415,12 @@ namespace Library_Management_System
 
                         connection.Open();
 
-                        using (SqlDataReader readerBookInfo = command.ExecuteReader())
+                        using (SqlDataReader readCustomerInfo = command.ExecuteReader())
                         {
                             bool check = false;
                             string prevIDs = "";
 
-                            while (readerBookInfo.Read())
+                            while (readCustomerInfo.Read())
                             {
                                 if (!check)
                                 {
@@ -435,29 +435,29 @@ namespace Library_Management_System
                                     check = true;
                                 }
 
-                                if (prevIDs == $"{readerBookInfo[0]}")
+                                if (prevIDs == $"{readCustomerInfo[0]}")
                                 {
                                     Console.WriteLine(
-                                        $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║");
+                                        $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
 
-                                    prevIDs = $"{readerBookInfo[0]}";
+                                    prevIDs = $"{readCustomerInfo[0]}";
 
                                     continue;
                                 }
 
-                                prevIDs = $"{readerBookInfo[0]}";
+                                prevIDs = $"{readCustomerInfo[0]}";
 
                                 for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
                                 {
                                     Console.Write($" {BookList.Repeat("═", Program.StoreLengthCustomer[k])} ");
                                 }
 
-                                string status = $"{readerBookInfo[6]}" != ""
-                                    ? $"║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║\n"
+                                string status = $"{readCustomerInfo[6]}" != ""
+                                    ? $"║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║\n"
                                     : $"║{"",-1}{"Empty",-25}║\n";
 
                                 Console.Write(
-                                    $"\n║{"",-1}{readerBookInfo[0],-10}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-5}║║{"",-1}{readerBookInfo[3],-6}║║{"",-1}{readerBookInfo[4],-15}║║{"",-1}{readerBookInfo[5],-23}║{status}");
+                                    $"\n║{"",-1}{readCustomerInfo[0],-10}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-6}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
                             }
 
                             if (check)
@@ -492,12 +492,12 @@ namespace Library_Management_System
 
                         connection.Open();
 
-                        using (SqlDataReader readerBookInfo = command.ExecuteReader())
+                        using (SqlDataReader readCustomerInfo = command.ExecuteReader())
                         {
                             bool check = false;
                             string prevIDs = "";
 
-                            while (readerBookInfo.Read())
+                            while (readCustomerInfo.Read())
                             {
                                 if (!check)
                                 {
@@ -512,29 +512,29 @@ namespace Library_Management_System
                                     check = true;
                                 }
 
-                                if (prevIDs == $"{readerBookInfo[0]}")
+                                if (prevIDs == $"{readCustomerInfo[0]}")
                                 {
                                     Console.WriteLine(
-                                        $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║");
+                                        $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
 
-                                    prevIDs = $"{readerBookInfo[0]}";
+                                    prevIDs = $"{readCustomerInfo[0]}";
 
                                     continue;
                                 }
 
-                                prevIDs = $"{readerBookInfo[0]}";
+                                prevIDs = $"{readCustomerInfo[0]}";
 
                                 for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
                                 {
                                     Console.Write($" {BookList.Repeat("═", Program.StoreLengthCustomer[k])} ");
                                 }
 
-                                string status = $"{readerBookInfo[6]}" != ""
-                                    ? $"║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║\n"
+                                string status = $"{readCustomerInfo[6]}" != ""
+                                    ? $"║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║\n"
                                     : $"║{"",-1}{"Empty",-25}║\n";
 
                                 Console.Write(
-                                    $"\n║{"",-1}{readerBookInfo[0],-10}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-5}║║{"",-1}{readerBookInfo[3],-6}║║{"",-1}{readerBookInfo[4],-15}║║{"",-1}{readerBookInfo[5],-23}║{status}");
+                                    $"\n║{"",-1}{readCustomerInfo[0],-10}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-6}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
                             }
 
                             if (check)
@@ -562,14 +562,6 @@ namespace Library_Management_System
             }
         }
 
-        /*
-         * return date and borrowed date.
-         *
-         * rename readerbookinfo
-         *
-         * Fix after returning all the books and ask for return more books.
-         */
-
         public void ReturnBook()
         {
             Console.Write("Input Customer's IDs to return: ");
@@ -586,14 +578,14 @@ namespace Library_Management_System
 
                 connection.Open();
 
-                using (SqlDataReader readerBookInfo = command.ExecuteReader())
+                using (SqlDataReader readCustomerInfo = command.ExecuteReader())
                 {
                     bool check = false;
                     string prevIDs = "";
 
-                    while (readerBookInfo.Read())
+                    while (readCustomerInfo.Read())
                     {
-                        if ($"{readerBookInfo[6]}" == "")
+                        if ($"{readCustomerInfo[6]}" == "")
                         {
                             Console.WriteLine("This Customer does not borrow any books.");
                             return;
@@ -612,29 +604,29 @@ namespace Library_Management_System
                             check = true;
                         }
 
-                        if (prevIDs == $"{readerBookInfo[0]}")
+                        if (prevIDs == $"{readCustomerInfo[0]}")
                         {
                             Console.WriteLine(
-                                $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║");
+                                $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
 
-                            prevIDs = $"{readerBookInfo[0]}";
+                            prevIDs = $"{readCustomerInfo[0]}";
 
                             continue;
                         }
 
-                        prevIDs = $"{readerBookInfo[0]}";
+                        prevIDs = $"{readCustomerInfo[0]}";
 
                         for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
                         {
                             Console.Write($" {BookList.Repeat("═", Program.StoreLengthCustomer[k])} ");
                         }
 
-                        string status = $"{readerBookInfo[6]}" != ""
-                            ? $"║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║\n"
+                        string status = $"{readCustomerInfo[6]}" != ""
+                            ? $"║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║\n"
                             : $"║{"",-1}{"Empty",-25}║\n";
 
                         Console.Write(
-                            $"\n║{"",-1}{readerBookInfo[0],-10}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-5}║║{"",-1}{readerBookInfo[3],-6}║║{"",-1}{readerBookInfo[4],-15}║║{"",-1}{readerBookInfo[5],-23}║{status}");
+                            $"\n║{"",-1}{readCustomerInfo[0],-10}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-6}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
                     }
 
                     if (check)
@@ -676,9 +668,11 @@ namespace Library_Management_System
                                         while (t.Read())
                                         {
                                             ch = true;
+                                            
+                                            string date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
 
                                             string ud =
-                                                $"update BookAmount set State = 1 where CustomerIDs = '{ids}' and BookIDs = '{idb}'";
+                                                $"update BookAmount set State = 1 and DateReturn = '{date}' where CustomerIDs = '{ids}' and BookIDs = '{idb}'";
 
                                             int ab = (int)t[2];
                                             int bb = (int)t[3];
@@ -797,12 +791,12 @@ namespace Library_Management_System
 
                         connection.Open();
 
-                        using (SqlDataReader readerBookInfo = command.ExecuteReader())
+                        using (SqlDataReader readCustomerInfo = command.ExecuteReader())
                         {
                             bool check = false;
                             string prevIDs = "";
 
-                            while (readerBookInfo.Read())
+                            while (readCustomerInfo.Read())
                             {
                                 if (!check)
                                 {
@@ -817,31 +811,31 @@ namespace Library_Management_System
                                     check = true;
                                 }
 
-                                bi.Add($"{readerBookInfo[6]}");
+                                bi.Add($"{readCustomerInfo[6]}");
 
-                                if (prevIDs == $"{readerBookInfo[0]}")
+                                if (prevIDs == $"{readCustomerInfo[0]}")
                                 {
                                     Console.WriteLine(
-                                        $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║");
+                                        $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
 
-                                    prevIDs = $"{readerBookInfo[0]}";
+                                    prevIDs = $"{readCustomerInfo[0]}";
 
                                     continue;
                                 }
 
-                                prevIDs = $"{readerBookInfo[0]}";
+                                prevIDs = $"{readCustomerInfo[0]}";
 
                                 for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
                                 {
                                     Console.Write($" {BookList.Repeat("═", Program.StoreLengthCustomer[k])} ");
                                 }
 
-                                string status = $"{readerBookInfo[6]}" != ""
-                                    ? $"║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║\n"
+                                string status = $"{readCustomerInfo[6]}" != ""
+                                    ? $"║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║\n"
                                     : $"║{"",-1}{"Empty",-25}║\n";
 
                                 Console.Write(
-                                    $"\n║{"",-1}{readerBookInfo[0],-10}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-5}║║{"",-1}{readerBookInfo[3],-6}║║{"",-1}{readerBookInfo[4],-15}║║{"",-1}{readerBookInfo[5],-23}║{status}");
+                                    $"\n║{"",-1}{readCustomerInfo[0],-10}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-6}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
                             }
 
                             if (check)
@@ -936,16 +930,16 @@ namespace Library_Management_System
 
                         connection.Open();
 
-                        using (SqlDataReader readerBookInfo = command.ExecuteReader())
+                        using (SqlDataReader readCustomerInfo = command.ExecuteReader())
                         {
                             bool check = false;
                             string prevIDs = "";
 
-                            while (readerBookInfo.Read())
+                            while (readCustomerInfo.Read())
                             {
                                 if (!check)
                                 {
-                                    i = (int)readerBookInfo[0];
+                                    i = (int)readCustomerInfo[0];
 
                                     for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
                                     {
@@ -958,31 +952,31 @@ namespace Library_Management_System
                                     check = true;
                                 }
 
-                                b.Add($"{readerBookInfo[6]}");
+                                b.Add($"{readCustomerInfo[6]}");
 
-                                if (prevIDs == $"{readerBookInfo[0]}")
+                                if (prevIDs == $"{readCustomerInfo[0]}")
                                 {
                                     Console.WriteLine(
-                                        $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║");
+                                        $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
 
-                                    prevIDs = $"{readerBookInfo[0]}";
+                                    prevIDs = $"{readCustomerInfo[0]}";
 
                                     continue;
                                 }
 
-                                prevIDs = $"{readerBookInfo[0]}";
+                                prevIDs = $"{readCustomerInfo[0]}";
 
                                 for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
                                 {
                                     Console.Write($" {BookList.Repeat("═", Program.StoreLengthCustomer[k])} ");
                                 }
 
-                                string status = $"{readerBookInfo[6]}" != ""
-                                    ? $"║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║\n"
+                                string status = $"{readCustomerInfo[6]}" != ""
+                                    ? $"║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║\n"
                                     : $"║{"",-1}{"Empty",-25}║\n";
 
                                 Console.Write(
-                                    $"\n║{"",-1}{readerBookInfo[0],-10}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-5}║║{"",-1}{readerBookInfo[3],-6}║║{"",-1}{readerBookInfo[4],-15}║║{"",-1}{readerBookInfo[5],-23}║{status}");
+                                    $"\n║{"",-1}{readCustomerInfo[0],-10}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-6}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
                             }
 
                             if (check)

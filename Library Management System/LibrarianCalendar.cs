@@ -7,45 +7,52 @@ namespace Library_Management_System
 {
     public class LibrarianCalendar
     {
-        List<Librarian> _librarians = new List<Librarian>();
-
         public void AddLibrarian()
         {
-            string path = @"D:\Dev\School\Library Management System\LibrarianData.txt";
-
-            if (File.Exists(@"D:\Dev\School\Library Management System\LibrarianData.txt"))
-            {
-                string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\LibrarianData.txt");
-                if (data.Length > 6)
-                {
-                    Console.WriteLine("No more librarian need to be recruited");
-                    return;
-                }
-            }
-
-            Console.Write("Enter Librarian's IDs: ");
-            string ids = Console.ReadLine();
-            Console.Write("Enter Librarian's name: ");
-            string name = Console.ReadLine();
-            Console.Write("Enter Librarian's age: ");
-            string age = Console.ReadLine();
-            Console.Write("Enter Librarian's sex: ");
-            string sex = Console.ReadLine().ToLower();
-            Console.Write("Enter Librarian's phone number: ");
-            string phoneNumber = Console.ReadLine();
-            string status = "";
-            string calendar = "";
-
-            _librarians.Add(new Librarian(ids, name, age, sex, phoneNumber, status, calendar));
-            string output =
-                $"{_librarians[0].getID()},{_librarians[0].getName()},{_librarians[0].getAge()},{_librarians[0].getSex()},{_librarians[0].getPhoneNumber()},{_librarians[0].getStatus()},{_librarians[0].getCalendar()}";
-
-            using (StreamWriter sw = new StreamWriter(path, true))
-            {
-                sw.WriteLine(output);
-            }
-
-            _librarians = new List<Librarian>();
+            /*
+             * Make a librarian table
+             * Make a schedule table
+             * 
+             * make a book column named it librarian for each schedule
+             * make a customer column named it librarian for each schedule
+             * 
+             * make a customer column named it librarian for each schedule
+             */
+            
+            
+            // if (File.Exists(@"D:\Dev\School\Library Management System\LibrarianData.txt"))
+            // {
+            //     string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\LibrarianData.txt");
+            //     if (data.Length > 6)
+            //     {
+            //         Console.WriteLine("No more librarian need to be recruited");
+            //         return;
+            //     }
+            // }
+            //
+            // Console.Write("Enter Librarian's IDs: ");
+            // string ids = Console.ReadLine();
+            // Console.Write("Enter Librarian's name: ");
+            // string name = Console.ReadLine();
+            // Console.Write("Enter Librarian's age: ");
+            // string age = Console.ReadLine();
+            // Console.Write("Enter Librarian's sex: ");
+            // string sex = Console.ReadLine().ToLower();
+            // Console.Write("Enter Librarian's phone number: ");
+            // string phoneNumber = Console.ReadLine();
+            // string status = "";
+            // string calendar = "";
+            //
+            // _librarians.Add(new Librarian(ids, name, age, sex, phoneNumber, status, calendar));
+            // string output =
+            //     $"{_librarians[0].getID()},{_librarians[0].getName()},{_librarians[0].getAge()},{_librarians[0].getSex()},{_librarians[0].getPhoneNumber()},{_librarians[0].getStatus()},{_librarians[0].getCalendar()}";
+            //
+            // using (StreamWriter sw = new StreamWriter(path, true))
+            // {
+            //     sw.WriteLine(output);
+            // }
+            
+            
         }
 
         public void ShowLibrarian()

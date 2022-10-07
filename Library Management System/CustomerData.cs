@@ -82,8 +82,8 @@ namespace Library_Management_System
         public void ShowCustomer()
         {
             string queryString =
-                "select Customer.CustomerIDs, CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Customer.Date, BookAmount.BookIDs " +
-                "from (Customer left join BookAmount on Customer.CustomerIDs = BookAmount.CustomerIDs and BookAmount.State = 0) " +
+                "select Customer.CustomerIDs, CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Customer.Date, BookLog.BookIDs " +
+                "from (Customer left join BookLog on Customer.CustomerIDs = BookLog.CustomerIDs and BookLog.State = 0) " +
                 "where Customer.State = 0";
 
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
@@ -148,7 +148,7 @@ namespace Library_Management_System
                     }
                     else
                     {
-                        Console.WriteLine("Invalid ID");
+                        Console.WriteLine("There are no data currently");
                     }
                 }
             }
@@ -174,8 +174,8 @@ namespace Library_Management_System
                     string ids = Console.ReadLine();
 
                     string getCustomerInfoByIDs =
-                        "select Customer.CustomerIDs, CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Customer.Date, BookAmount.BookIDs " +
-                        "from (Customer left join BookAmount on Customer.CustomerIDs = BookAmount.CustomerIDs and BookAmount.State = 0) " +
+                        "select Customer.CustomerIDs, CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Customer.Date, BookLog.BookIDs " +
+                        "from (Customer left join BookLog on Customer.CustomerIDs = BookLog.CustomerIDs and BookLog.State = 0) " +
                         $"where Customer.State = 0 and Customer.CustomerIDs = {ids}";
 
                     using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
@@ -251,8 +251,8 @@ namespace Library_Management_System
                     string name = Console.ReadLine();
 
                     string getCustomerInfoByName =
-                        "select Customer.CustomerIDs, CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Customer.Date, BookAmount.BookIDs " +
-                        "from (Customer left join BookAmount on Customer.CustomerIDs = BookAmount.CustomerIDs and BookAmount.State = 0) " +
+                        "select Customer.CustomerIDs, CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Customer.Date, BookLog.BookIDs " +
+                        "from (Customer left join BookLog on Customer.CustomerIDs = BookLog.CustomerIDs and BookLog.State = 0) " +
                         $"where Customer.State = 0 and CustomerName like '%{name}%'";
 
                     using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
@@ -328,8 +328,8 @@ namespace Library_Management_System
                     string age = Console.ReadLine();
 
                     string getCustomerInfoByAge =
-                        "select Customer.CustomerIDs, CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Customer.Date, BookAmount.BookIDs " +
-                        "from (Customer left join BookAmount on Customer.CustomerIDs = BookAmount.CustomerIDs and BookAmount.State = 0) " +
+                        "select Customer.CustomerIDs, CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Customer.Date, BookLog.BookIDs " +
+                        "from (Customer left join BookLog on Customer.CustomerIDs = BookLog.CustomerIDs and BookLog.State = 0) " +
                         $"where Customer.State = 0 and Customer.CustomerAge = '{age}'";
 
                     using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
@@ -405,8 +405,8 @@ namespace Library_Management_System
                     string sex = Console.ReadLine();
 
                     string getCustomerInfoBySex =
-                        "select Customer.CustomerIDs, CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Customer.Date, BookAmount.BookIDs " +
-                        "from (Customer left join BookAmount on Customer.CustomerIDs = BookAmount.CustomerIDs and BookAmount.State = 0) " +
+                        "select Customer.CustomerIDs, CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Customer.Date, BookLog.BookIDs " +
+                        "from (Customer left join BookLog on Customer.CustomerIDs = BookLog.CustomerIDs and BookLog.State = 0) " +
                         $"where Customer.State = 0 and Customer.CustomerSex = '{sex}'";
 
                     using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
@@ -482,8 +482,8 @@ namespace Library_Management_System
                     string pn = Console.ReadLine();
 
                     string getCustomerInfoByPhoneNumber =
-                        "select Customer.CustomerIDs, CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Customer.Date, BookAmount.BookIDs " +
-                        "from (Customer left join BookAmount on Customer.CustomerIDs = BookAmount.CustomerIDs and BookAmount.State = 0) " +
+                        "select Customer.CustomerIDs, CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Customer.Date, BookLog.BookIDs " +
+                        "from (Customer left join BookLog on Customer.CustomerIDs = BookLog.CustomerIDs and BookLog.State = 0) " +
                         $"where Customer.State = 0 and Customer.CustomerSex = '{pn}'";
 
                     using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
@@ -568,8 +568,8 @@ namespace Library_Management_System
             int ids = int.Parse(Console.ReadLine());
 
             string getCustomerInfoByIDs =
-                "select Customer.CustomerIDs, CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Customer.Date, BookAmount.BookIDs " +
-                "from (Customer left join BookAmount on Customer.CustomerIDs = BookAmount.CustomerIDs and BookAmount.State = 0) " +
+                "select Customer.CustomerIDs, CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Customer.Date, BookLog.BookIDs " +
+                "from (Customer left join BookLog on Customer.CustomerIDs = BookLog.CustomerIDs and BookLog.State = 0) " +
                 $"where Customer.State = 0 and Customer.CustomerIDs = {ids}";
 
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
@@ -655,9 +655,9 @@ namespace Library_Management_System
                                     string idb = Console.ReadLine();
 
                                     string s =
-                                        "Select BookAmount.BookIDs, CustomerIDs, BookAmountAvailable, BookAmountBorrowed " +
-                                        "from (BookAmount left join Books on Books.BookIDs = BookAmount.BookIDs) " +
-                                        $"where BookAmount.BookIDs = '{idb}' and CustomerIDs = '{ids}'";
+                                        "Select BookLog.BookIDs, CustomerIDs, BookAmountAvailable, BookAmountBorrowed " +
+                                        "from (BookLog left join Book on Book.BookIDs = BookLog.BookIDs) " +
+                                        $"where BookLog.BookIDs = '{idb}' and CustomerIDs = '{ids}'";
 
                                     SqlCommand c = new SqlCommand(s, connection);
 
@@ -672,15 +672,15 @@ namespace Library_Management_System
                                             string date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
 
                                             string ud =
-                                                $"update BookAmount set State = 1 and DateReturn = '{date}' where CustomerIDs = '{ids}' and BookIDs = '{idb}'";
+                                                $"update BookLog set State = 1, DateReturn = '{date}' where CustomerIDs = '{ids}' and BookIDs = '{idb}'";
 
                                             int ab = (int)t[2];
                                             int bb = (int)t[3];
 
                                             string a =
-                                                $"update Books set BookAmountAvailable = {ab + 1} where BookIDs = '{idb}'";
+                                                $"update Book set BookAmountAvailable = {ab + 1} where BookIDs = '{idb}'";
                                             string b =
-                                                $"update Books set BookAmountBorrowed = {bb + 1} where BookIDs = '{idb}'";
+                                                $"update Book set BookAmountBorrowed = {bb + 1} where BookIDs = '{idb}'";
 
                                             SqlCommand u = new SqlCommand(ud, connection);
                                             u.ExecuteNonQuery();
@@ -783,8 +783,8 @@ namespace Library_Management_System
                     List<string> bi = new List<string>();
 
                     string getCustomerInfoByIDs =
-                        "select Customer.CustomerIDs, CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Customer.Date, BookAmount.BookIDs " +
-                        "from (Customer left join BookAmount on Customer.CustomerIDs = BookAmount.CustomerIDs and BookAmount.State = 0) " +
+                        "select Customer.CustomerIDs, CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Customer.Date, BookLog.BookIDs " +
+                        "from (Customer left join BookLog on Customer.CustomerIDs = BookLog.CustomerIDs and BookLog.State = 0) " +
                         $"where Customer.State = 0 and Customer.CustomerIDs = '{ids}'";
 
                     using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
@@ -886,7 +886,7 @@ namespace Library_Management_System
                                             $"update Customer set State = 1 where CustomerIDs = '{ids}'";
 
                                         string ud =
-                                            $"update BookAmount set State = 1 where CustomerIDs = '{ids}'";
+                                            $"update BookLog set State = 1 where CustomerIDs = '{ids}'";
 
                                         SqlCommand d = new SqlCommand(delCustomer, connection);
                                         d.ExecuteNonQuery();
@@ -922,8 +922,8 @@ namespace Library_Management_System
                     List<string> b = new List<string>();
 
                     string getCustomerInfoByName =
-                        "select Customer.CustomerIDs, CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Customer.Date, BookAmount.BookIDs " +
-                        "from (Customer left join BookAmount on Customer.CustomerIDs = BookAmount.CustomerIDs and BookAmount.State = 0) " +
+                        "select Customer.CustomerIDs, CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Customer.Date, BookLog.BookIDs " +
+                        "from (Customer left join BookLog on Customer.CustomerIDs = BookLog.CustomerIDs and BookLog.State = 0) " +
                         $"where Customer.State = 0 and Customer.CustomerName = '{name}'";
 
                     using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
@@ -1027,7 +1027,7 @@ namespace Library_Management_System
                                             $"update Customer set State = 1 where CustomerName = '{name}'";
 
                                         string ud =
-                                            $"update BooksAmount set State = 1 where CustomerIDs = '{i}'";
+                                            $"update BookLog set State = 1 where CustomerIDs = '{i}'";
 
                                         SqlCommand d = new SqlCommand(delCustomer, connection);
                                         d.ExecuteNonQuery();
@@ -1067,46 +1067,6 @@ namespace Library_Management_System
             ShowCustomer();
             Console.Write("\nInput IDs to edit: ");
             string ids = Console.ReadLine();
-
-            // for (int i = 0; i < data.Length; i++)
-            // {
-            //     string[] output = data[i].Split(',');
-            //     if (output[0] == ids)
-            //     {
-            //         Console.WriteLine($"\t\t\t\t\t\t          EDITING THE BOOK NO.{ids} \t\t\t\t");
-            //         Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
-            //         Console.WriteLine("\t\t\t\t\t\t║ 1. EDIT IDs                            ║\t\t\t\t\t");
-            //         Console.WriteLine("\t\t\t\t\t\t║ 2. EDIT NAME                           ║\t\t\t\t\t");
-            //         Console.WriteLine("\t\t\t\t\t\t║ 3. EDIT AGE                            ║\t\t\t\t\t");
-            //         Console.WriteLine("\t\t\t\t\t\t║ 4. EDIT SEX                            ║\t\t\t\t\t");
-            //         Console.WriteLine("\t\t\t\t\t\t║ 5. EDIT PHONE NUMBER                   ║\t\t\t\t\t");
-            //         Console.WriteLine("\t\t\t\t\t\t║ 6. EXIT                                ║\t\t\t\t\t");
-            //         Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
-            //         Console.Write("Input to edit: ");
-            //         int number2 = int.Parse(Console.ReadLine());
-            //
-            //         if (number2 > 0 && number2 <= 5)
-            //         {
-            //             Console.Write($"Changing {output[number2 - 1]} to: ");
-            //             string newText = Console.ReadLine();
-            //             output[number2 - 1] = newText;
-            //             data[i] = string.Join(",", output);
-            //             File.WriteAllLines(@"D:\Dev\School\Library Management System\CustomerData.txt", data);
-            //             Console.WriteLine("\t\t\t\t\t\t═══════════ UPDATE SUCCESSFULLY ═══════════\t\t\t\t\t");
-            //         }
-            //         else if (number2 == 6)
-            //         {
-            //         }
-            //         else
-            //         {
-            //             Console.WriteLine("Invalid number");
-            //         }
-            //
-            //         return;
-            //     }
-            // }
-            //
-            // Console.WriteLine($"There is no {ids} in IDs section in database!");
 
             string name = "";
             string age = "";

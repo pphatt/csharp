@@ -10,19 +10,23 @@ namespace Library_Management_System
 {
     internal class Program
     {
-        public static readonly string ConnectionString = @"data source=DESKTOP-0FQDJF2\SQLEXPRESS;initial catalog=Management_Library;trusted_connection=true;MultipleActiveResultSets=true";
+        public static readonly string ConnectionString =
+            @"data source=DESKTOP-0FQDJF2\SQLEXPRESS;initial catalog=Management_Library;trusted_connection=true;MultipleActiveResultSets=true";
+
         public static readonly int[] StoreLengthBooks = { 5, 61, 41, 21, 11, 11, 23, 23 };
-        public static readonly int[] StoreLengthCustomer = { 11, 61, 6, 7, 16, 24, 26 };
+        public static readonly int[] StoreLengthCustomer = { 5, 61, 6, 8, 16, 24, 26 };
+        public static readonly int[] StoreLengthLibrary = { 5, 61, 6, 8, 16 };
+        public static readonly int[] StoreLengthSchedule = { 13, 24, 24, 24, 24, 24, 24, 24 };
 
         public static void Main(string[] args)
         {
             // string queryString = "INSERT INTO Books (BookIDs, BookName, BookAuthor, BookCategory, BookAmount, Date, CustomerIDs) VALUES (@BookIDs, @BookName, @BookAuthor, @BookCategory, @BookAmount, @Date, @CustomerIDs)";
             // string queryString = "Select BookIDs, BookName, BookAuthor, BookCategory, BookAmount, Date, CustomerIDs from Books where BookName like '1'";
-            
+
             /*
              * Update Row, Insert, Add data to Table
              */
-            
+
             // using (SqlConnection connection = new SqlConnection(ConnectionString))
             // {
             //     SqlCommand command = new SqlCommand(queryString, connection);
@@ -37,12 +41,12 @@ namespace Library_Management_System
             //     command.ExecuteNonQuery();
             //     Console.WriteLine(command.);
             // }
-            
-            
+
+
             /*
              * Read Row or Data from Table
              */
-            
+
             // using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             // {
             //     SqlCommand command = new SqlCommand(queryString, connection);
@@ -57,16 +61,68 @@ namespace Library_Management_System
             //         }
             //     }
             // }
-            
+
             Menu menu = new Menu();
+
+            // ╔
+            // ═
+            // ║
+            // ╗
+            //
+            // ╚
+            // ╝
+
+            // 13, 32, 32, 32, 32, 32 ,32, 32
+
+            /* ╔═════════════╗╔════════╗╔════════╗
+             * ║ Time ║ Date ║║ Monday ║║ Monday ║
+             *  ═════════════  ════════  ════════
+             * ║    08:00    ║║ Lopez  ║║ Lopez  ║
+             * ║    10:00    ║║ Lopez  ║║ Lopez  ║
+             * ║    12:00    ║║ Lopez  ║║ Lopez  ║
+             * ║    12:30    ║║ Lopez  ║║ Lopez  ║
+             * ║    01:30    ║║ Break  ║║ Lopez  ║
+             * ║    03:00    ║║ Math   ║║ Lopez  ║
+             * ║    06:00    ║║ Math   ║║ Lopez  ║
+             * ╚═════════════╝╚════════╝╚════════╝
+             * 
+             */
+
+
             // DateTime tDays = DateTime.Today;
 
-            // DateTime t = new DateTime(2022, 10, 1);
+            // DateTime d1 = DateTime.Now;
+            // DateTime d2 = d1.AddDays(1);
+            // DateTime d3 = d1.AddDays(2);
+            // DateTime d4 = d1.AddDays(3);
+            // DateTime d5 = d1.AddDays(4);
+            // DateTime d6 = d1.AddDays(5);
+            // DateTime d7 = d1.AddDays(6);
+            //
+            // // DateTime fDays = t.AddMonths(-1);
+            // // fDays = fDays.AddDays(-1);
+            //
+            // Console.WriteLine(d1.DayOfWeek);
+            // Console.WriteLine(d2.DayOfWeek);
+            // Console.WriteLine(d3.DayOfWeek);
+            // Console.WriteLine(d4.DayOfWeek);
+            // Console.WriteLine(d5.DayOfWeek);
+            // Console.WriteLine(d6.DayOfWeek);
+            // Console.WriteLine(d7.DayOfWeek);
+            //
+            // Console.WriteLine($"║{$"{d1.DayOfWeek.ToString().PadLeft(((23 - 8) / 2) + 8)}",-60}║");
+            // Console.WriteLine($"║{d1.DayOfWeek.ToString().PadLeft(((60 - 8) / 2) + 8).PadRight(60)}║");
 
-            // DateTime fDays = t.AddMonths(-1);
-            // fDays = fDays.AddDays(-1);
+            // ║      Saturday         ║
+            // ║       Saturday        ║
+            // Friday
+            //     Saturday
+            // Sunday
+            //     Monday
+            // Tuesday
+            //     Wednesday
+            // Thursday
 
-            // Console.WriteLine(tDays.DayOfWeek);
             // Console.WriteLine(fDays.ToString("MM/dd/yyyy HH:mm:ss"));
             // var yesterday = DateTime.Today.AddDays(-1);
             // DateTime today = DateTime.Parse("2022-10-03");

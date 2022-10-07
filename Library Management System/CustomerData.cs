@@ -107,7 +107,7 @@ namespace Library_Management_System
                             }
 
                             Console.WriteLine(
-                                $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
+                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-7}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
 
                             check = true;
                         }
@@ -115,7 +115,7 @@ namespace Library_Management_System
                         if (prevIDs == $"{readCustomerInfo[0]}")
                         {
                             Console.WriteLine(
-                                $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
+                                $"║{"",-5}║║{"",-61}║║{"",-6}║║{"",-8}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
 
                             prevIDs = $"{readCustomerInfo[0]}";
 
@@ -134,7 +134,7 @@ namespace Library_Management_System
                             : $"║{"",-1}{"Empty",-25}║\n";
 
                         Console.Write(
-                            $"\n║{"",-1}{readCustomerInfo[0],-10}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-6}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
+                            $"\n║{"",-1}{readCustomerInfo[0],-4}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-7}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
                     }
 
                     if (check)
@@ -199,7 +199,7 @@ namespace Library_Management_System
                                     }
 
                                     Console.WriteLine(
-                                        $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
+                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-7}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
 
                                     check = true;
                                 }
@@ -207,7 +207,7 @@ namespace Library_Management_System
                                 if (prevIDs == $"{readCustomerInfo[0]}")
                                 {
                                     Console.WriteLine(
-                                        $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
+                                        $"║{"",-5}║║{"",-61}║║{"",-6}║║{"",-8}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
 
                                     prevIDs = $"{readCustomerInfo[0]}";
 
@@ -226,7 +226,7 @@ namespace Library_Management_System
                                     : $"║{"",-1}{"Empty",-25}║\n";
 
                                 Console.Write(
-                                    $"\n║{"",-1}{readCustomerInfo[0],-10}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-6}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
+                                    $"\n║{"",-1}{readCustomerInfo[0],-4}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-7}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
                             }
 
                             if (check)
@@ -276,7 +276,7 @@ namespace Library_Management_System
                                     }
 
                                     Console.WriteLine(
-                                        $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
+                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-7}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
 
                                     check = true;
                                 }
@@ -284,7 +284,7 @@ namespace Library_Management_System
                                 if (prevIDs == $"{readCustomerInfo[0]}")
                                 {
                                     Console.WriteLine(
-                                        $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
+                                        $"║{"",-5}║║{"",-61}║║{"",-6}║║{"",-8}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
 
                                     prevIDs = $"{readCustomerInfo[0]}";
 
@@ -303,7 +303,7 @@ namespace Library_Management_System
                                     : $"║{"",-1}{"Empty",-25}║\n";
 
                                 Console.Write(
-                                    $"\n║{"",-1}{readCustomerInfo[0],-10}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-6}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
+                                    $"\n║{"",-1}{readCustomerInfo[0],-4}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-7}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
                             }
 
                             if (check)
@@ -353,7 +353,7 @@ namespace Library_Management_System
                                     }
 
                                     Console.WriteLine(
-                                        $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
+                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-7}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
 
                                     check = true;
                                 }
@@ -361,7 +361,7 @@ namespace Library_Management_System
                                 if (prevIDs == $"{readCustomerInfo[0]}")
                                 {
                                     Console.WriteLine(
-                                        $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
+                                        $"║{"",-5}║║{"",-61}║║{"",-6}║║{"",-8}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
 
                                     prevIDs = $"{readCustomerInfo[0]}";
 
@@ -380,7 +380,7 @@ namespace Library_Management_System
                                     : $"║{"",-1}{"Empty",-25}║\n";
 
                                 Console.Write(
-                                    $"\n║{"",-1}{readCustomerInfo[0],-10}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-6}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
+                                    $"\n║{"",-1}{readCustomerInfo[0],-4}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-7}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
                             }
 
                             if (check)
@@ -430,7 +430,7 @@ namespace Library_Management_System
                                     }
 
                                     Console.WriteLine(
-                                        $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
+                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-7}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
 
                                     check = true;
                                 }
@@ -438,7 +438,7 @@ namespace Library_Management_System
                                 if (prevIDs == $"{readCustomerInfo[0]}")
                                 {
                                     Console.WriteLine(
-                                        $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
+                                        $"║{"",-5}║║{"",-61}║║{"",-6}║║{"",-8}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
 
                                     prevIDs = $"{readCustomerInfo[0]}";
 
@@ -457,7 +457,7 @@ namespace Library_Management_System
                                     : $"║{"",-1}{"Empty",-25}║\n";
 
                                 Console.Write(
-                                    $"\n║{"",-1}{readCustomerInfo[0],-10}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-6}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
+                                    $"\n║{"",-1}{readCustomerInfo[0],-4}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-7}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
                             }
 
                             if (check)
@@ -484,7 +484,7 @@ namespace Library_Management_System
                     string getCustomerInfoByPhoneNumber =
                         "select Customer.CustomerIDs, CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Customer.Date, BookLog.BookIDs " +
                         "from (Customer left join BookLog on Customer.CustomerIDs = BookLog.CustomerIDs and BookLog.State = 0) " +
-                        $"where Customer.State = 0 and Customer.CustomerSex = '{pn}'";
+                        $"where Customer.State = 0 and Customer.CustomerPhoneNumber = '{pn}'";
 
                     using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                     {
@@ -507,7 +507,7 @@ namespace Library_Management_System
                                     }
 
                                     Console.WriteLine(
-                                        $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
+                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-7}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
 
                                     check = true;
                                 }
@@ -515,7 +515,7 @@ namespace Library_Management_System
                                 if (prevIDs == $"{readCustomerInfo[0]}")
                                 {
                                     Console.WriteLine(
-                                        $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
+                                        $"║{"",-5}║║{"",-61}║║{"",-6}║║{"",-8}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
 
                                     prevIDs = $"{readCustomerInfo[0]}";
 
@@ -534,7 +534,7 @@ namespace Library_Management_System
                                     : $"║{"",-1}{"Empty",-25}║\n";
 
                                 Console.Write(
-                                    $"\n║{"",-1}{readCustomerInfo[0],-10}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-6}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
+                                    $"\n║{"",-1}{readCustomerInfo[0],-4}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-7}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
                             }
 
                             if (check)
@@ -599,7 +599,7 @@ namespace Library_Management_System
                             }
 
                             Console.WriteLine(
-                                $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
+                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-7}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
 
                             check = true;
                         }
@@ -607,7 +607,7 @@ namespace Library_Management_System
                         if (prevIDs == $"{readCustomerInfo[0]}")
                         {
                             Console.WriteLine(
-                                $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
+                                $"║{"",-5}║║{"",-61}║║{"",-6}║║{"",-8}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
 
                             prevIDs = $"{readCustomerInfo[0]}";
 
@@ -626,7 +626,7 @@ namespace Library_Management_System
                             : $"║{"",-1}{"Empty",-25}║\n";
 
                         Console.Write(
-                            $"\n║{"",-1}{readCustomerInfo[0],-10}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-6}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
+                            $"\n║{"",-1}{readCustomerInfo[0],-4}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-7}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
                     }
 
                     if (check)
@@ -809,7 +809,7 @@ namespace Library_Management_System
                                     }
 
                                     Console.WriteLine(
-                                        $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
+                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-7}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
 
                                     check = true;
                                 }
@@ -819,7 +819,7 @@ namespace Library_Management_System
                                 if (prevIDs == $"{readCustomerInfo[0]}")
                                 {
                                     Console.WriteLine(
-                                        $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
+                                        $"║{"",-5}║║{"",-61}║║{"",-6}║║{"",-8}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
 
                                     prevIDs = $"{readCustomerInfo[0]}";
 
@@ -838,7 +838,7 @@ namespace Library_Management_System
                                     : $"║{"",-1}{"Empty",-25}║\n";
 
                                 Console.Write(
-                                    $"\n║{"",-1}{readCustomerInfo[0],-10}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-6}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
+                                    $"\n║{"",-1}{readCustomerInfo[0],-4}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-7}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
                             }
 
                             if (check)
@@ -950,7 +950,7 @@ namespace Library_Management_System
                                     }
 
                                     Console.WriteLine(
-                                        $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
+                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-7}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
 
                                     check = true;
                                 }
@@ -960,7 +960,7 @@ namespace Library_Management_System
                                 if (prevIDs == $"{readCustomerInfo[0]}")
                                 {
                                     Console.WriteLine(
-                                        $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
+                                        $"║{"",-5}║║{"",-61}║║{"",-6}║║{"",-8}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
 
                                     prevIDs = $"{readCustomerInfo[0]}";
 
@@ -979,7 +979,7 @@ namespace Library_Management_System
                                     : $"║{"",-1}{"Empty",-25}║\n";
 
                                 Console.Write(
-                                    $"\n║{"",-1}{readCustomerInfo[0],-10}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-6}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
+                                    $"\n║{"",-1}{readCustomerInfo[0],-4}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-7}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
                             }
 
                             if (check)
@@ -1051,7 +1051,7 @@ namespace Library_Management_System
                             }
                             else
                             {
-                                Console.WriteLine("Invalid ID");
+                                Console.WriteLine("Invalid Name");
                             }
                         }
                     }

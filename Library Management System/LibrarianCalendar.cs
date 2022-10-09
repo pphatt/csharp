@@ -214,46 +214,95 @@ namespace Library_Management_System
 
         public void AddCalendar()
         {
-            // string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\LibrarianData.txt");
-            // string[] days = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
-            //
-            // for (int i = 0; i < data.Length; i++)
-            // {
-            //     int check = Array.IndexOf(days, data[i].Split(',')[6]);
-            //     if (check >= 0)
-            //     {
-            //         days = days.Where((val, indx) => indx != check).ToArray();
-            //     }
-            // }
-            //
-            // ShowLibrarian();
-            // Console.Write("\nInput to use: ");
-            // int number = int.Parse(Console.ReadLine());
-            //
-            // if (number > 0 && number <= data.Length && days.Length > 0)
-            // {
-            //     string[] librarianCheck = data[number - 1].Split(',');
-            //     if (librarianCheck[6] == "")
-            //     {
-            //         Console.WriteLine("Here are the available day");
-            //         foreach (string day in days)
-            //         {
-            //             Console.Write($"|{day}|");
-            //         }
-            //
-            //         Console.Write("\nInput to use: ");
-            //         int number1 = int.Parse(Console.ReadLine());
-            //         librarianCheck[6] = $"{days[number1 - 1]}";
-            //         data[number - 1] = string.Join(",", librarianCheck);
-            //         File.WriteAllLines(@"D:\Dev\School\Library Management System\LibrarianData.txt", data);
-            //         Console.WriteLine("\t\t\t\t\t\t═══════════ UPDATED SUCCESSFULLY ═══════════\t\t\t\t\t");
-            //     }
-            //     else
-            //     {
-            //         Console.WriteLine("The Librarian already has schedule");
-            //         return;
-            //     }
-            // }
+            string queryString = "select DateOfWeek, TimeStart, TimeEnd " +
+                                 "from (Scheduled left join Librarian on Librarian.LibrarianIDs = Scheduled.LibrarianIDs) " +
+                                 "where DateOfWeek in ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday') and Scheduled.LibrarianIDs IS NULL";
+
+            List<List<string>> schedules = new List<List<string>>();
+
+            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+
+                connection.Open();
+
+                using (SqlDataReader readCustomerInfo = command.ExecuteReader())
+                {
+                    bool check = false;
+                    int i = 0;
+
+                    while (readCustomerInfo.Read())
+                    {
+                        if (!check)
+                        {
+                            for (int k = 0; k < Program.StoreLengthScheduleMissing.Length; k++)
+                            {
+                                Console.Write($"╔{BookList.Repeat("═", Program.StoreLengthScheduleMissing[k])}╗");
+                            }
+
+                            Console.WriteLine(
+                                $"\n║{"",-1}{"IDs",-3}║║{"",-1}{"Date",-13}║║{"",-1}{"Time Start",-11}║║{"",-1}{"Time End",-11}║");
+
+                            check = true;
+                        }
+
+                        for (int k = 0; k < Program.StoreLengthScheduleMissing.Length; k++)
+                        {
+                            Console.Write($" {BookList.Repeat("═", Program.StoreLengthScheduleMissing[k])} ");
+                        }
+
+                        Console.WriteLine(
+                            $"\n║{"",-1}{i + 1,-3}║║{"",-1}{readCustomerInfo[0],-13}║║{"",-1}{readCustomerInfo[1],-11}║║{"",-1}{readCustomerInfo[2],-11}║");
+
+                        List<string> s = new List<string> { $"{readCustomerInfo[0]}", $"{readCustomerInfo[1]}" };
+
+                        schedules.Add(s);
+                        i++;
+                    }
+
+                    if (check)
+                    {
+                        for (int k = 0; k < Program.StoreLengthScheduleMissing.Length; k++)
+                        {
+                            Console.Write($"╚{BookList.Repeat("═", Program.StoreLengthScheduleMissing[k])}╝");
+                        }
+
+                        Console.Write("\nInput Librarian's IDs to add: ");
+                        string l = Console.ReadLine();
+
+                        string ql = $"select * from Librarian where LibrarianIDs = '{l}'";
+                        SqlCommand co = new SqlCommand(ql, connection);
+
+                        using (SqlDataReader r = co.ExecuteReader())
+                        {
+                            if (!r.Read())
+                            {
+                                Console.WriteLine("Invalid Librarian's IDs");
+                                return;
+                            }
+                        }
+
+                        Console.Write("Input Schedule's IDs to add: ");
+                        int n = Int32.Parse(Console.ReadLine());
+
+                        if (n <= 0 || n > schedules.Count)
+                        {
+                            Console.WriteLine("Invalid Schedule's IDs.");
+                            return;
+                        }
+
+                        string q =
+                            $"update Scheduled set LibrarianIDs = {l} where DateOfWeek = '{schedules[n - 1][0]}' and TimeStart = '{schedules[n - 1][1]}'";
+                        SqlCommand u = new SqlCommand(q, connection);
+                        u.ExecuteReader();
+                        Console.WriteLine("\t\t\t\t\t\t═══════════ UPDATE SUCCESSFULLY ═══════════\t\t\t\t\t");
+                    }
+                    else
+                    {
+                        Console.WriteLine("There is no empty slot to add.");
+                    }
+                }
+            }
         }
     }
 }

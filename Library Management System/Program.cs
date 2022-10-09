@@ -17,6 +17,7 @@ namespace Library_Management_System
         public static readonly int[] StoreLengthCustomer = { 5, 61, 6, 8, 16, 24, 26 };
         public static readonly int[] StoreLengthLibrary = { 5, 61, 6, 8, 16 };
         public static readonly int[] StoreLengthSchedule = { 15, 24, 24, 24, 24, 24, 24, 24 };
+        public static readonly int[] StoreLengthScheduleMissing = { 4, 14, 12, 12 };
 
         public static void Main(string[] args)
         {

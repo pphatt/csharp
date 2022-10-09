@@ -154,6 +154,8 @@ namespace Library_Management_System
             string subject = Console.ReadLine();
             Console.Write("Enter amount: ");
             int amount = int.Parse(Console.ReadLine());
+            Console.Write("Enter Publishing Year: ");
+            string py = Console.ReadLine();
 
             string[] bna = bookName.Split(' ');
             StringBuilder bn = new StringBuilder();
@@ -188,7 +190,7 @@ namespace Library_Management_System
             }
 
             string addDataQuery =
-                "INSERT INTO Book (BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Date, State, LIDs) VALUES (@BookName, @BookAuthor, @BookCategory, @BookAmountAvailable, @BookAmountBorrowed, @Date, @State, @LIDs)";
+                "INSERT INTO Book (BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, PublishDate, Date, State, LIDs) VALUES (@BookName, @BookAuthor, @BookCategory, @BookAmountAvailable, @BookAmountBorrowed, @PublishDate, @Date, @State, @LIDs)";
 
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
@@ -201,6 +203,7 @@ namespace Library_Management_System
                 insertCommand.Parameters.AddWithValue("@BookCategory", subject);
                 insertCommand.Parameters.AddWithValue("@BookAmountAvailable", amount);
                 insertCommand.Parameters.AddWithValue("@BookAmountBorrowed", 0);
+                insertCommand.Parameters.AddWithValue("@PublishDate", py);
                 insertCommand.Parameters.AddWithValue("@Date", date.ToString("dd/MM/yyyy HH:mm:ss"));
                 insertCommand.Parameters.AddWithValue("@State", 0);
                 insertCommand.Parameters.AddWithValue("@LIDs", ln);
@@ -1526,8 +1529,6 @@ namespace Library_Management_System
          * Borrowed Multiple Books.
          *
          * add library to add customer
-         * add library to add book
-         * add library to bookBorrow
          * 
          */
 
@@ -2068,7 +2069,7 @@ namespace Library_Management_System
                             check = true;
 
                             string borrowedBookQuery =
-                                $"Insert into BookLog (BookIDs, CustomerIDs, DateBorrow, DateReturn, State, LIDs) values ({id}, {ids}, '{DateTime.Now}', null, 0, {ln})";
+                                $"Insert into BookLog (BookIDs, CustomerIDs, DateBorrow, LIDsCheckIn, DateReturn, LIDsCheckOut, State) values ({id}, {ids}, '{DateTime.Now}', {ln}, null, null, 0)";
 
                             SqlCommand b = new SqlCommand(borrowedBookQuery, connection);
                             b.ExecuteNonQuery();

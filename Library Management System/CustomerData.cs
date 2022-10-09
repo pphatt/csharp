@@ -39,7 +39,7 @@ namespace Library_Management_System
                     }
                 }
             }
-            
+
             Console.Write("Enter customer's name: ");
             string name = Console.ReadLine();
             Console.Write("Enter customer's age: ");
@@ -685,13 +685,38 @@ namespace Library_Management_System
                                     string idb = Console.ReadLine();
 
                                     string s =
-                                        "Select BookLog.BookIDs, CustomerIDs, BookAmountAvailable, BookAmountBorrowed " +
+                                        "Select BookAmountAvailable, BookAmountBorrowed " +
                                         "from (BookLog left join Book on Book.BookIDs = BookLog.BookIDs) " +
                                         $"where BookLog.BookIDs = '{idb}' and CustomerIDs = '{ids}' and BookLog.State = 0";
 
-                                    SqlCommand c = new SqlCommand(s, connection);
+                                    DateTime date = DateTime.Now;
+                                    int ln = 0;
 
-                                    using (SqlDataReader t = c.ExecuteReader())
+                                    string lq = "Select Librarian.LibrarianIDs " +
+                                                "from (Scheduled left join Librarian on Scheduled.LibrarianIDs = Librarian.LibrarianIDs) " +
+                                                $"where Scheduled.DateOfWeek = '{date.DayOfWeek}' and '{date.Hour}:{date.Minute}' between TimeStart and TimeEnd ";
+
+                                    SqlCommand q = new SqlCommand(lq, connection);
+
+                                    using (SqlDataReader r = q.ExecuteReader())
+                                    {
+                                        bool c = false;
+                                        while (r.Read())
+                                        {
+                                            ln = (int)r[0];
+                                            c = true;
+                                        }
+
+                                        if (!c)
+                                        {
+                                            Console.WriteLine("There is no currently active librarian.");
+                                            return;
+                                        }
+                                    }
+
+                                    SqlCommand qu = new SqlCommand(s, connection);
+
+                                    using (SqlDataReader t = qu.ExecuteReader())
                                     {
                                         bool ch = false;
 
@@ -699,13 +724,11 @@ namespace Library_Management_System
                                         {
                                             ch = true;
 
-                                            string date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-
                                             string ud =
-                                                $"update BookLog set State = 1, DateReturn = '{date}' where CustomerIDs = '{ids}' and BookIDs = '{idb}'";
+                                                $"update BookLog set State = 1, DateReturn = '{date:dd/MM/yyyy HH:mm:ss}', LIDsCheckOut = '{ln}' where CustomerIDs = '{ids}' and BookIDs = '{idb}'";
 
-                                            int ab = (int)t[2];
-                                            int bb = (int)t[3];
+                                            int ab = (int)t[0];
+                                            int bb = (int)t[1];
 
                                             string a =
                                                 $"update Book set BookAmountAvailable = {ab + 1} where BookIDs = '{idb}'";

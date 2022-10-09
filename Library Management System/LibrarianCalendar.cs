@@ -9,13 +9,6 @@ namespace Library_Management_System
 {
     public class LibrarianCalendar
     {
-        /*
-         * make a book column named it librarian for each schedule
-         * make a customer column named it librarian for each schedule
-         * 
-         * make a customer column named it librarian for each schedule
-        */
-
         public void AddLibrarian()
         {
             Console.Write("Enter Librarian's name: ");

@@ -1523,12 +1523,8 @@ namespace Library_Management_System
             }
         }
 
-        /*
-         * When delete we should have a log for record action and next is librarian and schedule.
-         *
+        /*         *
          * Borrowed Multiple Books.
-         *
-         * add library to add customer
          * 
          */
 

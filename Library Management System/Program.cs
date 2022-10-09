@@ -16,7 +16,7 @@ namespace Library_Management_System
         public static readonly int[] StoreLengthBooks = { 5, 61, 41, 21, 11, 11, 23, 23 };
         public static readonly int[] StoreLengthCustomer = { 5, 61, 6, 8, 16, 24, 26 };
         public static readonly int[] StoreLengthLibrary = { 5, 61, 6, 8, 16 };
-        public static readonly int[] StoreLengthSchedule = { 13, 24, 24, 24, 24, 24, 24, 24 };
+        public static readonly int[] StoreLengthSchedule = { 15, 24, 24, 24, 24, 24, 24, 24 };
 
         public static void Main(string[] args)
         {
@@ -63,7 +63,30 @@ namespace Library_Management_System
             // }
 
             Menu menu = new Menu();
-
+            // DateTime d = DateTime.Now;
+            // DateTime d1 = d.AddDays(1);
+            // DateTime d2 = d.AddDays(2);
+            // DateTime d3 = d.AddDays(3);
+            // DateTime d4 = d.AddDays(4);
+            // DateTime d5 = d.AddDays(5);
+            // DateTime d6 = d.AddDays(6);
+            // DateTime d7 = d.AddDays(7);
+            //
+            // for (int k = 0; k < Program.StoreLengthSchedule.Length; k++)
+            // {
+            //     Console.Write($"╔{BookList.Repeat("═", Program.StoreLengthSchedule[k])}╗");
+            // }
+            //
+            // Console.WriteLine(
+            //     $"\n║{"",-1}{"Time",-5}║{"",-1}{"Date",-5}║" +
+            //     $"║{"",-1}{$"{d1.DayOfWeek} ({d1:M/d/yy})",-23}║" +
+            //     $"║{"",-1}{$"{d2.DayOfWeek} ({d2:M/d/yy})",-23}║" +
+            //     $"║{"",-1}{$"{d3.DayOfWeek} ({d3:M/d/yy})",-23}║" +
+            //     $"║{"",-1}{$"{d4.DayOfWeek} ({d4:M/d/yy})",-23}║" +
+            //     $"║{"",-1}{$"{d5.DayOfWeek} ({d5:M/d/yy})",-23}║" +
+            //     $"║{"",-1}{$"{d6.DayOfWeek} ({d6:M/d/yy})",-23}║" +
+            //     $"║{"",-1}{$"{d7.DayOfWeek} ({d7:M/d/yy})",-23}║");
+            
             // ╔
             // ═
             // ║
@@ -77,12 +100,12 @@ namespace Library_Management_System
             /* ╔═════════════╗╔════════╗╔════════╗
              * ║ Time ║ Date ║║ Monday ║║ Monday ║
              *  ═════════════  ════════  ════════
-             * ║    08:00    ║║ Lopez  ║║ Lopez  ║
+             * ║    08:00    ║║ EMPTY  ║║ Lopez  ║
              * ║    10:00    ║║ Lopez  ║║ Lopez  ║
-             * ║    12:00    ║║ Lopez  ║║ Lopez  ║
+             * ║    12:00    ║║ Lopez  ║║ EMPTY  ║
              * ║    12:30    ║║ Lopez  ║║ Lopez  ║
              * ║    01:30    ║║ Break  ║║ Lopez  ║
-             * ║    03:00    ║║ Math   ║║ Lopez  ║
+             * ║    03:00    ║║ EMPTY  ║║ EMPTY  ║
              * ║    06:00    ║║ Math   ║║ Lopez  ║
              * ╚═════════════╝╚════════╝╚════════╝
              * 
@@ -90,7 +113,7 @@ namespace Library_Management_System
 
 
             // DateTime tDays = DateTime.Today;
-
+            //
             // DateTime d1 = DateTime.Now;
             // DateTime d2 = d1.AddDays(1);
             // DateTime d3 = d1.AddDays(2);
@@ -110,7 +133,7 @@ namespace Library_Management_System
             // Console.WriteLine(d6.DayOfWeek);
             // Console.WriteLine(d7.DayOfWeek);
             //
-            // Console.WriteLine($"║{$"{d1.DayOfWeek.ToString().PadLeft(((23 - 8) / 2) + 8)}",-60}║");
+            // Console.WriteLine($"║{$"{d1.DayOfWeek.ToString().PadLeft(((60 - 8) / 2) + 8)}",-60}║");
             // Console.WriteLine($"║{d1.DayOfWeek.ToString().PadLeft(((60 - 8) / 2) + 8).PadRight(60)}║");
 
             // ║      Saturday         ║

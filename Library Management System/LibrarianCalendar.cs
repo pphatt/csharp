@@ -122,187 +122,138 @@ namespace Library_Management_System
 
         public void ShowCalendar()
         {
-            // for (int i = 0; i < data.Length; i++)
-            // {
-            //     string[] checkD = data[i].Split(',');
-            //     if (checkD[6] == "")
-            //     {
-            //         Console.WriteLine("There is no data currently or the TIME TABLE IS NOT FULL");
-            //         return;
-            //     }
-            // }
-            //
-            // string[] day = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
-            // string[] routineDay = new string[7];
-            // string[] employeeDay = new string[7];
-            // int[] test = { 12, 11, 61, 6, 11, 16, 49 };
-            // int check = 0;
-            //
-            // int index = Array.IndexOf(day, DateTime.Today.ToString("F").Split(',')[0]);
-            //
-            // for (int i = index; i < day.Length; i++)
-            // {
-            //     routineDay[check] = day[i];
-            //     check += 1;
-            // }
-            //
-            // for (int i = 0; i < day.Length - check; i++)
-            // {
-            //     check += i;
-            //     routineDay[check] = day[i];
-            //     check -= i;
-            // }
-            //
-            // for (int i = 0; i < data.Length; i++)
-            // {
-            //     string checkDay = data[i].Split(',')[6];
-            //     int index1 = Array.IndexOf(routineDay, checkDay);
-            //     employeeDay[index1] = data[i].Split(',')[0];
-            // }
-            //
-            // for (int i = 0; i < test.Length; i++)
-            // {
-            //     Console.Write($"╔{BookList.Repeat("═", test[i])}╗");
-            // }
-            //
-            // Console.WriteLine(
-            //     $"\n║{"",-12}║║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-10}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Status",-48}║");
-            //
-            // int checking = 0;
-            // for (int i = 0; i < routineDay.Length; i++)
-            // {
-            //     string[] output = (employeeDay[checking] == null)
-            //         ? new string[7]
-            //         : data[Int32.Parse(employeeDay[checking]) - 1].Split(',');
-            //
-            //     for (int j = 0; j < test.Length; j++)
-            //     {
-            //         Console.Write($" {BookList.Repeat("═", test[j])} ");
-            //     }
-            //
-            //     Console.Write("\n");
-            //
-            //     Console.WriteLine(
-            //         $"║{"",-2}{routineDay[i].ToUpper(),-10}║║{"",-1}{output[0],-10}║║{"",-1}{output[1],-60}║║{"",-1}{output[2],-5}║║{"",-1}{output[3],-10}║║{"",-1}{output[4],-15}║║{"",-1}{output[5],-48}║");
-            //     checking += 1;
-            // }
-            //
-            // for (int i = 0; i < test.Length; i++)
-            // {
-            //     Console.Write($"╚{BookList.Repeat("═", test[i])}╝");
-            // }
+            DateTime d1 = DateTime.Now;
+            DateTime d2 = d1.AddDays(1);
+            DateTime d3 = d1.AddDays(2);
+            DateTime d4 = d1.AddDays(3);
+            DateTime d5 = d1.AddDays(4);
+            DateTime d6 = d1.AddDays(5);
+            DateTime d7 = d1.AddDays(6);
 
-            string queryString = "select LibrarianName, Date, TimeStart, TimeEnd " +
-                                 "from (Librarian left join Scheduled on Librarian.LibrarianIDs = Scheduled.LibrarianIDs)";
+            string[] time = { "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:30", "15:00", "17:00" };
 
-            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+            for (int k = 0; k < Program.StoreLengthSchedule.Length; k++)
             {
-                SqlCommand command = new SqlCommand(queryString, connection);
+                Console.Write($"╔{BookList.Repeat("═", Program.StoreLengthSchedule[k])}╗");
+            }
 
-                connection.Open();
+            Console.WriteLine(
+                $"\n║{"",-2}{"Time",-5}║{"",-1}{"Date",-6}║" +
+                $"║{"",-1}{$"{d1.DayOfWeek} ({d1:M/d/yy})",-23}║" +
+                $"║{"",-1}{$"{d2.DayOfWeek} ({d2:M/d/yy})",-23}║" +
+                $"║{"",-1}{$"{d3.DayOfWeek} ({d3:M/d/yy})",-23}║" +
+                $"║{"",-1}{$"{d4.DayOfWeek} ({d4:M/d/yy})",-23}║" +
+                $"║{"",-1}{$"{d5.DayOfWeek} ({d5:M/d/yy})",-23}║" +
+                $"║{"",-1}{$"{d6.DayOfWeek} ({d6:M/d/yy})",-23}║" +
+                $"║{"",-1}{$"{d7.DayOfWeek} ({d7:M/d/yy})",-23}║");
 
-                using (SqlDataReader readCustomerInfo = command.ExecuteReader())
+            for (int k = 0; k < Program.StoreLengthSchedule.Length; k++)
+            {
+                Console.Write($" {BookList.Repeat("═", Program.StoreLengthSchedule[k])} ");
+            }
+
+            for (int i = 0; i < time.Length - 1; i++)
+            {
+                StringBuilder o = new StringBuilder();
+                string q = "select LibrarianName " +
+                           "from (Scheduled left join Librarian on Librarian.LibrarianIDs = Scheduled.LibrarianIDs) " +
+                           $"where TimeStart = '{time[i]}' and DateOfWeek in ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')";
+
+                o.Append($"\n║{"",-1}{$"{time[i]} - {time[i + 1]}",-14}║");
+
+                using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                 {
-                    bool check = false;
+                    SqlCommand command = new SqlCommand(q, connection);
 
-                    while (readCustomerInfo.Read())
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        if (!check)
-                        {
-                            DateTime d1 = DateTime.Now;
-                            DateTime d2 = d1.AddDays(1);
-                            DateTime d3 = d1.AddDays(2);
-                            DateTime d4 = d1.AddDays(3);
-                            DateTime d5 = d1.AddDays(4);
-                            DateTime d6 = d1.AddDays(5);
-                            DateTime d7 = d1.AddDays(6);
+                        bool check = false;
 
-                            for (int k = 0; k < Program.StoreLengthSchedule.Length; k++)
+                        while (reader.Read())
+                        {
+                            if (!check)
                             {
-                                Console.Write($"╔{BookList.Repeat("═", Program.StoreLengthSchedule[k])}╗");
+                                check = true;
                             }
 
-                            Console.WriteLine(
-                                $"\n║{"",-1}{"Time",-5}║{"",-1}{"Date",-5}║" +
-                                $"║{"",-1}{$"{d1.DayOfWeek}",-22}║" +
-                                $"║{"",-1}{$"{d2.DayOfWeek}",-22}║" +
-                                $"║{"",-1}{$"{d3.DayOfWeek}",-22}║" +
-                                $"║{"",-1}{$"{d4.DayOfWeek}",-22}║" +
-                                $"║{"",-1}{$"{d5.DayOfWeek}",-22}║" +
-                                $"║{"",-1}{$"{d6.DayOfWeek}",-22}║" +
-                                $"║{"",-1}{$"{d7.DayOfWeek}",-22}║");
+                            string tmp = $"║{"",-1}{reader[0],-23}║";
 
-                            check = true;
+                            if ($"{reader[0]}" == "")
+                            {
+                                tmp = $"║{"",-1}{"EMPTY",-23}║";
+                            }
+
+                            o.Append(tmp);
                         }
+
+                        if (!check)
+                        {
+                            o.Append($"║{"",-1}{"BREAK",-23}║" +
+                                     $"║{"",-1}{"BREAK",-23}║" +
+                                     $"║{"",-1}{"BREAK",-23}║" +
+                                     $"║{"",-1}{"BREAK",-23}║" +
+                                     $"║{"",-1}{"BREAK",-23}║" +
+                                     $"║{"",-1}{"BREAK",-23}║" +
+                                     $"║{"",-1}{"BREAK",-23}║");
+                        }
+
+                        Console.WriteLine(o.ToString());
 
                         for (int k = 0; k < Program.StoreLengthSchedule.Length; k++)
                         {
                             Console.Write($" {BookList.Repeat("═", Program.StoreLengthSchedule[k])} ");
                         }
-
-                        Console.WriteLine(
-                            $"\n║{"",-1}{readCustomerInfo[0],-4}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-7}║║{"",-1}{readCustomerInfo[4],-15}║");
-                    }
-
-                    if (check)
-                    {
-                        for (int k = 0; k < Program.StoreLengthSchedule.Length; k++)
-                        {
-                            Console.Write($"╚{BookList.Repeat("═", Program.StoreLengthSchedule[k])}╝");
-                        }
-
-                        Console.WriteLine("");
-                    }
-                    else
-                    {
-                        Console.WriteLine("There are no data currently");
                     }
                 }
             }
+
+            Console.WriteLine("");
         }
 
         public void AddCalendar()
         {
-            string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\LibrarianData.txt");
-            string[] days = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
-
-            for (int i = 0; i < data.Length; i++)
-            {
-                int check = Array.IndexOf(days, data[i].Split(',')[6]);
-                if (check >= 0)
-                {
-                    days = days.Where((val, indx) => indx != check).ToArray();
-                }
-            }
-
-            ShowLibrarian();
-            Console.Write("\nInput to use: ");
-            int number = int.Parse(Console.ReadLine());
-
-            if (number > 0 && number <= data.Length && days.Length > 0)
-            {
-                string[] librarianCheck = data[number - 1].Split(',');
-                if (librarianCheck[6] == "")
-                {
-                    Console.WriteLine("Here are the available day");
-                    foreach (string day in days)
-                    {
-                        Console.Write($"|{day}|");
-                    }
-
-                    Console.Write("\nInput to use: ");
-                    int number1 = int.Parse(Console.ReadLine());
-                    librarianCheck[6] = $"{days[number1 - 1]}";
-                    data[number - 1] = string.Join(",", librarianCheck);
-                    File.WriteAllLines(@"D:\Dev\School\Library Management System\LibrarianData.txt", data);
-                    Console.WriteLine("\t\t\t\t\t\t═══════════ UPDATED SUCCESSFULLY ═══════════\t\t\t\t\t");
-                }
-                else
-                {
-                    Console.WriteLine("The Librarian already has schedule");
-                    return;
-                }
-            }
+            // string[] data = File.ReadAllLines(@"D:\Dev\School\Library Management System\LibrarianData.txt");
+            // string[] days = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+            //
+            // for (int i = 0; i < data.Length; i++)
+            // {
+            //     int check = Array.IndexOf(days, data[i].Split(',')[6]);
+            //     if (check >= 0)
+            //     {
+            //         days = days.Where((val, indx) => indx != check).ToArray();
+            //     }
+            // }
+            //
+            // ShowLibrarian();
+            // Console.Write("\nInput to use: ");
+            // int number = int.Parse(Console.ReadLine());
+            //
+            // if (number > 0 && number <= data.Length && days.Length > 0)
+            // {
+            //     string[] librarianCheck = data[number - 1].Split(',');
+            //     if (librarianCheck[6] == "")
+            //     {
+            //         Console.WriteLine("Here are the available day");
+            //         foreach (string day in days)
+            //         {
+            //             Console.Write($"|{day}|");
+            //         }
+            //
+            //         Console.Write("\nInput to use: ");
+            //         int number1 = int.Parse(Console.ReadLine());
+            //         librarianCheck[6] = $"{days[number1 - 1]}";
+            //         data[number - 1] = string.Join(",", librarianCheck);
+            //         File.WriteAllLines(@"D:\Dev\School\Library Management System\LibrarianData.txt", data);
+            //         Console.WriteLine("\t\t\t\t\t\t═══════════ UPDATED SUCCESSFULLY ═══════════\t\t\t\t\t");
+            //     }
+            //     else
+            //     {
+            //         Console.WriteLine("The Librarian already has schedule");
+            //         return;
+            //     }
+            // }
         }
     }
 }

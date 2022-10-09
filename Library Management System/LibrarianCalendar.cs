@@ -75,11 +75,11 @@ namespace Library_Management_System
 
                 connection.Open();
 
-                using (SqlDataReader readCustomerInfo = command.ExecuteReader())
+                using (SqlDataReader readLibrarianInfo = command.ExecuteReader())
                 {
                     bool check = false;
 
-                    while (readCustomerInfo.Read())
+                    while (readLibrarianInfo.Read())
                     {
                         if (!check)
                         {
@@ -100,7 +100,7 @@ namespace Library_Management_System
                         }
 
                         Console.WriteLine(
-                            $"\n║{"",-1}{readCustomerInfo[0],-4}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-7}║║{"",-1}{readCustomerInfo[4],-15}║");
+                            $"\n║{"",-1}{readLibrarianInfo[0],-4}║║{"",-1}{readLibrarianInfo[1],-60}║║{"",-1}{readLibrarianInfo[2],-5}║║{"",-1}{readLibrarianInfo[3],-7}║║{"",-1}{readLibrarianInfo[4],-15}║");
                     }
 
                     if (check)
@@ -226,12 +226,12 @@ namespace Library_Management_System
 
                 connection.Open();
 
-                using (SqlDataReader readCustomerInfo = command.ExecuteReader())
+                using (SqlDataReader readSchedule = command.ExecuteReader())
                 {
                     bool check = false;
                     int i = 0;
 
-                    while (readCustomerInfo.Read())
+                    while (readSchedule.Read())
                     {
                         if (!check)
                         {
@@ -252,9 +252,9 @@ namespace Library_Management_System
                         }
 
                         Console.WriteLine(
-                            $"\n║{"",-1}{i + 1,-3}║║{"",-1}{readCustomerInfo[0],-13}║║{"",-1}{readCustomerInfo[1],-11}║║{"",-1}{readCustomerInfo[2],-11}║");
+                            $"\n║{"",-1}{i + 1,-3}║║{"",-1}{readSchedule[0],-13}║║{"",-1}{readSchedule[1],-11}║║{"",-1}{readSchedule[2],-11}║");
 
-                        List<string> s = new List<string> { $"{readCustomerInfo[0]}", $"{readCustomerInfo[1]}" };
+                        List<string> s = new List<string> { $"{readSchedule[0]}", $"{readSchedule[1]}" };
 
                         schedules.Add(s);
                         i++;

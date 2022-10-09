@@ -10,6 +10,36 @@ namespace Library_Management_System
     {
         public void AddCustomer()
         {
+            DateTime date = DateTime.Now;
+            int ln = 0;
+
+            string lq = "Select Librarian.LibrarianIDs " +
+                        "from (Scheduled left join Librarian on Scheduled.LibrarianIDs = Librarian.LibrarianIDs) " +
+                        $"where Scheduled.DateOfWeek = '{date.DayOfWeek}' and '{date.Hour}:{date.Minute}' between TimeStart and TimeEnd ";
+
+            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+            {
+                connection.Open();
+
+                SqlCommand q = new SqlCommand(lq, connection);
+
+                using (SqlDataReader r = q.ExecuteReader())
+                {
+                    bool c = false;
+                    while (r.Read())
+                    {
+                        ln = (int)r[0];
+                        c = true;
+                    }
+
+                    if (!c)
+                    {
+                        Console.WriteLine("There is no currently active librarian.");
+                        return;
+                    }
+                }
+            }
+            
             Console.Write("Enter customer's name: ");
             string name = Console.ReadLine();
             Console.Write("Enter customer's age: ");
@@ -18,7 +48,6 @@ namespace Library_Management_System
             string sex = Console.ReadLine();
             Console.Write("Enter customer's phone number: ");
             string phoneNumber = Console.ReadLine();
-            string date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
 
             string[] na = name.Split(' ');
             StringBuilder n = new StringBuilder();
@@ -37,7 +66,7 @@ namespace Library_Management_System
             }
 
             string addDataQuery =
-                "INSERT INTO Customer (CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Date, State) VALUES (@CustomerName, @CustomerAge, @CustomerSex, @CustomerPhoneNumber, @Date, @State)";
+                "INSERT INTO Customer (CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Date, State, LIDs) VALUES (@CustomerName, @CustomerAge, @CustomerSex, @CustomerPhoneNumber, @Date, @State, @LIDs)";
 
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
@@ -52,8 +81,9 @@ namespace Library_Management_System
                     insertCommand.Parameters.AddWithValue("@CustomerSex",
                         sex[0].ToString().ToUpper() + sex.Substring(1));
                     insertCommand.Parameters.AddWithValue("@CustomerPhoneNumber", phoneNumber);
-                    insertCommand.Parameters.AddWithValue("@Date", date);
+                    insertCommand.Parameters.AddWithValue("@Date", date.ToString("dd/MM/yyyy HH:mm:ss"));
                     insertCommand.Parameters.AddWithValue("@State", 0);
+                    insertCommand.Parameters.AddWithValue("@LIDs", ln);
                     insertCommand.ExecuteNonQuery();
                     Console.WriteLine("\t\t\t\t\t\t═══════════ ADDED SUCCESSFULLY ═══════════\t\t\t\t\t");
                 }

@@ -116,6 +116,36 @@ namespace Library_Management_System
 
         public void Add()
         {
+            DateTime date = DateTime.Now;
+            int ln = 0;
+
+            string lq = "Select Librarian.LibrarianIDs " +
+                        "from (Scheduled left join Librarian on Scheduled.LibrarianIDs = Librarian.LibrarianIDs) " +
+                        $"where Scheduled.DateOfWeek = '{date.DayOfWeek}' and '{date.Hour}:{date.Minute}' between TimeStart and TimeEnd ";
+
+            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+            {
+                connection.Open();
+
+                SqlCommand q = new SqlCommand(lq, connection);
+
+                using (SqlDataReader r = q.ExecuteReader())
+                {
+                    bool c = false;
+                    while (r.Read())
+                    {
+                        ln = (int)r[0];
+                        c = true;
+                    }
+
+                    if (!c)
+                    {
+                        Console.WriteLine("There is no currently active librarian.");
+                        return;
+                    }
+                }
+            }
+
             Console.Write("Enter book's title: ");
             string bookName = Console.ReadLine();
             Console.Write("Enter author: ");
@@ -124,7 +154,6 @@ namespace Library_Management_System
             string subject = Console.ReadLine();
             Console.Write("Enter amount: ");
             int amount = int.Parse(Console.ReadLine());
-            string date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
 
             string[] bna = bookName.Split(' ');
             StringBuilder bn = new StringBuilder();
@@ -159,7 +188,7 @@ namespace Library_Management_System
             }
 
             string addDataQuery =
-                "INSERT INTO Book (BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Date, State) VALUES (@BookName, @BookAuthor, @BookCategory, @BookAmountAvailable, @BookAmountBorrowed, @Date, @State)";
+                "INSERT INTO Book (BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Date, State, LIDs) VALUES (@BookName, @BookAuthor, @BookCategory, @BookAmountAvailable, @BookAmountBorrowed, @Date, @State, @LIDs)";
 
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
@@ -172,9 +201,11 @@ namespace Library_Management_System
                 insertCommand.Parameters.AddWithValue("@BookCategory", subject);
                 insertCommand.Parameters.AddWithValue("@BookAmountAvailable", amount);
                 insertCommand.Parameters.AddWithValue("@BookAmountBorrowed", 0);
-                insertCommand.Parameters.AddWithValue("@Date", date);
+                insertCommand.Parameters.AddWithValue("@Date", date.ToString("dd/MM/yyyy HH:mm:ss"));
                 insertCommand.Parameters.AddWithValue("@State", 0);
+                insertCommand.Parameters.AddWithValue("@LIDs", ln);
                 insertCommand.ExecuteNonQuery();
+                Console.WriteLine("\t\t\t\t\t\t═══════════ ADDED SUCCESSFULLY ═══════════\t\t\t\t\t");
             }
         }
 
@@ -796,16 +827,16 @@ namespace Library_Management_System
                     Console.Write("Input to use: ");
                     int d = int.Parse(Console.ReadLine());
 
+                    DateTime today = DateTime.Today;
+                    string to = $"{today.Year}/{today.Month}/{today.Day}";
+
                     switch (d)
                     {
                         case 1:
-                            DateTime today = DateTime.Today;
-                            string to = $"{today.Year}/{today.Day}/{today.Month}";
-
                             string gettodayBooks =
                                 "select Book.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Book.Date, CustomerIDs " +
                                 "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0) " +
-                                $"where cast(Book.Date as date) = '{to}' and Book.State = 0";
+                                $"where datediff(day, Book.Date, '{to}') = 0 and Book.State = 0";
 
                             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                             {
@@ -876,13 +907,10 @@ namespace Library_Management_System
 
                             break;
                         case 2:
-                            DateTime yesterday = DateTime.Today.AddDays(-1);
-                            string y = $"{yesterday.Year}/{yesterday.Day}/{yesterday.Month}";
-
                             string getyesterdayBooks =
                                 "select Book.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Book.Date, CustomerIDs " +
                                 "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0) " +
-                                $"where cast(Book.Date as date) = '{y}' and Book.State = 0";
+                                $"where datediff(day, Book.Date, '{to}') = 1 and Book.State = 0";
 
                             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                             {
@@ -953,16 +981,10 @@ namespace Library_Management_System
 
                             break;
                         case 3:
-                            DateTime tDays = DateTime.Today.AddDays(-1);
-                            DateTime fDays = DateTime.Today.AddDays(-5);
-
-                            string t = tDays.ToString("MM/dd/yyyy 23:59:59");
-                            string f = fDays.ToString("MM/dd/yyyy HH:mm:ss");
-
                             string getFDaysBooks =
                                 "select Book.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Book.Date, CustomerIDs " +
                                 "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0) " +
-                                $"where Book.Date between '{t}' and '{f}' and Book.State = 0";
+                                $"where (datediff(day, Book.Date, '{to}') between 2 and 5) and Book.State = 0";
 
                             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                             {
@@ -1033,16 +1055,10 @@ namespace Library_Management_System
 
                             break;
                         case 4:
-                            DateTime sDays = DateTime.Today.AddDays(-6);
-                            DateTime week = DateTime.Today.AddDays(-7);
-
-                            string sd = sDays.ToString("MM/dd/yyyy 23:59:59");
-                            string w = week.ToString("MM/dd/yyyy HH:mm:ss");
-
                             string getAWeekBooks =
                                 "select Book.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Book.Date, CustomerIDs " +
                                 "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0) " +
-                                $"where Book.Date between '{sd}' and '{w}' and Book.State = 0";
+                                $"where datediff(week, Book.Date, '{to}') = 1 and Book.State = 0";
 
                             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                             {
@@ -1113,16 +1129,10 @@ namespace Library_Management_System
 
                             break;
                         case 5:
-                            DateTime tWeek = DateTime.Today.AddDays(-8);
-                            DateTime month = DateTime.Today.AddMonths(-1);
-
-                            string tw = tWeek.ToString("MM/dd/yyyy 23:59:59");
-                            string m = month.ToString("MM/dd/yyyy HH:mm:ss");
-
                             string getMonthBooks =
                                 "select Book.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Book.Date, CustomerIDs " +
                                 "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0) " +
-                                $"where Book.Date between '{tw}' and '{m}' and Book.State = 0";
+                                $"where (datediff(day, Book.Date, '{to}') between 8 and 31) and Book.State = 0";
 
                             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                             {
@@ -1193,18 +1203,10 @@ namespace Library_Management_System
 
                             break;
                         case 6:
-                            DateTime tMonth = DateTime.Today.AddMonths(-1);
-                            tMonth = tMonth.AddDays(-1);
-
-                            DateTime sMonth = DateTime.Today.AddMonths(-6);
-
-                            string tm = tMonth.ToString("MM/dd/yyyy 23:59:59");
-                            string sm = sMonth.ToString("MM/dd/yyyy HH:mm:ss");
-
                             string getSMonthBooks =
                                 "select Book.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Book.Date, CustomerIDs " +
                                 "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0) " +
-                                $"where Book.Date between '{tm}' and '{sm}' and Book.State = 0";
+                                $"where (datediff(Month, Book.Date, '{to}') between 2 and 6) and Book.State = 0";
 
                             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                             {
@@ -1275,18 +1277,10 @@ namespace Library_Management_System
 
                             break;
                         case 7:
-                            DateTime sM = DateTime.Today.AddMonths(-6);
-                            sM = sM.AddDays(-1);
-
-                            DateTime aY = DateTime.Today.AddYears(-1);
-
-                            string smt = sM.ToString("MM/dd/yyyy 23:59:59");
-                            string ay = aY.ToString("MM/dd/yyyy HH:mm:ss");
-
                             string getAyBooks =
                                 "select Book.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Book.Date, CustomerIDs " +
                                 "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0) " +
-                                $"where Book.Date between '{smt}' and '{ay}' and Book.State = 0";
+                                $"where (datediff(Month, Book.Date, '{to}') between 7 and 12) and Book.State = 0";
 
                             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                             {
@@ -1357,18 +1351,10 @@ namespace Library_Management_System
 
                             break;
                         case 8:
-                            DateTime aYr = DateTime.Today.AddYears(-1);
-                            aYr = aYr.AddDays(-1);
-
-                            DateTime tYr = DateTime.Today.AddYears(-2);
-
-                            string ayr = aYr.ToString("MM/dd/yyyy 23:59:59");
-                            string tyr = tYr.ToString("MM/dd/yyyy HH:mm:ss");
-
                             string getTyBooks =
                                 "select Book.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Book.Date, CustomerIDs " +
                                 "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0) " +
-                                $"where Book.Date between '{ayr}' and '{tyr}' and Book.State = 0";
+                                $"where (datediff(year, Book.Date, '{to}') between 1 and 2) and Book.State = 0";
 
                             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                             {
@@ -1450,7 +1436,7 @@ namespace Library_Management_System
                             string getFyBooks =
                                 "select Book.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Book.Date, CustomerIDs " +
                                 "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0) " +
-                                $"where Book.Date between '{tyrd}' and '{fyr}' and Book.State = 0";
+                                $"where (datediff(year, Book.Date, '{to}') between 3 and 5) and Book.State = 0";
 
                             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                             {
@@ -1538,6 +1524,11 @@ namespace Library_Management_System
          * When delete we should have a log for record action and next is librarian and schedule.
          *
          * Borrowed Multiple Books.
+         *
+         * add library to add customer
+         * add library to add book
+         * add library to bookBorrow
+         * 
          */
 
         public void Delete()
@@ -1863,7 +1854,7 @@ namespace Library_Management_System
                 case 1:
                     Console.Write($"Changing from {title} to: ");
                     string newTitle = Console.ReadLine();
-                    
+
                     string[] bna = newTitle.Split(' ');
                     StringBuilder bn = new StringBuilder();
 
@@ -1895,7 +1886,7 @@ namespace Library_Management_System
                 case 2:
                     Console.Write($"Changing from {author} to: ");
                     string newAuthor = Console.ReadLine();
-                    
+
                     string[] aut = newAuthor.Split(' ');
                     StringBuilder au = new StringBuilder();
 
@@ -1947,6 +1938,36 @@ namespace Library_Management_System
 
         public void Borrowed()
         {
+            DateTime date = DateTime.Now;
+            int ln = 0;
+
+            string lq = "Select Librarian.LibrarianIDs " +
+                        "from (Scheduled left join Librarian on Scheduled.LibrarianIDs = Librarian.LibrarianIDs) " +
+                        $"where Scheduled.DateOfWeek = '{date.DayOfWeek}' and '{date.Hour}:{date.Minute}' between TimeStart and TimeEnd ";
+
+            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+            {
+                connection.Open();
+
+                SqlCommand q = new SqlCommand(lq, connection);
+
+                using (SqlDataReader r = q.ExecuteReader())
+                {
+                    bool c = false;
+                    while (r.Read())
+                    {
+                        ln = (int)r[0];
+                        c = true;
+                    }
+
+                    if (!c)
+                    {
+                        Console.WriteLine("There is no currently active librarian.");
+                        return;
+                    }
+                }
+            }
+
             Console.Write("Input Customer's IDs to search: ");
             string ids = Console.ReadLine();
 
@@ -1976,7 +1997,7 @@ namespace Library_Management_System
                             }
 
                             Console.WriteLine(
-                                $"\n║{"",-1}{"ID",-10}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-6}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
+                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-7}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
 
                             check = true;
                         }
@@ -1984,7 +2005,7 @@ namespace Library_Management_System
                         if (prevIDs == $"{readerBookInfo[0]}")
                         {
                             Console.WriteLine(
-                                $"║{"",-11}║║{"",-61}║║{"",-6}║║{"",-7}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║");
+                                $"║{"",-5}║║{"",-61}║║{"",-6}║║{"",-8}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║");
 
                             prevIDs = $"{readerBookInfo[0]}";
 
@@ -2003,7 +2024,7 @@ namespace Library_Management_System
                             : $"║{"",-1}{"Empty",-25}║\n";
 
                         Console.Write(
-                            $"\n║{"",-1}{readerBookInfo[0],-10}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-5}║║{"",-1}{readerBookInfo[3],-6}║║{"",-1}{readerBookInfo[4],-15}║║{"",-1}{readerBookInfo[5],-23}║{status}");
+                            $"\n║{"",-1}{readerBookInfo[0],-4}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-5}║║{"",-1}{readerBookInfo[3],-7}║║{"",-1}{readerBookInfo[4],-15}║║{"",-1}{readerBookInfo[5],-23}║{status}");
                     }
 
                     if (check)
@@ -2047,7 +2068,7 @@ namespace Library_Management_System
                             check = true;
 
                             string borrowedBookQuery =
-                                $"Insert into BookLog (BookIDs, CustomerIDs, DateBorrow, DateReturn, State) values ({id}, {ids}, '{DateTime.Now}', null, 0)";
+                                $"Insert into BookLog (BookIDs, CustomerIDs, DateBorrow, DateReturn, State, LIDs) values ({id}, {ids}, '{DateTime.Now}', null, 0, {ln})";
 
                             SqlCommand b = new SqlCommand(borrowedBookQuery, connection);
                             b.ExecuteNonQuery();

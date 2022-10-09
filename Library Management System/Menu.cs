@@ -42,7 +42,6 @@ namespace Library_Management_System
                     case 1:
                         Console.WriteLine("\t\t\t\t\t\t════════════ ADDING NEW BOOK ═════════════\t\t\t\t\t");
                         _book.Add();
-                        Console.WriteLine("\t\t\t\t\t\t═══════════ ADDED SUCCESSFULLY ═══════════\t\t\t\t\t");
                         Console.ReadKey();
                         break;
                     case 2:

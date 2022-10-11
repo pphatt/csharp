@@ -4,7 +4,12 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Library_Management_System
 {
@@ -19,8 +24,138 @@ namespace Library_Management_System
         public static readonly int[] StoreLengthSchedule = { 15, 24, 24, 24, 24, 24, 24, 24 };
         public static readonly int[] StoreLengthScheduleMissing = { 4, 14, 12, 12 };
 
+        static async Task Test()
+        {
+            int[] id = { 35243, 44227, 9115, 651, 21525, 104039, 34053, 100448, 74697, 91941 };
+            Console.WriteLine("Making API Call...");
+            var baseAddress = new Uri("https://api.jikan.moe/v4/");
+
+            // using (var client = new HttpClient())
+            // {
+            //     client.BaseAddress = new Uri("https://kitsu.io/api/edge/");
+            //     var response = HttpClient.GetAsync("trending/anime?limit=100");
+            //     string responseData = await response.Content.ReadAsStringAsync();
+            //     // string result = response..ReadAsStringAsync();
+            //     Console.WriteLine("Result: " + result);
+            // }
+
+            using (var httpClient = new HttpClient { BaseAddress = baseAddress })
+            {
+                using (var response = await httpClient.GetAsync("top/manga?limit=50"))
+                {
+                    string responseData = await response.Content.ReadAsStringAsync();
+                    var a = JObject.Parse(responseData);
+                    // return responseData;
+                    // Console.WriteLine(responseData);
+                    // Console.WriteLine();
+                    // foreach (var c in a["data"])
+                    // {
+                    //     Console.WriteLine(c["titles"][0]["title"]);
+                    //     // Console.WriteLine(c["title_english"]);
+                    //     // foreach (var d in c)
+                    //     // {
+                    //     //     Console.WriteLine(d);
+                    //     //     Console.ReadKey();
+                    //     // }
+                    // }
+                    // Console.WriteLine();
+                    // Console.ReadKey();
+
+                    foreach (var c in a["data"])
+                    {
+                        string bn = $"{c["title"]}";
+                        string au = $"{c["authors"][0]["name"]}";
+                        string subject = "Comic";
+                        string amount = "20";
+                        string py = $"{c["published"]["prop"]["from"]["year"]}";
+                        DateTime date = DateTime.Now;
+                        string ln = "3";
+
+                        string addDataQuery =
+                            "INSERT INTO Book (BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, PublishDate, Date, State, LIDs) VALUES (@BookName, @BookAuthor, @BookCategory, @BookAmountAvailable, @BookAmountBorrowed, @PublishDate, @Date, @State, @LIDs)";
+
+                        using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+                        {
+                            connection.Open();
+
+                            SqlCommand insertCommand = new SqlCommand(addDataQuery, connection);
+
+                            insertCommand.Parameters.AddWithValue("@BookName", bn.ToString());
+                            insertCommand.Parameters.AddWithValue("@BookAuthor", au.ToString());
+                            insertCommand.Parameters.AddWithValue("@BookCategory", subject);
+                            insertCommand.Parameters.AddWithValue("@BookAmountAvailable", amount);
+                            insertCommand.Parameters.AddWithValue("@BookAmountBorrowed", 0);
+                            insertCommand.Parameters.AddWithValue("@PublishDate", py);
+                            insertCommand.Parameters.AddWithValue("@Date", date.ToString("dd/MM/yyyy HH:mm:ss"));
+                            insertCommand.Parameters.AddWithValue("@State", 0);
+                            insertCommand.Parameters.AddWithValue("@LIDs", ln);
+                            insertCommand.ExecuteNonQuery();
+                            // Console.WriteLine("\t\t\t\t\t\t═══════════ ADDED SUCCESSFULLY ═══════════\t\t\t\t\t");
+                        }
+
+                        // Console.WriteLine(c["titles"][0]["title"]);
+                        // Console.WriteLine(
+                        //     $"{c["title"]} {c["authors"][0]["name"]} {c["published"]["prop"]["from"]["year"]}");
+                        // foreach (var d in c)
+                        // {
+                        //     Console.WriteLine(d);
+                        //     Console.ReadKey();
+                        // }
+                    }
+
+                    // var b = a["id"];
+                    // Console.WriteLine(b);
+                }
+            }
+
+            foreach (var i in id)
+            {
+                var baseAddress1 = new Uri("https://api.jikan.moe/v4/");
+
+                using (var httpClient = new HttpClient { BaseAddress = baseAddress1 })
+                {
+                    using (var response = await httpClient.GetAsync($"manga/{i}/full"))
+                    {
+                        string responseData = await response.Content.ReadAsStringAsync();
+                        var a = JObject.Parse(responseData);
+
+                        string bn = a["data"]["title"].ToString();
+                        string au = $"{a["data"]["authors"][0]["name"]}";
+                        string subject = "Comic";
+                        string amount = "20";
+                        string py = $"{a["data"]["published"]["prop"]["from"]["year"]}";
+                        DateTime date = DateTime.Now;
+                        string ln = "3";
+
+                        string addDataQuery =
+                            "INSERT INTO Book (BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, PublishDate, Date, State, LIDs) VALUES (@BookName, @BookAuthor, @BookCategory, @BookAmountAvailable, @BookAmountBorrowed, @PublishDate, @Date, @State, @LIDs)";
+
+                        using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+                        {
+                            connection.Open();
+
+                            SqlCommand insertCommand = new SqlCommand(addDataQuery, connection);
+
+                            insertCommand.Parameters.AddWithValue("@BookName", bn.ToString());
+                            insertCommand.Parameters.AddWithValue("@BookAuthor", au.ToString());
+                            insertCommand.Parameters.AddWithValue("@BookCategory", subject);
+                            insertCommand.Parameters.AddWithValue("@BookAmountAvailable", amount);
+                            insertCommand.Parameters.AddWithValue("@BookAmountBorrowed", 0);
+                            insertCommand.Parameters.AddWithValue("@PublishDate", py);
+                            insertCommand.Parameters.AddWithValue("@Date", date.ToString("dd/MM/yyyy HH:mm:ss"));
+                            insertCommand.Parameters.AddWithValue("@State", 0);
+                            insertCommand.Parameters.AddWithValue("@LIDs", ln);
+                            insertCommand.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+        }
+
         public static void Main(string[] args)
         {
+            var t = Test();
+            t.Wait();
             // string queryString = "INSERT INTO Books (BookIDs, BookName, BookAuthor, BookCategory, BookAmount, Date, CustomerIDs) VALUES (@BookIDs, @BookName, @BookAuthor, @BookCategory, @BookAmount, @Date, @CustomerIDs)";
             // string queryString = "Select BookIDs, BookName, BookAuthor, BookCategory, BookAmount, Date, CustomerIDs from Books where BookName like '1'";
 
@@ -63,7 +198,8 @@ namespace Library_Management_System
             //     }
             // }
 
-            Menu menu = new Menu();
+            // Menu menu = new Menu();
+
             // DateTime d = DateTime.Now;
             // DateTime d1 = d.AddDays(1);
             // DateTime d2 = d.AddDays(2);
@@ -87,7 +223,7 @@ namespace Library_Management_System
             //     $"║{"",-1}{$"{d5.DayOfWeek} ({d5:M/d/yy})",-23}║" +
             //     $"║{"",-1}{$"{d6.DayOfWeek} ({d6:M/d/yy})",-23}║" +
             //     $"║{"",-1}{$"{d7.DayOfWeek} ({d7:M/d/yy})",-23}║");
-            
+
             // ╔
             // ═
             // ║

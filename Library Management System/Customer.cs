@@ -23,31 +23,31 @@ namespace Library_Management_System
         {
             return IDs;
         }
-        
+
         public string getName()
         {
             return Name;
         }
-        
+
         public string getAge()
         {
             return Age;
         }
-        
+
         public string getSex()
         {
             return Sex;
         }
-        
+
         public string getPhoneNumber()
         {
             return PhoneNumber;
         }
-        
+
         public string getStatus()
         {
             return Status;
         }
-        
+
     }
 }

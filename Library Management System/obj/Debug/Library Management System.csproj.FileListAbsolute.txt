@@ -12,3 +12,7 @@ D:\Dev\School-CSharp\Library Management System\obj\Debug\Library Management Syst
 D:\Dev\School-CSharp\Library Management System\obj\Debug\Library Management System.csproj.CoreCompileInputs.cache
 D:\Dev\School-CSharp\Library Management System\obj\Debug\Library_Management_System.exe
 D:\Dev\School-CSharp\Library Management System\obj\Debug\Library_Management_System.pdb
+D:\Dev\School-CSharp\Library Management System\bin\Debug\Newtonsoft.Json.dll
+D:\Dev\School-CSharp\Library Management System\bin\Debug\Newtonsoft.Json.xml
+D:\Dev\School-CSharp\Library Management System\obj\Debug\Library Management System.csproj.CopyComplete
+D:\Dev\School-CSharp\Library Management System\bin\Debug\Library_Management_System.exe.config

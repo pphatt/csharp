@@ -32,7 +32,10 @@ namespace Library_Management_System
                 Console.WriteLine("\t\t\t\t\t\t║ 14. SHOW LIBRARIAN                     ║\t\t\t\t\t");
                 Console.WriteLine("\t\t\t\t\t\t║ 15. ADD LIBRARIAN's CALENDAR           ║\t\t\t\t\t");
                 Console.WriteLine("\t\t\t\t\t\t║ 16. SHOW LIBRARIAN's CALENDAR          ║\t\t\t\t\t");
-                Console.WriteLine("\t\t\t\t\t\t║ 17. EXIT                               ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 17. ADD BOOK (AUTOMATIC)               ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 18. ADD CUSTOMER (AUTOMATIC)           ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 19. ADD LIBRARIAN (AUTOMATIC)          ║\t\t\t\t\t");
+                Console.WriteLine("\t\t\t\t\t\t║ 20. EXIT                               ║\t\t\t\t\t");
                 Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
                 Console.Write("Input to use: ");
                 int number = int.Parse(Console.ReadLine());
@@ -92,7 +95,6 @@ namespace Library_Management_System
                     case 13:
                         Console.WriteLine("\t\t\t\t\t\t═══════════ ADDING NEW LIBRARIAN ══════════\t\t\t\t\t");
                         _LibrarianCalendar.AddLibrarian();
-                        Console.WriteLine("\t\t\t\t\t\t═══════════ ADDED SUCCESSFULLY ═══════════\t\t\t\t\t");
                         Console.ReadKey();
                         break;
                     case 14:
@@ -105,6 +107,15 @@ namespace Library_Management_System
                         break;
                     case 16:
                         _LibrarianCalendar.ShowCalendar();
+                        Console.ReadKey();
+                        break;
+                    case 17:
+                        var f = _book.FetchBookData();
+                        f.Wait();
+                        Console.ReadKey();
+                        break;
+                    case 18:
+                        _customer.GenerateCustomerFakeData();
                         Console.ReadKey();
                         break;
                     default:

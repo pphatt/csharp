@@ -4,6 +4,10 @@ using System.IO;
 using System.Text;
 using System.Data;
 using System.Data.SqlClient;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Library_Management_System
 {
@@ -203,8 +207,8 @@ namespace Library_Management_System
                 insertCommand.Parameters.AddWithValue("@BookCategory", subject);
                 insertCommand.Parameters.AddWithValue("@BookAmountAvailable", amount);
                 insertCommand.Parameters.AddWithValue("@BookAmountBorrowed", 0);
+                insertCommand.Parameters.AddWithValue("@Date", date.ToString("yyyy-MM-dd HH:mm:ss"));
                 insertCommand.Parameters.AddWithValue("@PublishDate", py);
-                insertCommand.Parameters.AddWithValue("@Date", date.ToString("dd/MM/yyyy HH:mm:ss"));
                 insertCommand.Parameters.AddWithValue("@State", 0);
                 insertCommand.Parameters.AddWithValue("@LIDs", ln);
                 insertCommand.ExecuteNonQuery();
@@ -2089,6 +2093,154 @@ namespace Library_Management_System
             }
 
             Console.WriteLine("\t\t\t\t\t\t═════════ BORROWED SUCCESSFULLY ═════════\t\t\t\t\t");
+        }
+
+        public async Task FetchBookData()
+        {
+            DateTime date = DateTime.Now;
+            int ln = 0;
+
+            string lq = "Select Librarian.LibrarianIDs " +
+                        "from (Scheduled left join Librarian on Scheduled.LibrarianIDs = Librarian.LibrarianIDs) " +
+                        $"where Scheduled.DateOfWeek = '{date.DayOfWeek}' and '{date.Hour}:{date.Minute}' between TimeStart and TimeEnd ";
+
+            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+            {
+                connection.Open();
+
+                SqlCommand q = new SqlCommand(lq, connection);
+
+                using (SqlDataReader r = q.ExecuteReader())
+                {
+                    bool c = false;
+                    while (r.Read())
+                    {
+                        ln = (int)r[0];
+                        c = true;
+                    }
+
+                    if (!c)
+                    {
+                        Console.WriteLine("There is no currently active librarian.");
+                        return;
+                    }
+                }
+            }
+            
+            Console.Write("Insert the amount of books you want to fetch (max is 35): ");
+            int n = Int32.Parse(Console.ReadLine());
+            
+            if (n > 35 || n < 1)
+            {
+                Console.WriteLine("Invalid amount...");
+                return;
+            }
+
+            int tm;
+            int m = 0;
+
+            if (n == 25)
+            {
+                tm = 25;
+            }
+            else if (n < 25)
+            {
+                tm = n;
+            }
+            else
+            {
+                tm = 25;
+                m = n - tm;
+            }
+
+            int[] id = { 35243, 44227, 9115, 651, 21525, 104039, 34053, 100448, 74697, 91941 };
+            var baseAddress = new Uri("https://api.jikan.moe/v4/");
+
+            using (var httpClient = new HttpClient { BaseAddress = baseAddress })
+            {
+                using (var response = await httpClient.GetAsync($"top/manga?limit={tm}"))
+                {
+                    string responseData = await response.Content.ReadAsStringAsync();
+                    var a = JObject.Parse(responseData);
+
+                    foreach (var c in a["data"])
+                    {
+                        string bn = $"{c["title"]}";
+                        string au = $"{c["authors"][0]["name"]}";
+                        string subject = "Comic";
+                        Random rnd = new Random();
+                        int amount = rnd.Next(20, 100);
+                        string py =
+                            $"{c["published"]["prop"]["from"]["year"]}-{c["published"]["prop"]["from"]["month"]}-{c["published"]["prop"]["from"]["day"]}";
+
+                        string addDataQuery =
+                            "INSERT INTO Book (BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Date, PublishDate, State, LIDs) VALUES (@BookName, @BookAuthor, @BookCategory, @BookAmountAvailable, @BookAmountBorrowed, @Date, @PublishDate, @State, @LIDs)";
+
+                        using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+                        {
+                            connection.Open();
+
+                            SqlCommand insertCommand = new SqlCommand(addDataQuery, connection);
+
+                            insertCommand.Parameters.AddWithValue("@BookName", bn);
+                            insertCommand.Parameters.AddWithValue("@BookAuthor", au);
+                            insertCommand.Parameters.AddWithValue("@BookCategory", subject);
+                            insertCommand.Parameters.AddWithValue("@BookAmountAvailable", amount);
+                            insertCommand.Parameters.AddWithValue("@BookAmountBorrowed", 0);
+                            insertCommand.Parameters.AddWithValue("@Date", date.ToString("yyyy-MM-dd HH:mm:ss"));
+                            insertCommand.Parameters.AddWithValue("@PublishDate", py);
+                            insertCommand.Parameters.AddWithValue("@State", 0);
+                            insertCommand.Parameters.AddWithValue("@LIDs", ln);
+                            insertCommand.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+
+            for (var i = 0; i < m; i++)
+            {
+                var baseAddress1 = new Uri("https://api.jikan.moe/v4/");
+
+                using (var httpClient = new HttpClient { BaseAddress = baseAddress1 })
+                {
+                    using (var response = await httpClient.GetAsync($"manga/{id[i]}/full"))
+                    {
+                        string responseData = await response.Content.ReadAsStringAsync();
+                        var a = JObject.Parse(responseData);
+
+                        string bn = a["data"]["title"].ToString();
+                        string au = $"{a["data"]["authors"][0]["name"]}";
+                        string subject = "Comic";
+                        string amount = "20";
+                        string p =
+                            $"{a["data"]["published"]["prop"]["from"]["year"]}-{a["data"]["published"]["prop"]["from"]["month"]}-{a["data"]["published"]["prop"]["from"]["day"]}";
+
+                        string addDataQuery =
+                            "INSERT INTO Book (BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Date, PublishDate, State, LIDs) VALUES (@BookName, @BookAuthor, @BookCategory, @BookAmountAvailable, @BookAmountBorrowed, @Date, @PublishDate, @State, @LIDs)";
+
+                        using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+                        {
+                            connection.Open();
+
+                            SqlCommand insertCommand = new SqlCommand(addDataQuery, connection);
+
+                            insertCommand.Parameters.AddWithValue("@BookName", bn);
+                            insertCommand.Parameters.AddWithValue("@BookAuthor", au);
+                            insertCommand.Parameters.AddWithValue("@BookCategory", subject);
+                            insertCommand.Parameters.AddWithValue("@BookAmountAvailable", amount);
+                            insertCommand.Parameters.AddWithValue("@BookAmountBorrowed", 0);
+                            insertCommand.Parameters.AddWithValue("@Date", date.ToString("yyyy-MM-dd HH:mm:ss"));
+                            insertCommand.Parameters.AddWithValue("@PublishDate", p);
+                            insertCommand.Parameters.AddWithValue("@State", 0);
+                            insertCommand.Parameters.AddWithValue("@LIDs", ln);
+                            insertCommand.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+
+            Console.WriteLine("\t\t\t\t\t\tYOU JUST CAN INSERT AUTOMATICALLY ONCE TIMES\t\t\t\t\t");
+            Console.WriteLine("\t\t\t\t\t\t═══════════ ADDED SUCCESSFULLY ═══════════\t\t\t\t\t");
         }
     }
 }

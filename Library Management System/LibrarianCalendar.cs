@@ -19,7 +19,7 @@ namespace Library_Management_System
             string sex = Console.ReadLine().ToLower();
             Console.Write("Enter Librarian's phone number: ");
             string pn = Console.ReadLine();
-            string date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+            string date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
             string[] lna = name.Split(' ');
             StringBuilder ln = new StringBuilder();
@@ -54,6 +54,7 @@ namespace Library_Management_System
                 insertCommand.Parameters.AddWithValue("@DateRetire", null);
                 insertCommand.Parameters.AddWithValue("@State", 0);
                 insertCommand.ExecuteNonQuery();
+                Console.WriteLine("\t\t\t\t\t\t═══════════ ADDED SUCCESSFULLY ═══════════\t\t\t\t\t");
             }
         }
 

@@ -3,11 +3,24 @@ using System.Collections.Generic;
 using System.IO;
 using System.Data.SqlClient;
 using System.Text;
+using Bogus;
 
 namespace Library_Management_System
 {
     public class CustomerData
     {
+        private enum Gender
+        {
+            Male,
+            Female
+        }
+
+        private class User
+        {
+            public Gender Gender { get; set; }
+            public string FullName { get; set; }
+        }
+
         public void AddCustomer()
         {
             DateTime date = DateTime.Now;
@@ -81,7 +94,7 @@ namespace Library_Management_System
                     insertCommand.Parameters.AddWithValue("@CustomerSex",
                         sex[0].ToString().ToUpper() + sex.Substring(1));
                     insertCommand.Parameters.AddWithValue("@CustomerPhoneNumber", phoneNumber);
-                    insertCommand.Parameters.AddWithValue("@Date", date.ToString("dd/MM/yyyy HH:mm:ss"));
+                    insertCommand.Parameters.AddWithValue("@Date", date.ToString("yyyy-MM-dd HH:mm:ss"));
                     insertCommand.Parameters.AddWithValue("@State", 0);
                     insertCommand.Parameters.AddWithValue("@LIDs", ln);
                     insertCommand.ExecuteNonQuery();
@@ -1272,6 +1285,81 @@ namespace Library_Management_System
                 default:
                     return;
             }
+        }
+
+        public void GenerateCustomerFakeData()
+        {
+            DateTime date = DateTime.Now;
+            int ln = 0;
+
+            string lq = "Select Librarian.LibrarianIDs " +
+                        "from (Scheduled left join Librarian on Scheduled.LibrarianIDs = Librarian.LibrarianIDs) " +
+                        $"where Scheduled.DateOfWeek = '{date.DayOfWeek}' and '{date.Hour}:{date.Minute}' between TimeStart and TimeEnd ";
+
+            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+            {
+                connection.Open();
+
+                SqlCommand q = new SqlCommand(lq, connection);
+
+                using (SqlDataReader r = q.ExecuteReader())
+                {
+                    bool c = false;
+                    while (r.Read())
+                    {
+                        ln = (int)r[0];
+                        c = true;
+                    }
+
+                    if (!c)
+                    {
+                        Console.WriteLine("There is no currently active librarian.");
+                        return;
+                    }
+                }
+            }
+
+            Console.Write("Insert the amount of customer information you want to generate: ");
+            int n = Int32.Parse(Console.ReadLine());
+
+            if (n < 1)
+            {
+                Console.WriteLine("Invalid amount...");
+                return;
+            }
+
+            for (var i = 0; i < n; i++)
+            {
+                var phone = new Bogus.DataSets.PhoneNumbers("vi");
+                var testUsers = new Faker<User>()
+                    .RuleFor(u => u.Gender, f => f.PickRandom<Gender>())
+                    .RuleFor(u => u.FullName, (f, u) => f.Name.FullName());
+
+                var user = testUsers.Generate();
+                Random rnd = new Random();
+                int age = rnd.Next(20, 80);
+
+                string addDataQuery =
+                    "INSERT INTO Customer (CustomerName, CustomerAge, CustomerSex, CustomerPhoneNumber, Date, State, LIDs) VALUES (@CustomerName, @CustomerAge, @CustomerSex, @CustomerPhoneNumber, @Date, @State, @LIDs)";
+
+                using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+                {
+                    connection.Open();
+
+                    SqlCommand insertCommand = new SqlCommand(addDataQuery, connection);
+
+                    insertCommand.Parameters.AddWithValue("@CustomerName", user.FullName);
+                    insertCommand.Parameters.AddWithValue("@CustomerAge", age);
+                    insertCommand.Parameters.AddWithValue("@CustomerSex", user.Gender.ToString());
+                    insertCommand.Parameters.AddWithValue("@CustomerPhoneNumber", phone.PhoneNumber());
+                    insertCommand.Parameters.AddWithValue("@Date", date.ToString("yyyy-MM-dd HH:mm:ss"));
+                    insertCommand.Parameters.AddWithValue("@State", 0);
+                    insertCommand.Parameters.AddWithValue("@LIDs", ln);
+                    insertCommand.ExecuteNonQuery();
+                }
+            }
+
+            Console.WriteLine("\t\t\t\t\t\t═══════════ ADDED SUCCESSFULLY ═══════════\t\t\t\t\t");
         }
     }
 }

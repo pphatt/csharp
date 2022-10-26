@@ -30,6 +30,16 @@ namespace Library_Management_System
              * Update Row, Insert, Add data to Table
              */
 
+            /*
+             * Author Name: INPUT
+             * if there is author name like the INPUT, auto add it
+             * else if there are author names like the INPUT, show it and make the user to choose
+             * else new author
+             * 
+             * THE SAME WITH CATEGORY
+             * 
+             */
+
             // using (SqlConnection connection = new SqlConnection(ConnectionString))
             // {
             //     SqlCommand command = new SqlCommand(queryString, connection);

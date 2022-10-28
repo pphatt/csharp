@@ -85,7 +85,6 @@ namespace Library_Management_System
 
                     Console.Write("Enter author: ");
                     string author = Console.ReadLine();
-                    string aui = "";
 
                     string[] aut = author.Split(' ');
                     StringBuilder au = new StringBuilder();
@@ -102,19 +101,6 @@ namespace Library_Management_System
 
                         au.Append(nn + o);
                     }
-
-                    SqlCommand cau = new SqlCommand("CheckAuthor", connection);
-                    cau.CommandType = CommandType.StoredProcedure;
-                    cau.Parameters.Add(new SqlParameter("@author_name", au.ToString()));
-
-                    connection.InfoMessage += SqlInfoMessageEventHandlerAu;
-
-                    void SqlInfoMessageEventHandlerAu(object sender, SqlInfoMessageEventArgs e)
-                    {
-                        aui = e.Message;
-                    }
-
-                    cau.ExecuteNonQuery();
 
                     Console.Write("Enter Category: ");
                     string ca = Console.ReadLine();
@@ -136,20 +122,8 @@ namespace Library_Management_System
                         cas.Append(nn + o);
                     }
 
-                    SqlCommand cca = new SqlCommand("CheckCategory", connection);
-                    cca.CommandType = CommandType.StoredProcedure;
-                    cca.Parameters.Add(new SqlParameter("@category_name", cas.ToString()));
-
-                    connection.InfoMessage += SqlInfoMessageEventHandlerCa;
-
-                    void SqlInfoMessageEventHandlerCa(object sender, SqlInfoMessageEventArgs e)
-                    {
-                        cai = e.Message;
-                    }
-
-                    cca.ExecuteNonQuery();
-
-                    insertCommand.Parameters.AddWithValue("@CategoryIDs", cai);
+                    insertCommand.Parameters.AddWithValue("@CategoryIDs",
+                        HandleStoredProcedure(cas.ToString(), "CheckCategory", "@category_name"));
 
                     Console.Write("Enter amount: ");
                     int amount = int.Parse(Console.ReadLine());
@@ -164,6 +138,15 @@ namespace Library_Management_System
                     insertCommand.Parameters.AddWithValue("@State", 0);
                     insertCommand.Parameters.AddWithValue("@LIDs", ln);
                     insertCommand.ExecuteNonQuery();
+
+                    string aaa =
+                        "insert into BookAuthor (BookIDs, AuthorIDs) values ((select Count(BookIDs) from Book), @ai)";
+                    SqlCommand ac = new SqlCommand(aaa, connection);
+
+                    ac.Parameters.AddWithValue("@ai",
+                        HandleStoredProcedure(au.ToString(), "CheckAuthor", "@author_name"));
+                    ac.ExecuteNonQuery();
+
                     Console.WriteLine("\t\t\t\t\t\t═══════════ ADDED SUCCESSFULLY ═══════════\t\t\t\t\t");
                 }
                 catch (SqlException e)
@@ -171,6 +154,29 @@ namespace Library_Management_System
                     DisplaySqlErrors(e);
                 }
             }
+        }
+
+        private string HandleStoredProcedure(string name, string checkName, string checkParameter)
+        {
+            string i = "";
+            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+            {
+                connection.Open();
+                SqlCommand a = new SqlCommand(checkName, connection);
+                a.CommandType = CommandType.StoredProcedure;
+                a.Parameters.Add(new SqlParameter(checkParameter, name));
+
+                connection.InfoMessage += SqlInfoMessageEventHandler;
+
+                void SqlInfoMessageEventHandler(object sender, SqlInfoMessageEventArgs e)
+                {
+                    i = e.Message;
+                }
+
+                a.ExecuteNonQuery();
+            }
+
+            return i;
         }
 
         // for trigger when something went wrong
@@ -198,7 +204,7 @@ namespace Library_Management_System
                 "select Book.BookIDs, BookName, Author.Name, Category.Name, BookAmountAvailable, BookAmountBorrowed, Book.date, CustomerIDs " +
                 "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0), Category, Author, BookAuthor " +
                 "where Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs " +
-                "order by BookName, CustomerIDs, Author.Name";
+                "order by BookIDs";
 
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
@@ -231,7 +237,7 @@ namespace Library_Management_System
                             }
 
                             Console.WriteLine(
-                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
+                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-75}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-22}║");
 
                             check = true;
                         }
@@ -296,7 +302,7 @@ namespace Library_Management_System
                             : $"║{"",-1}{"Empty",-22}║";
 
                         Console.Write(
-                            $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{d,-22}║{status}");
+                            $"\n║{"",-1}{id,-4}║║{"",-1}{n,-75}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{d,-23}║{status}");
 
                         for (int i = 1; i < length; i++)
                         {
@@ -309,7 +315,7 @@ namespace Library_Management_System
                                 : $"║{"",-1}{"",-40}║";
 
                             Console.Write(
-                                $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{s}");
+                                $"\n║{"",-5}║║{"",-76}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-24}║{s}");
                         }
 
                         Console.WriteLine("");
@@ -345,7 +351,7 @@ namespace Library_Management_System
                                 : $"║{"",-1}{"Empty",-22}║";
 
                             Console.Write(
-                                $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{d,-22}║{status}");
+                                $"\n║{"",-1}{id,-4}║║{"",-1}{n,-75}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{d,-23}║{status}");
 
                             for (int i = 1; i < length; i++)
                             {
@@ -358,7 +364,7 @@ namespace Library_Management_System
                                     : $"║{"",-1}{"",-40}║";
 
                                 Console.Write(
-                                    $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{s}");
+                                    $"\n║{"",-5}║║{"",-76}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-24}║{s}");
                             }
 
                             Console.WriteLine("");
@@ -2885,7 +2891,7 @@ namespace Library_Management_System
 
                                             check = true;
                                         }
-                                        
+
                                         if (prevIDs == $"{readerBookInfo[0]}" || prevIDs == "")
                                         {
                                             string i = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
@@ -3013,7 +3019,7 @@ namespace Library_Management_System
 
                                             Console.WriteLine("");
                                         }
-                                        
+
                                         for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                                         {
                                             Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
@@ -3685,7 +3691,7 @@ namespace Library_Management_System
                             $"{c["published"]["prop"]["from"]["year"]}-{c["published"]["prop"]["from"]["month"]}-{c["published"]["prop"]["from"]["day"]}";
 
                         string addDataQuery =
-                            "INSERT INTO Book (BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Date, PublishDate, State, LIDs) VALUES (@BookName, @BookAuthor, @BookCategory, @BookAmountAvailable, @BookAmountBorrowed, @Date, @PublishDate, @State, @LIDs)";
+                            "INSERT INTO Book (BookName, CategoryIDs, BookAmountAvailable, BookAmountBorrowed, Date, PublishDate, State, LIDs) VALUES (@BookName, @CategoryIDs, @BookAmountAvailable, @BookAmountBorrowed, @Date, @PublishDate, @State, @LIDs)";
 
                         using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                         {
@@ -3694,8 +3700,8 @@ namespace Library_Management_System
                             SqlCommand insertCommand = new SqlCommand(addDataQuery, connection);
 
                             insertCommand.Parameters.AddWithValue("@BookName", bn);
-                            insertCommand.Parameters.AddWithValue("@BookAuthor", au);
-                            insertCommand.Parameters.AddWithValue("@BookCategory", subject);
+                            insertCommand.Parameters.AddWithValue("@CategoryIDs",
+                                HandleStoredProcedure(subject, "CheckCategory", "@category_name"));
                             insertCommand.Parameters.AddWithValue("@BookAmountAvailable", amount);
                             insertCommand.Parameters.AddWithValue("@BookAmountBorrowed", 0);
                             insertCommand.Parameters.AddWithValue("@Date", date.ToString("yyyy-MM-dd HH:mm:ss"));
@@ -3703,6 +3709,13 @@ namespace Library_Management_System
                             insertCommand.Parameters.AddWithValue("@State", 0);
                             insertCommand.Parameters.AddWithValue("@LIDs", ln);
                             insertCommand.ExecuteNonQuery();
+
+                            string aaa =
+                                "insert into BookAuthor (BookIDs, AuthorIDs) values ((select Count(BookIDs) from Book), @ai)";
+                            SqlCommand ac = new SqlCommand(aaa, connection);
+
+                            ac.Parameters.AddWithValue("@ai", HandleStoredProcedure(au, "CheckAuthor", "@author_name"));
+                            ac.ExecuteNonQuery();
                         }
                     }
                 }
@@ -3727,7 +3740,7 @@ namespace Library_Management_System
                             $"{a["data"]["published"]["prop"]["from"]["year"]}-{a["data"]["published"]["prop"]["from"]["month"]}-{a["data"]["published"]["prop"]["from"]["day"]}";
 
                         string addDataQuery =
-                            "INSERT INTO Book (BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Date, PublishDate, State, LIDs) VALUES (@BookName, @BookAuthor, @BookCategory, @BookAmountAvailable, @BookAmountBorrowed, @Date, @PublishDate, @State, @LIDs)";
+                            "INSERT INTO Book (BookName, CategoryIDs, BookAmountAvailable, BookAmountBorrowed, Date, PublishDate, State, LIDs) VALUES (@BookName, @CategoryIDs, @BookAmountAvailable, @BookAmountBorrowed, @Date, @PublishDate, @State, @LIDs)";
 
                         using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                         {
@@ -3736,8 +3749,8 @@ namespace Library_Management_System
                             SqlCommand insertCommand = new SqlCommand(addDataQuery, connection);
 
                             insertCommand.Parameters.AddWithValue("@BookName", bn);
-                            insertCommand.Parameters.AddWithValue("@BookAuthor", au);
-                            insertCommand.Parameters.AddWithValue("@BookCategory", subject);
+                            insertCommand.Parameters.AddWithValue("@CategoryIDs",
+                                HandleStoredProcedure(subject, "CheckCategory", "@category_name"));
                             insertCommand.Parameters.AddWithValue("@BookAmountAvailable", amount);
                             insertCommand.Parameters.AddWithValue("@BookAmountBorrowed", 0);
                             insertCommand.Parameters.AddWithValue("@Date", date.ToString("yyyy-MM-dd HH:mm:ss"));
@@ -3745,6 +3758,13 @@ namespace Library_Management_System
                             insertCommand.Parameters.AddWithValue("@State", 0);
                             insertCommand.Parameters.AddWithValue("@LIDs", ln);
                             insertCommand.ExecuteNonQuery();
+
+                            string aaa =
+                                "insert into BookAuthor (BookIDs, AuthorIDs) values ((select Count(BookIDs) from Book), @ai)";
+                            SqlCommand ac = new SqlCommand(aaa, connection);
+
+                            ac.Parameters.AddWithValue("@ai", HandleStoredProcedure(au, "CheckAuthor", "@author_name"));
+                            ac.ExecuteNonQuery();
                         }
                     }
                 }

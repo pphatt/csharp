@@ -18,7 +18,7 @@ namespace Library_Management_System
         public static readonly string ConnectionString =
             @"data source=DESKTOP-0FQDJF2\SQLEXPRESS;initial catalog=Management_Library;trusted_connection=true;MultipleActiveResultSets=true";
 
-        public static readonly int[] StoreLengthBooks = { 5, 61, 41, 21, 11, 11, 23, 23 };
+        public static readonly int[] StoreLengthBooks = { 5, 76, 41, 21, 11, 11, 24, 23 };
         public static readonly int[] StoreLengthCustomer = { 5, 61, 6, 8, 16, 24, 26 };
         public static readonly int[] StoreLengthLibrary = { 5, 61, 6, 8, 16 };
         public static readonly int[] StoreLengthSchedule = { 15, 24, 24, 24, 24, 24, 24, 24 };

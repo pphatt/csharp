@@ -19,144 +19,24 @@ namespace Library_Management_System
             return new StringBuilder(value.Length * count).Insert(0, value, count).ToString();
         }
 
-        public void Add()
+        private void HandleStoredProcedure(string functionName, string[] listFunctionParameter, string[] listValueParameter)
         {
-            DateTime date = DateTime.Now;
-            int ln = 0;
-
-            string lq = "Select Librarian.LibrarianIDs " +
-                        "from (Scheduled left join Librarian on Scheduled.LibrarianIDs = Librarian.LibrarianIDs) " +
-                        $"where Scheduled.DateOfWeek = '{date.DayOfWeek}' and '{date.Hour}:{date.Minute}' between TimeStart and TimeEnd ";
-
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
                 connection.Open();
-
-                SqlCommand q = new SqlCommand(lq, connection);
-
-                using (SqlDataReader r = q.ExecuteReader())
+                SqlCommand a = new SqlCommand(functionName, connection);
+                a.CommandType = CommandType.StoredProcedure;
+                
+                for (int i = 0; i < listValueParameter.Length; i++)
                 {
-                    bool c = false;
-                    while (r.Read())
-                    {
-                        ln = (int)r[0];
-                        c = true;
-                    }
-
-                    if (!c)
-                    {
-                        Console.WriteLine("There is no currently active librarian.");
-                        return;
-                    }
+                    a.Parameters.Add(new SqlParameter(listFunctionParameter[i], listValueParameter[i]));
                 }
-            }
-
-            string addDataQuery =
-                "INSERT INTO Book (BookName, CategoryIDs, BookAmountAvailable, BookAmountBorrowed, Date, PublishDate, State, LIDs) VALUES (@BookName, @CategoryIDs, @BookAmountAvailable, @BookAmountBorrowed, @Date, @PublishDate, @State, @LIDs)";
-
-            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-            {
-                connection.Open();
-
-                SqlCommand insertCommand = new SqlCommand(addDataQuery, connection);
-
-                try
-                {
-                    Console.Write("Enter book's title: ");
-                    string bookName = Console.ReadLine();
-
-                    string[] bna = bookName.Split(' ');
-                    StringBuilder bn = new StringBuilder();
-
-                    for (int i = 0; i < bna.Length; i++)
-                    {
-                        string o = "";
-                        string nn = bna[i][0].ToString().ToUpper() + bna[i].Substring(1);
-
-                        if (i != bna.Length - 1)
-                        {
-                            o = " ";
-                        }
-
-                        bn.Append(nn + o);
-                    }
-
-                    insertCommand.Parameters.AddWithValue("@BookName", bn.ToString());
-
-                    Console.Write("Enter author: ");
-                    string author = Console.ReadLine();
-
-                    string[] aut = author.Split(' ');
-                    StringBuilder au = new StringBuilder();
-
-                    for (int i = 0; i < aut.Length; i++)
-                    {
-                        string o = "";
-                        string nn = aut[i][0].ToString().ToUpper() + aut[i].Substring(1);
-
-                        if (i != aut.Length - 1)
-                        {
-                            o = " ";
-                        }
-
-                        au.Append(nn + o);
-                    }
-
-                    Console.Write("Enter Category: ");
-                    string ca = Console.ReadLine();
-                    string cai = "";
-
-                    string[] cat = ca.Split(' ');
-                    StringBuilder cas = new StringBuilder();
-
-                    for (int i = 0; i < cat.Length; i++)
-                    {
-                        string o = "";
-                        string nn = cat[i][0].ToString().ToUpper() + cat[i].Substring(1);
-
-                        if (i != cat.Length - 1)
-                        {
-                            o = " ";
-                        }
-
-                        cas.Append(nn + o);
-                    }
-
-                    insertCommand.Parameters.AddWithValue("@CategoryIDs",
-                        HandleStoredProcedure(cas.ToString(), "CheckCategory", "@category_name"));
-
-                    Console.Write("Enter amount: ");
-                    int amount = int.Parse(Console.ReadLine());
-
-                    Console.Write("Enter Publishing Year: ");
-                    string py = Console.ReadLine();
-
-                    insertCommand.Parameters.AddWithValue("@BookAmountAvailable", amount);
-                    insertCommand.Parameters.AddWithValue("@BookAmountBorrowed", 0);
-                    insertCommand.Parameters.AddWithValue("@Date", date.ToString("yyyy-MM-dd HH:mm:ss"));
-                    insertCommand.Parameters.AddWithValue("@PublishDate", py);
-                    insertCommand.Parameters.AddWithValue("@State", 0);
-                    insertCommand.Parameters.AddWithValue("@LIDs", ln);
-                    insertCommand.ExecuteNonQuery();
-
-                    string aaa =
-                        "insert into BookAuthor (BookIDs, AuthorIDs) values ((select Count(BookIDs) from Book), @ai)";
-                    SqlCommand ac = new SqlCommand(aaa, connection);
-
-                    ac.Parameters.AddWithValue("@ai",
-                        HandleStoredProcedure(au.ToString(), "CheckAuthor", "@author_name"));
-                    ac.ExecuteNonQuery();
-
-                    Console.WriteLine("\t\t\t\t\t\t═══════════ ADDED SUCCESSFULLY ═══════════\t\t\t\t\t");
-                }
-                catch (SqlException e)
-                {
-                    DisplaySqlErrors(e);
-                }
+                
+                a.ExecuteNonQuery();
             }
         }
 
-        private string HandleStoredProcedure(string name, string checkName, string checkParameter)
+        private string HandleStoredProcedureMessage(string name, string checkName, string checkParameter)
         {
             string i = "";
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
@@ -198,14 +78,8 @@ namespace Library_Management_System
             Console.ReadLine();
         }
 
-        public void Show()
+        private bool DisplayTable(string queryString, string yieldErrorMessage)
         {
-            string queryString =
-                "select Book.BookIDs, BookName, Author.Name, Category.Name, BookAmountAvailable, BookAmountBorrowed, Book.date, CustomerIDs " +
-                "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0), Category, Author, BookAuthor " +
-                "where Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs " +
-                "order by BookIDs";
-
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
                 SqlCommand command = new SqlCommand(queryString, connection);
@@ -215,7 +89,6 @@ namespace Library_Management_System
                 using (SqlDataReader readerBookInfo = command.ExecuteReader())
                 {
                     bool check = false;
-                    bool ch = false;
                     string prevIDs = "";
 
                     string id = "";
@@ -332,43 +205,39 @@ namespace Library_Management_System
                         LC = new List<int> { Int32.Parse(ia) };
 
                         prevIDs = $"{readerBookInfo[0]}";
-                        ch = true;
                     }
 
                     if (check)
                     {
-                        if (!ch)
+                        int length = LA.Count > LC.Count ? LA.Count : LC.Count;
+
+                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                         {
-                            int length = LA.Count > LC.Count ? LA.Count : LC.Count;
+                            Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
+                        }
 
-                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                            {
-                                Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                            }
+                        string status = LC.Count != 0 && LC[0] != 0
+                            ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
+                            : $"║{"",-1}{"Empty",-22}║";
 
-                            string status = LC.Count != 0 && LC[0] != 0
-                                ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                : $"║{"",-1}{"Empty",-22}║";
+                        Console.Write(
+                            $"\n║{"",-1}{id,-4}║║{"",-1}{n,-75}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{d,-23}║{status}");
+
+                        for (int i = 1; i < length; i++)
+                        {
+                            string s = LC.Count > i
+                                ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
+                                : $"║{"",-1}{"",-22}║";
+
+                            string am = LA.Count > i
+                                ? $"║{"",-1}{$"{LA[i]}",-40}║"
+                                : $"║{"",-1}{"",-40}║";
 
                             Console.Write(
-                                $"\n║{"",-1}{id,-4}║║{"",-1}{n,-75}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{d,-23}║{status}");
-
-                            for (int i = 1; i < length; i++)
-                            {
-                                string s = LC.Count > i
-                                    ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                    : $"║{"",-1}{"",-22}║";
-
-                                string am = LA.Count > i
-                                    ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                    : $"║{"",-1}{"",-40}║";
-
-                                Console.Write(
-                                    $"\n║{"",-5}║║{"",-76}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-24}║{s}");
-                            }
-
-                            Console.WriteLine("");
+                                $"\n║{"",-5}║║{"",-76}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-24}║{s}");
                         }
+
+                        Console.WriteLine("");
 
                         for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
                         {
@@ -376,13 +245,363 @@ namespace Library_Management_System
                         }
 
                         Console.WriteLine("");
+                        return true;
+                    }
+
+                    Console.WriteLine(yieldErrorMessage);
+                    return false;
+                }
+            }
+        }
+
+        private void DisplayTableAddOns(string getStatusQueryAvailable, string yieldErrorMessage, int number)
+        {
+            int[] currentStoreLength = { 5, 76, 41, 21, 11, 24, 23 };
+            bool check = false;
+
+            string id = "";
+            string n = "";
+            string a = "";
+            string b = "";
+            string c = "";
+            string d = "";
+            List<string> LA = new List<string>();
+            List<int> LC = new List<int>();
+
+            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+            {
+                SqlCommand command = new SqlCommand(getStatusQueryAvailable, connection);
+
+                connection.Open();
+
+                using (SqlDataReader readerBookInfo = command.ExecuteReader())
+                {
+                    string prevIDs = "";
+
+                    while (readerBookInfo.Read())
+                    {
+                        if (!check)
+                        {
+                            for (int k = 0; k < currentStoreLength.Length; k++)
+                            {
+                                Console.Write($"╔{Repeat("═", currentStoreLength[k])}╗");
+                            }
+
+                            if (number == 1)
+                            {
+                                Console.WriteLine(
+                                    $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-75}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-22}║");
+                            }
+                            else
+                            {
+                                Console.WriteLine(
+                                    $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-75}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-22}║");
+                            }
+
+                            check = true;
+                        }
+
+                        if (prevIDs == $"{readerBookInfo[0]}" || prevIDs == "")
+                        {
+                            string i = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
+
+                            if (id == "")
+                            {
+                                id = $"{readerBookInfo[0]}";
+                            }
+
+                            if (n == "")
+                            {
+                                n = $"{readerBookInfo[1]}";
+                            }
+
+                            if (a == "")
+                            {
+                                a = $"{readerBookInfo[4]}";
+                            }
+
+                            if (b == "")
+                            {
+                                b = $"{readerBookInfo[5]}";
+                            }
+
+                            if (c == "")
+                            {
+                                c = $"{readerBookInfo[3]}";
+                            }
+
+                            if (d == "")
+                            {
+                                d = $"{readerBookInfo[6]}";
+                            }
+
+                            if (!LA.Contains(readerBookInfo[2]))
+                            {
+                                LA.Add($"{readerBookInfo[2]}");
+                            }
+
+                            if (!LC.Contains(Int32.Parse(i)))
+                            {
+                                LC.Add(Int32.Parse(i));
+                            }
+
+                            prevIDs = $"{readerBookInfo[0]}";
+                            continue;
+                        }
+
+                        int length = LA.Count > LC.Count ? LA.Count : LC.Count;
+
+                        for (int k = 0; k < currentStoreLength.Length; k++)
+                        {
+                            Console.Write($" {Repeat("═", currentStoreLength[k])} ");
+                        }
+
+                        string status = LC.Count != 0 && LC[0] != 0
+                            ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
+                            : $"║{"",-1}{"Empty",-22}║";
+
+                        if (number == 1)
+                        {
+                            Console.Write(
+                                $"\n║{"",-1}{id,-4}║║{"",-1}{n,-75}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{$"{readerBookInfo[4]} ({(int)readerBookInfo[4] + (int)readerBookInfo[5]})",-10}║║{"",-1}{d,-23}║{status}");
+                        }
+                        else
+                        {
+                            Console.Write(
+                                $"\n║{"",-1}{id,-4}║║{"",-1}{n,-75}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{$"{readerBookInfo[4]} ({(int)readerBookInfo[4] + (int)readerBookInfo[5]})",-10}║║{"",-1}{d,-23}║{status}");
+                        }
+
+                        for (int i = 1; i < length; i++)
+                        {
+                            string ss = LC.Count > i
+                                ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
+                                : $"║{"",-1}{"",-22}║";
+
+                            string am = LA.Count > i
+                                ? $"║{"",-1}{$"{LA[i]}",-40}║"
+                                : $"║{"",-1}{"",-40}║";
+
+                            Console.Write(
+                                $"\n║{"",-5}║║{"",-76}║{am}║{"",-21}║║{"",-11}║║{"",-24}║{ss}");
+                        }
+
+                        Console.WriteLine("");
+
+                        string ia = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
+
+                        id = $"{readerBookInfo[0]}";
+                        n = $"{readerBookInfo[1]}";
+                        a = $"{readerBookInfo[4]}";
+                        b = $"{readerBookInfo[5]}";
+                        c = $"{readerBookInfo[3]}";
+                        d = $"{readerBookInfo[6]}";
+                        LA = new List<string> { $"{readerBookInfo[2]}" };
+                        LC = new List<int> { Int32.Parse(ia) };
+
+                        prevIDs = $"{readerBookInfo[0]}";
+                    }
+
+                    if (check)
+                    {
+                        int length = LA.Count > LC.Count ? LA.Count : LC.Count;
+
+                        for (int k = 0; k < currentStoreLength.Length; k++)
+                        {
+                            Console.Write($" {Repeat("═", currentStoreLength[k])} ");
+                        }
+
+                        string status = LC.Count != 0 && LC[0] != 0
+                            ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
+                            : $"║{"",-1}{"Empty",-22}║";
+
+                        if (number == 1)
+                        {
+                            Console.Write(
+                                $"\n║{"",-1}{id,-4}║║{"",-1}{n,-75}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{$"{a} ({Int32.Parse(a) + Int32.Parse(b)})",-10}║║{"",-1}{d,-23}║{status}");
+                        }
+                        else
+                        {
+                            Console.Write(
+                                $"\n║{"",-1}{id,-4}║║{"",-1}{n,-75}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{$"{b} ({Int32.Parse(a) + Int32.Parse(b)})",-10}║║{"",-1}{d,-23}║{status}");
+                        }
+
+                        for (int i = 1; i < length; i++)
+                        {
+                            string ss = LC.Count > i
+                                ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
+                                : $"║{"",-1}{"",-22}║";
+
+                            string am = LA.Count > i
+                                ? $"║{"",-1}{$"{LA[i]}",-40}║"
+                                : $"║{"",-1}{"",-40}║";
+
+                            Console.Write(
+                                $"\n║{"",-5}║║{"",-76}║{am}║{"",-21}║║{"",-11}║║{"",-24}║{ss}");
+                        }
+
+                        Console.WriteLine("");
+
+                        for (int k = 0; k < currentStoreLength.Length; k++)
+                        {
+                            Console.Write($"╚{Repeat("═", currentStoreLength[k])}╝");
+                        }
+
+                        Console.WriteLine("");
                     }
                     else
                     {
-                        Console.WriteLine("There are no data currently");
+                        Console.WriteLine(yieldErrorMessage);
                     }
                 }
             }
+        }
+
+        public void Add()
+        {
+            DateTime date = DateTime.Now;
+            int ln = 0;
+
+            string lq = "Select Librarian.LibrarianIDs " +
+                        "from (Scheduled left join Librarian on Scheduled.LibrarianIDs = Librarian.LibrarianIDs) " +
+                        $"where Scheduled.DateOfWeek = '{date.DayOfWeek}' and '{date.Hour}:{date.Minute}' between TimeStart and TimeEnd ";
+
+            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+            {
+                connection.Open();
+
+                SqlCommand q = new SqlCommand(lq, connection);
+
+                using (SqlDataReader r = q.ExecuteReader())
+                {
+                    bool c = false;
+                    while (r.Read())
+                    {
+                        ln = (int)r[0];
+                        c = true;
+                    }
+
+                    if (!c)
+                    {
+                        Console.WriteLine("There is no currently active librarian.");
+                        return;
+                    }
+                }
+            }
+
+            string addDataQuery =
+                "INSERT INTO Book (BookName, CategoryIDs, BookAmountAvailable, BookAmountBorrowed, Date, PublishDate, State, LIDs) VALUES (@BookName, @CategoryIDs, @BookAmountAvailable, @BookAmountBorrowed, @Date, @PublishDate, @State, @LIDs)";
+
+            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+            {
+                connection.Open();
+
+                SqlCommand insertCommand = new SqlCommand(addDataQuery, connection);
+
+                try
+                {
+                    Console.Write("Enter book's title: ");
+                    string bookName = Console.ReadLine();
+
+                    string[] bna = bookName.Split(' ');
+                    StringBuilder bn = new StringBuilder();
+
+                    for (int i = 0; i < bna.Length; i++)
+                    {
+                        string o = "";
+                        string nn = bna[i][0].ToString().ToUpper() + bna[i].Substring(1);
+
+                        if (i != bna.Length - 1)
+                        {
+                            o = " ";
+                        }
+
+                        bn.Append(nn + o);
+                    }
+
+                    insertCommand.Parameters.AddWithValue("@BookName", bn.ToString());
+
+                    Console.Write("Enter author: ");
+                    string author = Console.ReadLine();
+
+                    string[] aut = author.Split(' ');
+                    StringBuilder au = new StringBuilder();
+
+                    for (int i = 0; i < aut.Length; i++)
+                    {
+                        string o = "";
+                        string nn = aut[i][0].ToString().ToUpper() + aut[i].Substring(1);
+
+                        if (i != aut.Length - 1)
+                        {
+                            o = " ";
+                        }
+
+                        au.Append(nn + o);
+                    }
+
+                    Console.Write("Enter Category: ");
+                    string ca = Console.ReadLine();
+                    string cai = "";
+
+                    string[] cat = ca.Split(' ');
+                    StringBuilder cas = new StringBuilder();
+
+                    for (int i = 0; i < cat.Length; i++)
+                    {
+                        string o = "";
+                        string nn = cat[i][0].ToString().ToUpper() + cat[i].Substring(1);
+
+                        if (i != cat.Length - 1)
+                        {
+                            o = " ";
+                        }
+
+                        cas.Append(nn + o);
+                    }
+
+                    insertCommand.Parameters.AddWithValue("@CategoryIDs",
+                        HandleStoredProcedureMessage(cas.ToString(), "CheckCategory", "@category_name"));
+
+                    Console.Write("Enter amount: ");
+                    int amount = int.Parse(Console.ReadLine());
+
+                    Console.Write("Enter Publishing Year: ");
+                    string py = Console.ReadLine();
+
+                    insertCommand.Parameters.AddWithValue("@BookAmountAvailable", amount);
+                    insertCommand.Parameters.AddWithValue("@BookAmountBorrowed", 0);
+                    insertCommand.Parameters.AddWithValue("@Date", date.ToString("yyyy-MM-dd HH:mm:ss"));
+                    insertCommand.Parameters.AddWithValue("@PublishDate", py);
+                    insertCommand.Parameters.AddWithValue("@State", 0);
+                    insertCommand.Parameters.AddWithValue("@LIDs", ln);
+                    insertCommand.ExecuteNonQuery();
+
+                    string aaa =
+                        "insert into BookAuthor (BookIDs, AuthorIDs) values ((select Count(BookIDs) from Book), @ai)";
+                    SqlCommand ac = new SqlCommand(aaa, connection);
+
+                    ac.Parameters.AddWithValue("@ai",
+                        HandleStoredProcedureMessage(au.ToString(), "CheckAuthor", "@author_name"));
+                    ac.ExecuteNonQuery();
+
+                    Console.WriteLine("\t\t\t\t\t\t═══════════ ADDED SUCCESSFULLY ═══════════\t\t\t\t\t");
+                }
+                catch (SqlException e)
+                {
+                    DisplaySqlErrors(e);
+                }
+            }
+        }
+
+        public void Show()
+        {
+            string queryString =
+                "select Book.BookIDs, BookName, Author.Name, Category.Name, BookAmountAvailable, BookAmountBorrowed, Book.date, CustomerIDs " +
+                "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0), Category, Author, BookAuthor " +
+                "where Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs " +
+                "order by BookIDs";
+
+            DisplayTable(queryString, "There are no data currently...");
         }
 
         public void Search()
@@ -428,19 +647,6 @@ namespace Library_Management_System
 
             int number1 = int.Parse(Console.ReadLine());
 
-            string id = "";
-            string n = "";
-            string a = "";
-            string b = "";
-            string c = "";
-            string da = "";
-
-            bool check = false;
-            bool ch = false;
-
-            List<string> LA = new List<string>();
-            List<int> LC = new List<int>();
-
             switch (number1)
             {
                 case 1:
@@ -458,94 +664,7 @@ namespace Library_Management_System
                         "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0), Category, Author, BookAuthor " +
                         $"where Book.BookIDs = {ids} and Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs";
 
-                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-                    {
-                        SqlCommand command = new SqlCommand(getIDsQuery, connection);
-
-                        connection.Open();
-
-                        using (SqlDataReader readerBookInfo = command.ExecuteReader())
-                        {
-                            while (readerBookInfo.Read())
-                            {
-                                if (!check)
-                                {
-                                    id = $"{readerBookInfo[0]}";
-                                    n = $"{readerBookInfo[1]}";
-                                    a = $"{readerBookInfo[4]}";
-                                    b = $"{readerBookInfo[5]}";
-                                    c = $"{readerBookInfo[3]}";
-                                    da = $"{readerBookInfo[6]}";
-
-                                    check = true;
-                                }
-
-                                string i = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                if (!LA.Contains(readerBookInfo[2]))
-                                {
-                                    LA.Add($"{readerBookInfo[2]}");
-                                }
-
-                                if (!LC.Contains(Int32.Parse(i)))
-                                {
-                                    LC.Add(Int32.Parse(i));
-                                }
-                            }
-
-                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                            {
-                                Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
-                            }
-
-                            Console.WriteLine(
-                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
-
-                            int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                            {
-                                Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                            }
-
-                            string status = LC.Count != 0 && LC[0] != 0
-                                ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                : $"║{"",-1}{"Empty",-22}║";
-
-                            Console.Write(
-                                $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{da,-22}║{status}");
-
-                            for (int i = 1; i < length; i++)
-                            {
-                                string ss = LC.Count > i
-                                    ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                    : $"║{"",-1}{"",-22}║";
-
-                                string am = LA.Count > i
-                                    ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                    : $"║{"",-1}{"",-40}║";
-
-                                Console.Write(
-                                    $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{ss}");
-                            }
-
-                            Console.WriteLine("");
-
-                            if (check)
-                            {
-                                for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                {
-                                    Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
-                                }
-
-                                Console.WriteLine("");
-                            }
-                            else
-                            {
-                                Console.WriteLine("Invalid ID");
-                            }
-                        }
-                    }
+                    DisplayTable(getIDsQuery, "Invalid IDs");
 
                     break;
                 case 2:
@@ -556,174 +675,10 @@ namespace Library_Management_System
                     string getTitlesQuery =
                         "select Book.BookIDs, BookName, Author.Name, Category.Name, BookAmountAvailable, BookAmountBorrowed, Book.date, CustomerIDs " +
                         "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0), Category, Author, BookAuthor " +
-                        $"where BookName like '%{title}%' and Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs";
+                        $"where BookName like '%{title}%' and Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs " +
+                        "order by BookIDs";
 
-                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-                    {
-                        SqlCommand command = new SqlCommand(getTitlesQuery, connection);
-
-                        connection.Open();
-
-                        using (SqlDataReader readerBookInfo = command.ExecuteReader())
-                        {
-                            string prevIDs = "";
-
-                            while (readerBookInfo.Read())
-                            {
-                                if (!check)
-                                {
-                                    for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                    {
-                                        Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
-                                    }
-
-                                    Console.WriteLine(
-                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
-
-                                    check = true;
-                                }
-
-                                if (prevIDs == $"{readerBookInfo[0]}" || prevIDs == "")
-                                {
-                                    string i = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                    if (id == "")
-                                    {
-                                        id = $"{readerBookInfo[0]}";
-                                    }
-
-                                    if (n == "")
-                                    {
-                                        n = $"{readerBookInfo[1]}";
-                                    }
-
-                                    if (a == "")
-                                    {
-                                        a = $"{readerBookInfo[4]}";
-                                    }
-
-                                    if (b == "")
-                                    {
-                                        b = $"{readerBookInfo[5]}";
-                                    }
-
-                                    if (c == "")
-                                    {
-                                        c = $"{readerBookInfo[3]}";
-                                    }
-
-                                    if (da == "")
-                                    {
-                                        da = $"{readerBookInfo[6]}";
-                                    }
-
-                                    if (!LA.Contains(readerBookInfo[2]))
-                                    {
-                                        LA.Add($"{readerBookInfo[2]}");
-                                    }
-
-                                    if (!LC.Contains(Int32.Parse(i)))
-                                    {
-                                        LC.Add(Int32.Parse(i));
-                                    }
-
-                                    prevIDs = $"{readerBookInfo[0]}";
-                                    continue;
-                                }
-
-                                int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                {
-                                    Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                }
-
-                                string status = LC.Count != 0 && LC[0] != 0
-                                    ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                    : $"║{"",-1}{"Empty",-22}║";
-
-                                Console.Write(
-                                    $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{da,-22}║{status}");
-
-                                for (int i = 1; i < length; i++)
-                                {
-                                    string ss = LC.Count > i
-                                        ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                        : $"║{"",-1}{"",-22}║";
-
-                                    string am = LA.Count > i
-                                        ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                        : $"║{"",-1}{"",-40}║";
-
-                                    Console.Write(
-                                        $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{ss}");
-                                }
-
-                                Console.WriteLine("");
-
-                                string ia = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                id = $"{readerBookInfo[0]}";
-                                n = $"{readerBookInfo[1]}";
-                                a = $"{readerBookInfo[4]}";
-                                b = $"{readerBookInfo[5]}";
-                                c = $"{readerBookInfo[3]}";
-                                da = $"{readerBookInfo[6]}";
-                                LA = new List<string> { $"{readerBookInfo[2]}" };
-                                LC = new List<int> { Int32.Parse(ia) };
-
-                                prevIDs = $"{readerBookInfo[0]}";
-                                ch = true;
-                            }
-
-                            if (check)
-                            {
-                                if (!ch)
-                                {
-                                    int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                    for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                    {
-                                        Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                    }
-
-                                    string status = LC.Count != 0 && LC[0] != 0
-                                        ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                        : $"║{"",-1}{"Empty",-22}║";
-
-                                    Console.Write(
-                                        $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{da,-22}║{status}");
-
-                                    for (int i = 1; i < length; i++)
-                                    {
-                                        string ss = LC.Count > i
-                                            ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                            : $"║{"",-1}{"",-22}║";
-
-                                        string am = LA.Count > i
-                                            ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                            : $"║{"",-1}{"",-40}║";
-
-                                        Console.Write(
-                                            $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{ss}");
-                                    }
-
-                                    Console.WriteLine("");
-                                }
-
-                                for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                {
-                                    Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
-                                }
-
-                                Console.WriteLine("");
-                            }
-                            else
-                            {
-                                Console.WriteLine($"There is no Book's Title ({title}) in the database");
-                            }
-                        }
-                    }
+                    DisplayTable(getTitlesQuery, $"There is no Book's Title ({title}) in the database...");
 
                     break;
                 case 3:
@@ -735,174 +690,10 @@ namespace Library_Management_System
                         "select Book.BookIDs, BookName, Author.Name, Category.Name, BookAmountAvailable, BookAmountBorrowed, Book.date, CustomerIDs " +
                         "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0), Category, Author, BookAuthor " +
                         "where Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs " +
-                        $"and Book.BookIDs in (select Book.BookIDs from Book, Author, BookAuthor where Author.Name like '%{name}%' and Book.BookIDs = BookAuthor.BookIDs and AuthorIDs = Author.IDs)";
+                        $"and Book.BookIDs in (select Book.BookIDs from Book, Author, BookAuthor where Author.Name like '%{name}%' and Book.BookIDs = BookAuthor.BookIDs and AuthorIDs = Author.IDs) " +
+                        "order by BookIDs";
 
-                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-                    {
-                        SqlCommand command = new SqlCommand(getAuthorNamesQuery, connection);
-
-                        connection.Open();
-
-                        using (SqlDataReader readerBookInfo = command.ExecuteReader())
-                        {
-                            string prevIDs = "";
-
-                            while (readerBookInfo.Read())
-                            {
-                                if (!check)
-                                {
-                                    for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                    {
-                                        Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
-                                    }
-
-                                    Console.WriteLine(
-                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
-
-                                    check = true;
-                                }
-
-                                if (prevIDs == $"{readerBookInfo[0]}" || prevIDs == "")
-                                {
-                                    string i = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                    if (id == "")
-                                    {
-                                        id = $"{readerBookInfo[0]}";
-                                    }
-
-                                    if (n == "")
-                                    {
-                                        n = $"{readerBookInfo[1]}";
-                                    }
-
-                                    if (a == "")
-                                    {
-                                        a = $"{readerBookInfo[4]}";
-                                    }
-
-                                    if (b == "")
-                                    {
-                                        b = $"{readerBookInfo[5]}";
-                                    }
-
-                                    if (c == "")
-                                    {
-                                        c = $"{readerBookInfo[3]}";
-                                    }
-
-                                    if (da == "")
-                                    {
-                                        da = $"{readerBookInfo[6]}";
-                                    }
-
-                                    if (!LA.Contains(readerBookInfo[2]))
-                                    {
-                                        LA.Add($"{readerBookInfo[2]}");
-                                    }
-
-                                    if (!LC.Contains(Int32.Parse(i)))
-                                    {
-                                        LC.Add(Int32.Parse(i));
-                                    }
-
-                                    prevIDs = $"{readerBookInfo[0]}";
-                                    continue;
-                                }
-
-                                int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                {
-                                    Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                }
-
-                                string status = LC.Count != 0 && LC[0] != 0
-                                    ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                    : $"║{"",-1}{"Empty",-22}║";
-
-                                Console.Write(
-                                    $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{da,-22}║{status}");
-
-                                for (int i = 1; i < length; i++)
-                                {
-                                    string ss = LC.Count > i
-                                        ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                        : $"║{"",-1}{"",-22}║";
-
-                                    string am = LA.Count > i
-                                        ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                        : $"║{"",-1}{"",-40}║";
-
-                                    Console.Write(
-                                        $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{ss}");
-                                }
-
-                                Console.WriteLine("");
-
-                                string ia = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                id = $"{readerBookInfo[0]}";
-                                n = $"{readerBookInfo[1]}";
-                                a = $"{readerBookInfo[4]}";
-                                b = $"{readerBookInfo[5]}";
-                                c = $"{readerBookInfo[3]}";
-                                da = $"{readerBookInfo[6]}";
-                                LA = new List<string> { $"{readerBookInfo[2]}" };
-                                LC = new List<int> { Int32.Parse(ia) };
-
-                                prevIDs = $"{readerBookInfo[0]}";
-                                ch = true;
-                            }
-
-                            if (check)
-                            {
-                                if (!ch)
-                                {
-                                    int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                    for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                    {
-                                        Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                    }
-
-                                    string status = LC.Count != 0 && LC[0] != 0
-                                        ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                        : $"║{"",-1}{"Empty",-22}║";
-
-                                    Console.Write(
-                                        $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{da,-22}║{status}");
-
-                                    for (int i = 1; i < length; i++)
-                                    {
-                                        string ss = LC.Count > i
-                                            ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                            : $"║{"",-1}{"",-22}║";
-
-                                        string am = LA.Count > i
-                                            ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                            : $"║{"",-1}{"",-40}║";
-
-                                        Console.Write(
-                                            $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{ss}");
-                                    }
-
-                                    Console.WriteLine("");
-                                }
-
-                                for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                {
-                                    Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
-                                }
-
-                                Console.WriteLine("");
-                            }
-                            else
-                            {
-                                Console.WriteLine($"There is no Book's Author ({name}) in the database");
-                            }
-                        }
-                    }
+                    DisplayTable(getAuthorNamesQuery, $"There is no Book's Author ({name}) in the database");
 
                     break;
                 case 4:
@@ -913,174 +704,10 @@ namespace Library_Management_System
                     string getCategoryQuery =
                         "select Book.BookIDs, BookName, Author.Name, Category.Name, BookAmountAvailable, BookAmountBorrowed, Book.date, CustomerIDs " +
                         "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0), Category, Author, BookAuthor " +
-                        $"where Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs and Category.Name = '%{category}%'";
+                        $"where Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs and Category.Name = '%{category}%' " +
+                        "order by BookIDs";
 
-                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-                    {
-                        SqlCommand command = new SqlCommand(getCategoryQuery, connection);
-
-                        connection.Open();
-
-                        using (SqlDataReader readerBookInfo = command.ExecuteReader())
-                        {
-                            string prevIDs = "";
-
-                            while (readerBookInfo.Read())
-                            {
-                                if (!check)
-                                {
-                                    for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                    {
-                                        Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
-                                    }
-
-                                    Console.WriteLine(
-                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
-
-                                    check = true;
-                                }
-
-                                if (prevIDs == $"{readerBookInfo[0]}" || prevIDs == "")
-                                {
-                                    string i = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                    if (id == "")
-                                    {
-                                        id = $"{readerBookInfo[0]}";
-                                    }
-
-                                    if (n == "")
-                                    {
-                                        n = $"{readerBookInfo[1]}";
-                                    }
-
-                                    if (a == "")
-                                    {
-                                        a = $"{readerBookInfo[4]}";
-                                    }
-
-                                    if (b == "")
-                                    {
-                                        b = $"{readerBookInfo[5]}";
-                                    }
-
-                                    if (c == "")
-                                    {
-                                        c = $"{readerBookInfo[3]}";
-                                    }
-
-                                    if (da == "")
-                                    {
-                                        da = $"{readerBookInfo[6]}";
-                                    }
-
-                                    if (!LA.Contains(readerBookInfo[2]))
-                                    {
-                                        LA.Add($"{readerBookInfo[2]}");
-                                    }
-
-                                    if (!LC.Contains(Int32.Parse(i)))
-                                    {
-                                        LC.Add(Int32.Parse(i));
-                                    }
-
-                                    prevIDs = $"{readerBookInfo[0]}";
-                                    continue;
-                                }
-
-                                int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                {
-                                    Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                }
-
-                                string status = LC.Count != 0 && LC[0] != 0
-                                    ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                    : $"║{"",-1}{"Empty",-22}║";
-
-                                Console.Write(
-                                    $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{da,-22}║{status}");
-
-                                for (int i = 1; i < length; i++)
-                                {
-                                    string ss = LC.Count > i
-                                        ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                        : $"║{"",-1}{"",-22}║";
-
-                                    string am = LA.Count > i
-                                        ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                        : $"║{"",-1}{"",-40}║";
-
-                                    Console.Write(
-                                        $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{ss}");
-                                }
-
-                                Console.WriteLine("");
-
-                                string ia = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                id = $"{readerBookInfo[0]}";
-                                n = $"{readerBookInfo[1]}";
-                                a = $"{readerBookInfo[4]}";
-                                b = $"{readerBookInfo[5]}";
-                                c = $"{readerBookInfo[3]}";
-                                da = $"{readerBookInfo[6]}";
-                                LA = new List<string> { $"{readerBookInfo[2]}" };
-                                LC = new List<int> { Int32.Parse(ia) };
-
-                                prevIDs = $"{readerBookInfo[0]}";
-                                ch = true;
-                            }
-
-                            if (check)
-                            {
-                                if (!ch)
-                                {
-                                    int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                    for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                    {
-                                        Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                    }
-
-                                    string status = LC.Count != 0 && LC[0] != 0
-                                        ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                        : $"║{"",-1}{"Empty",-22}║";
-
-                                    Console.Write(
-                                        $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{da,-22}║{status}");
-
-                                    for (int i = 1; i < length; i++)
-                                    {
-                                        string ss = LC.Count > i
-                                            ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                            : $"║{"",-1}{"",-22}║";
-
-                                        string am = LA.Count > i
-                                            ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                            : $"║{"",-1}{"",-40}║";
-
-                                        Console.Write(
-                                            $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{ss}");
-                                    }
-
-                                    Console.WriteLine("");
-                                }
-
-                                for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                {
-                                    Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
-                                }
-
-                                Console.WriteLine("");
-                            }
-                            else
-                            {
-                                Console.WriteLine("Invalid Category");
-                            }
-                        }
-                    }
+                    DisplayTable(getCategoryQuery, "Invalid Category");
 
                     break;
                 case 5:
@@ -1091,356 +718,28 @@ namespace Library_Management_System
                     Console.Write("Input to use: ");
                     int sss = int.Parse(Console.ReadLine());
 
-                    int[] currentStoreLength = { 5, 61, 41, 21, 11, 23, 23 };
-
                     switch (sss)
                     {
                         case 1:
                             string getStatusQueryAvailable =
                                 "select Book.BookIDs, BookName, Author.Name, Category.Name, BookAmountAvailable, BookAmountBorrowed, Book.date, CustomerIDs " +
                                 "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0), Category, Author, BookAuthor " +
-                                "where Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs and BookAmountAvailable > 0";
+                                "where Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs and BookAmountAvailable > 0 " +
+                                "order by BookIDs";
 
-                            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-                            {
-                                SqlCommand command = new SqlCommand(getStatusQueryAvailable, connection);
-
-                                connection.Open();
-
-                                using (SqlDataReader readerBookInfo = command.ExecuteReader())
-                                {
-                                    string prevIDs = "";
-
-                                    while (readerBookInfo.Read())
-                                    {
-                                        if (!check)
-                                        {
-                                            for (int k = 0; k < currentStoreLength.Length; k++)
-                                            {
-                                                Console.Write($"╔{Repeat("═", currentStoreLength[k])}╗");
-                                            }
-
-                                            Console.WriteLine(
-                                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
-
-                                            check = true;
-                                        }
-
-                                        if (prevIDs == $"{readerBookInfo[0]}" || prevIDs == "")
-                                        {
-                                            string i = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                            if (id == "")
-                                            {
-                                                id = $"{readerBookInfo[0]}";
-                                            }
-
-                                            if (n == "")
-                                            {
-                                                n = $"{readerBookInfo[1]}";
-                                            }
-
-                                            if (a == "")
-                                            {
-                                                a = $"{readerBookInfo[4]}";
-                                            }
-
-                                            if (b == "")
-                                            {
-                                                b = $"{readerBookInfo[5]}";
-                                            }
-
-                                            if (c == "")
-                                            {
-                                                c = $"{readerBookInfo[3]}";
-                                            }
-
-                                            if (da == "")
-                                            {
-                                                da = $"{readerBookInfo[6]}";
-                                            }
-
-                                            if (!LA.Contains(readerBookInfo[2]))
-                                            {
-                                                LA.Add($"{readerBookInfo[2]}");
-                                            }
-
-                                            if (!LC.Contains(Int32.Parse(i)))
-                                            {
-                                                LC.Add(Int32.Parse(i));
-                                            }
-
-                                            prevIDs = $"{readerBookInfo[0]}";
-                                            continue;
-                                        }
-
-                                        int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                        for (int k = 0; k < currentStoreLength.Length; k++)
-                                        {
-                                            Console.Write($" {Repeat("═", currentStoreLength[k])} ");
-                                        }
-
-                                        string status = LC.Count != 0 && LC[0] != 0
-                                            ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                            : $"║{"",-1}{"Empty",-22}║";
-
-                                        Console.Write(
-                                            $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{$"{readerBookInfo[4]} ({(int)readerBookInfo[4] + (int)readerBookInfo[5]})",-10}║║{"",-1}{da,-22}║{status}");
-
-                                        for (int i = 1; i < length; i++)
-                                        {
-                                            string ss = LC.Count > i
-                                                ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                                : $"║{"",-1}{"",-22}║";
-
-                                            string am = LA.Count > i
-                                                ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                                : $"║{"",-1}{"",-40}║";
-
-                                            Console.Write(
-                                                $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-23}║{ss}");
-                                        }
-
-                                        Console.WriteLine("");
-
-                                        string ia = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                        id = $"{readerBookInfo[0]}";
-                                        n = $"{readerBookInfo[1]}";
-                                        a = $"{readerBookInfo[4]}";
-                                        b = $"{readerBookInfo[5]}";
-                                        c = $"{readerBookInfo[3]}";
-                                        da = $"{readerBookInfo[6]}";
-                                        LA = new List<string> { $"{readerBookInfo[2]}" };
-                                        LC = new List<int> { Int32.Parse(ia) };
-
-                                        prevIDs = $"{readerBookInfo[0]}";
-                                        ch = true;
-                                    }
-
-                                    if (check)
-                                    {
-                                        if (!ch)
-                                        {
-                                            int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                            for (int k = 0; k < currentStoreLength.Length; k++)
-                                            {
-                                                Console.Write($" {Repeat("═", currentStoreLength[k])} ");
-                                            }
-
-                                            string status = LC.Count != 0 && LC[0] != 0
-                                                ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                                : $"║{"",-1}{"Empty",-22}║";
-
-                                            Console.Write(
-                                                $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{$"{a} ({Int32.Parse(a) + Int32.Parse(b)})",-10}║║{"",-1}{da,-22}║{status}");
-
-                                            for (int i = 1; i < length; i++)
-                                            {
-                                                string ss = LC.Count > i
-                                                    ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                                    : $"║{"",-1}{"",-22}║";
-
-                                                string am = LA.Count > i
-                                                    ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                                    : $"║{"",-1}{"",-40}║";
-
-                                                Console.Write(
-                                                    $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-23}║{ss}");
-                                            }
-
-                                            Console.WriteLine("");
-                                        }
-
-                                        for (int k = 0; k < currentStoreLength.Length; k++)
-                                        {
-                                            Console.Write($"╚{Repeat("═", currentStoreLength[k])}╝");
-                                        }
-
-                                        Console.WriteLine("");
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("There is no AVAILABLE BOOK right now. Come back later!");
-                                    }
-                                }
-                            }
+                            DisplayTableAddOns(getStatusQueryAvailable,
+                                "There is no AVAILABLE BOOK right now. Come back later!", sss);
 
                             break;
                         case 2:
                             string getStatusQueryBorrowed =
                                 "select Book.BookIDs, BookName, Author.Name, Category.Name, BookAmountAvailable, BookAmountBorrowed, Book.date, CustomerIDs " +
                                 "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0), Category, Author, BookAuthor " +
-                                "where Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs and BookAmountBorrowed > 0";
+                                "where Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs and BookAmountBorrowed > 0 " +
+                                "order by BookIDs";
 
-                            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-                            {
-                                SqlCommand command = new SqlCommand(getStatusQueryBorrowed, connection);
-
-                                connection.Open();
-
-                                using (SqlDataReader readerBookInfo = command.ExecuteReader())
-                                {
-                                    string prevIDs = "";
-
-                                    while (readerBookInfo.Read())
-                                    {
-                                        if (!check)
-                                        {
-                                            for (int k = 0; k < currentStoreLength.Length; k++)
-                                            {
-                                                Console.Write($"╔{Repeat("═", currentStoreLength[k])}╗");
-                                            }
-
-                                            Console.WriteLine(
-                                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
-
-                                            check = true;
-                                        }
-
-                                        if (prevIDs == $"{readerBookInfo[0]}" || prevIDs == "")
-                                        {
-                                            string i = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                            if (id == "")
-                                            {
-                                                id = $"{readerBookInfo[0]}";
-                                            }
-
-                                            if (n == "")
-                                            {
-                                                n = $"{readerBookInfo[1]}";
-                                            }
-
-                                            if (a == "")
-                                            {
-                                                a = $"{readerBookInfo[4]}";
-                                            }
-
-                                            if (b == "")
-                                            {
-                                                b = $"{readerBookInfo[5]}";
-                                            }
-
-                                            if (c == "")
-                                            {
-                                                c = $"{readerBookInfo[3]}";
-                                            }
-
-                                            if (da == "")
-                                            {
-                                                da = $"{readerBookInfo[6]}";
-                                            }
-
-                                            if (!LA.Contains(readerBookInfo[2]))
-                                            {
-                                                LA.Add($"{readerBookInfo[2]}");
-                                            }
-
-                                            if (!LC.Contains(Int32.Parse(i)))
-                                            {
-                                                LC.Add(Int32.Parse(i));
-                                            }
-
-                                            prevIDs = $"{readerBookInfo[0]}";
-                                            continue;
-                                        }
-
-                                        int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                        for (int k = 0; k < currentStoreLength.Length; k++)
-                                        {
-                                            Console.Write($" {Repeat("═", currentStoreLength[k])} ");
-                                        }
-
-                                        string status = LC.Count != 0 && LC[0] != 0
-                                            ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                            : $"║{"",-1}{"Empty",-22}║";
-
-                                        Console.Write(
-                                            $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{$"{readerBookInfo[4]} ({(int)readerBookInfo[4] + (int)readerBookInfo[5]})",-10}║║{"",-1}{da,-22}║{status}");
-
-                                        for (int i = 1; i < length; i++)
-                                        {
-                                            string ss = LC.Count > i
-                                                ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                                : $"║{"",-1}{"",-22}║";
-
-                                            string am = LA.Count > i
-                                                ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                                : $"║{"",-1}{"",-40}║";
-
-                                            Console.Write(
-                                                $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-23}║{ss}");
-                                        }
-
-                                        Console.WriteLine("");
-
-                                        string ia = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                        id = $"{readerBookInfo[0]}";
-                                        n = $"{readerBookInfo[1]}";
-                                        a = $"{readerBookInfo[4]}";
-                                        b = $"{readerBookInfo[5]}";
-                                        c = $"{readerBookInfo[3]}";
-                                        da = $"{readerBookInfo[6]}";
-                                        LA = new List<string> { $"{readerBookInfo[2]}" };
-                                        LC = new List<int> { Int32.Parse(ia) };
-
-                                        prevIDs = $"{readerBookInfo[0]}";
-                                        ch = true;
-                                    }
-
-                                    if (check)
-                                    {
-                                        if (!ch)
-                                        {
-                                            int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                            for (int k = 0; k < currentStoreLength.Length; k++)
-                                            {
-                                                Console.Write($" {Repeat("═", currentStoreLength[k])} ");
-                                            }
-
-                                            string status = LC.Count != 0 && LC[0] != 0
-                                                ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                                : $"║{"",-1}{"Empty",-22}║";
-
-                                            Console.Write(
-                                                $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{$"{b} ({Int32.Parse(a) + Int32.Parse(b)})",-10}║║{"",-1}{da,-22}║{status}");
-
-                                            for (int i = 1; i < length; i++)
-                                            {
-                                                string ss = LC.Count > i
-                                                    ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                                    : $"║{"",-1}{"",-22}║";
-
-                                                string am = LA.Count > i
-                                                    ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                                    : $"║{"",-1}{"",-40}║";
-
-                                                Console.Write(
-                                                    $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-23}║{ss}");
-                                            }
-
-                                            Console.WriteLine("");
-                                        }
-
-                                        for (int k = 0; k < currentStoreLength.Length; k++)
-                                        {
-                                            Console.Write($"╚{Repeat("═", currentStoreLength[k])}╝");
-                                        }
-
-                                        Console.WriteLine("");
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("All the BOOKs are AVAILABLE.");
-                                    }
-                                }
-                            }
+                            DisplayTableAddOns(getStatusQueryBorrowed,
+                                "All the BOOKs are AVAILABLE...", sss);
 
                             break;
                         default:
@@ -1473,174 +772,10 @@ namespace Library_Management_System
                             string getTodayBooks =
                                 "select Book.BookIDs, BookName, Author.Name, Category.Name, BookAmountAvailable, BookAmountBorrowed, Book.date, CustomerIDs " +
                                 "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0), Category, Author, BookAuthor " +
-                                $"where Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs and datediff(day, Book.Date, '{to}') = 0";
+                                $"where Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs and datediff(day, Book.Date, '{to}') = 0 " +
+                                "order by BookIDs";
 
-                            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-                            {
-                                SqlCommand command = new SqlCommand(getTodayBooks, connection);
-
-                                connection.Open();
-
-                                using (SqlDataReader readerBookInfo = command.ExecuteReader())
-                                {
-                                    string prevIDs = "";
-
-                                    while (readerBookInfo.Read())
-                                    {
-                                        if (!check)
-                                        {
-                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                            {
-                                                Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
-                                            }
-
-                                            Console.WriteLine(
-                                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
-
-                                            check = true;
-                                        }
-
-                                        if (prevIDs == $"{readerBookInfo[0]}" || prevIDs == "")
-                                        {
-                                            string i = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                            if (id == "")
-                                            {
-                                                id = $"{readerBookInfo[0]}";
-                                            }
-
-                                            if (n == "")
-                                            {
-                                                n = $"{readerBookInfo[1]}";
-                                            }
-
-                                            if (a == "")
-                                            {
-                                                a = $"{readerBookInfo[4]}";
-                                            }
-
-                                            if (b == "")
-                                            {
-                                                b = $"{readerBookInfo[5]}";
-                                            }
-
-                                            if (c == "")
-                                            {
-                                                c = $"{readerBookInfo[3]}";
-                                            }
-
-                                            if (da == "")
-                                            {
-                                                da = $"{readerBookInfo[6]}";
-                                            }
-
-                                            if (!LA.Contains(readerBookInfo[2]))
-                                            {
-                                                LA.Add($"{readerBookInfo[2]}");
-                                            }
-
-                                            if (!LC.Contains(Int32.Parse(i)))
-                                            {
-                                                LC.Add(Int32.Parse(i));
-                                            }
-
-                                            prevIDs = $"{readerBookInfo[0]}";
-                                            continue;
-                                        }
-
-                                        int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                        {
-                                            Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                        }
-
-                                        string status = LC.Count != 0 && LC[0] != 0
-                                            ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                            : $"║{"",-1}{"Empty",-22}║";
-
-                                        Console.Write(
-                                            $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{da,-22}║{status}");
-
-                                        for (int i = 1; i < length; i++)
-                                        {
-                                            string ss = LC.Count > i
-                                                ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                                : $"║{"",-1}{"",-22}║";
-
-                                            string am = LA.Count > i
-                                                ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                                : $"║{"",-1}{"",-40}║";
-
-                                            Console.Write(
-                                                $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{ss}");
-                                        }
-
-                                        Console.WriteLine("");
-
-                                        string ia = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                        id = $"{readerBookInfo[0]}";
-                                        n = $"{readerBookInfo[1]}";
-                                        a = $"{readerBookInfo[4]}";
-                                        b = $"{readerBookInfo[5]}";
-                                        c = $"{readerBookInfo[3]}";
-                                        da = $"{readerBookInfo[6]}";
-                                        LA = new List<string> { $"{readerBookInfo[2]}" };
-                                        LC = new List<int> { Int32.Parse(ia) };
-
-                                        prevIDs = $"{readerBookInfo[0]}";
-                                        ch = true;
-                                    }
-
-                                    if (check)
-                                    {
-                                        if (!ch)
-                                        {
-                                            int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                            {
-                                                Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                            }
-
-                                            string status = LC.Count != 0 && LC[0] != 0
-                                                ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                                : $"║{"",-1}{"Empty",-22}║";
-
-                                            Console.Write(
-                                                $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{d,-22}║{status}");
-
-                                            for (int i = 1; i < length; i++)
-                                            {
-                                                string s = LC.Count > i
-                                                    ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                                    : $"║{"",-1}{"",-22}║";
-
-                                                string am = LA.Count > i
-                                                    ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                                    : $"║{"",-1}{"",-40}║";
-
-                                                Console.Write(
-                                                    $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{s}");
-                                            }
-
-                                            Console.WriteLine("");
-                                        }
-
-                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                        {
-                                            Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
-                                        }
-
-                                        Console.WriteLine("");
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("There was no BOOKs was added in the library.");
-                                    }
-                                }
-                            }
+                            DisplayTable(getTodayBooks, "There was no BOOKs was added in the library...");
 
                             break;
                         case 2:
@@ -1649,172 +784,7 @@ namespace Library_Management_System
                                 "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0), Category, Author, BookAuthor " +
                                 $"where Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs and datediff(day, Book.Date, '{to}') = 1";
 
-                            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-                            {
-                                SqlCommand command = new SqlCommand(getYesterdayBooks, connection);
-
-                                connection.Open();
-
-                                using (SqlDataReader readerBookInfo = command.ExecuteReader())
-                                {
-                                    string prevIDs = "";
-
-                                    while (readerBookInfo.Read())
-                                    {
-                                        if (!check)
-                                        {
-                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                            {
-                                                Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
-                                            }
-
-                                            Console.WriteLine(
-                                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
-
-                                            check = true;
-                                        }
-
-                                        if (prevIDs == $"{readerBookInfo[0]}" || prevIDs == "")
-                                        {
-                                            string i = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                            if (id == "")
-                                            {
-                                                id = $"{readerBookInfo[0]}";
-                                            }
-
-                                            if (n == "")
-                                            {
-                                                n = $"{readerBookInfo[1]}";
-                                            }
-
-                                            if (a == "")
-                                            {
-                                                a = $"{readerBookInfo[4]}";
-                                            }
-
-                                            if (b == "")
-                                            {
-                                                b = $"{readerBookInfo[5]}";
-                                            }
-
-                                            if (c == "")
-                                            {
-                                                c = $"{readerBookInfo[3]}";
-                                            }
-
-                                            if (da == "")
-                                            {
-                                                da = $"{readerBookInfo[6]}";
-                                            }
-
-                                            if (!LA.Contains(readerBookInfo[2]))
-                                            {
-                                                LA.Add($"{readerBookInfo[2]}");
-                                            }
-
-                                            if (!LC.Contains(Int32.Parse(i)))
-                                            {
-                                                LC.Add(Int32.Parse(i));
-                                            }
-
-                                            prevIDs = $"{readerBookInfo[0]}";
-                                            continue;
-                                        }
-
-                                        int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                        {
-                                            Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                        }
-
-                                        string status = LC.Count != 0 && LC[0] != 0
-                                            ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                            : $"║{"",-1}{"Empty",-22}║";
-
-                                        Console.Write(
-                                            $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{da,-22}║{status}");
-
-                                        for (int i = 1; i < length; i++)
-                                        {
-                                            string ss = LC.Count > i
-                                                ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                                : $"║{"",-1}{"",-22}║";
-
-                                            string am = LA.Count > i
-                                                ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                                : $"║{"",-1}{"",-40}║";
-
-                                            Console.Write(
-                                                $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{ss}");
-                                        }
-
-                                        Console.WriteLine("");
-
-                                        string ia = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                        id = $"{readerBookInfo[0]}";
-                                        n = $"{readerBookInfo[1]}";
-                                        a = $"{readerBookInfo[4]}";
-                                        b = $"{readerBookInfo[5]}";
-                                        c = $"{readerBookInfo[3]}";
-                                        da = $"{readerBookInfo[6]}";
-                                        LA = new List<string> { $"{readerBookInfo[2]}" };
-                                        LC = new List<int> { Int32.Parse(ia) };
-
-                                        prevIDs = $"{readerBookInfo[0]}";
-                                        ch = true;
-                                    }
-
-                                    if (check)
-                                    {
-                                        if (!ch)
-                                        {
-                                            int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                            {
-                                                Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                            }
-
-                                            string status = LC.Count != 0 && LC[0] != 0
-                                                ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                                : $"║{"",-1}{"Empty",-22}║";
-
-                                            Console.Write(
-                                                $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{d,-22}║{status}");
-
-                                            for (int i = 1; i < length; i++)
-                                            {
-                                                string s = LC.Count > i
-                                                    ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                                    : $"║{"",-1}{"",-22}║";
-
-                                                string am = LA.Count > i
-                                                    ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                                    : $"║{"",-1}{"",-40}║";
-
-                                                Console.Write(
-                                                    $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{s}");
-                                            }
-
-                                            Console.WriteLine("");
-                                        }
-
-                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                        {
-                                            Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
-                                        }
-
-                                        Console.WriteLine("");
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("There was no BOOKs was added in the library.");
-                                    }
-                                }
-                            }
+                            DisplayTable(getYesterdayBooks, "There was no BOOKs was added in the library...");
 
                             break;
                         case 3:
@@ -1823,172 +793,7 @@ namespace Library_Management_System
                                 "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0), Category, Author, BookAuthor " +
                                 $"where Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs and (datediff(day, Book.Date, '{to}') between 2 and 5)";
 
-                            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-                            {
-                                SqlCommand command = new SqlCommand(getFDaysBooks, connection);
-
-                                connection.Open();
-
-                                using (SqlDataReader readerBookInfo = command.ExecuteReader())
-                                {
-                                    string prevIDs = "";
-
-                                    while (readerBookInfo.Read())
-                                    {
-                                        if (!check)
-                                        {
-                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                            {
-                                                Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
-                                            }
-
-                                            Console.WriteLine(
-                                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
-
-                                            check = true;
-                                        }
-
-                                        if (prevIDs == $"{readerBookInfo[0]}" || prevIDs == "")
-                                        {
-                                            string i = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                            if (id == "")
-                                            {
-                                                id = $"{readerBookInfo[0]}";
-                                            }
-
-                                            if (n == "")
-                                            {
-                                                n = $"{readerBookInfo[1]}";
-                                            }
-
-                                            if (a == "")
-                                            {
-                                                a = $"{readerBookInfo[4]}";
-                                            }
-
-                                            if (b == "")
-                                            {
-                                                b = $"{readerBookInfo[5]}";
-                                            }
-
-                                            if (c == "")
-                                            {
-                                                c = $"{readerBookInfo[3]}";
-                                            }
-
-                                            if (da == "")
-                                            {
-                                                da = $"{readerBookInfo[6]}";
-                                            }
-
-                                            if (!LA.Contains(readerBookInfo[2]))
-                                            {
-                                                LA.Add($"{readerBookInfo[2]}");
-                                            }
-
-                                            if (!LC.Contains(Int32.Parse(i)))
-                                            {
-                                                LC.Add(Int32.Parse(i));
-                                            }
-
-                                            prevIDs = $"{readerBookInfo[0]}";
-                                            continue;
-                                        }
-
-                                        int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                        {
-                                            Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                        }
-
-                                        string status = LC.Count != 0 && LC[0] != 0
-                                            ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                            : $"║{"",-1}{"Empty",-22}║";
-
-                                        Console.Write(
-                                            $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{da,-22}║{status}");
-
-                                        for (int i = 1; i < length; i++)
-                                        {
-                                            string ss = LC.Count > i
-                                                ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                                : $"║{"",-1}{"",-22}║";
-
-                                            string am = LA.Count > i
-                                                ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                                : $"║{"",-1}{"",-40}║";
-
-                                            Console.Write(
-                                                $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{ss}");
-                                        }
-
-                                        Console.WriteLine("");
-
-                                        string ia = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                        id = $"{readerBookInfo[0]}";
-                                        n = $"{readerBookInfo[1]}";
-                                        a = $"{readerBookInfo[4]}";
-                                        b = $"{readerBookInfo[5]}";
-                                        c = $"{readerBookInfo[3]}";
-                                        da = $"{readerBookInfo[6]}";
-                                        LA = new List<string> { $"{readerBookInfo[2]}" };
-                                        LC = new List<int> { Int32.Parse(ia) };
-
-                                        prevIDs = $"{readerBookInfo[0]}";
-                                        ch = true;
-                                    }
-
-                                    if (check)
-                                    {
-                                        if (!ch)
-                                        {
-                                            int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                            {
-                                                Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                            }
-
-                                            string status = LC.Count != 0 && LC[0] != 0
-                                                ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                                : $"║{"",-1}{"Empty",-22}║";
-
-                                            Console.Write(
-                                                $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{d,-22}║{status}");
-
-                                            for (int i = 1; i < length; i++)
-                                            {
-                                                string s = LC.Count > i
-                                                    ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                                    : $"║{"",-1}{"",-22}║";
-
-                                                string am = LA.Count > i
-                                                    ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                                    : $"║{"",-1}{"",-40}║";
-
-                                                Console.Write(
-                                                    $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{s}");
-                                            }
-
-                                            Console.WriteLine("");
-                                        }
-
-                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                        {
-                                            Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
-                                        }
-
-                                        Console.WriteLine("");
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("There was no BOOKs was added in the library.");
-                                    }
-                                }
-                            }
+                            DisplayTable(getFDaysBooks, "There was no BOOKs was added in the library...");
 
                             break;
                         case 4:
@@ -1997,172 +802,7 @@ namespace Library_Management_System
                                 "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0), Category, Author, BookAuthor " +
                                 $"where Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs and datediff(week, Book.Date, '{to}') = 1";
 
-                            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-                            {
-                                SqlCommand command = new SqlCommand(getAWeekBooks, connection);
-
-                                connection.Open();
-
-                                using (SqlDataReader readerBookInfo = command.ExecuteReader())
-                                {
-                                    string prevIDs = "";
-
-                                    while (readerBookInfo.Read())
-                                    {
-                                        if (!check)
-                                        {
-                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                            {
-                                                Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
-                                            }
-
-                                            Console.WriteLine(
-                                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
-
-                                            check = true;
-                                        }
-
-                                        if (prevIDs == $"{readerBookInfo[0]}" || prevIDs == "")
-                                        {
-                                            string i = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                            if (id == "")
-                                            {
-                                                id = $"{readerBookInfo[0]}";
-                                            }
-
-                                            if (n == "")
-                                            {
-                                                n = $"{readerBookInfo[1]}";
-                                            }
-
-                                            if (a == "")
-                                            {
-                                                a = $"{readerBookInfo[4]}";
-                                            }
-
-                                            if (b == "")
-                                            {
-                                                b = $"{readerBookInfo[5]}";
-                                            }
-
-                                            if (c == "")
-                                            {
-                                                c = $"{readerBookInfo[3]}";
-                                            }
-
-                                            if (da == "")
-                                            {
-                                                da = $"{readerBookInfo[6]}";
-                                            }
-
-                                            if (!LA.Contains(readerBookInfo[2]))
-                                            {
-                                                LA.Add($"{readerBookInfo[2]}");
-                                            }
-
-                                            if (!LC.Contains(Int32.Parse(i)))
-                                            {
-                                                LC.Add(Int32.Parse(i));
-                                            }
-
-                                            prevIDs = $"{readerBookInfo[0]}";
-                                            continue;
-                                        }
-
-                                        int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                        {
-                                            Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                        }
-
-                                        string status = LC.Count != 0 && LC[0] != 0
-                                            ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                            : $"║{"",-1}{"Empty",-22}║";
-
-                                        Console.Write(
-                                            $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{da,-22}║{status}");
-
-                                        for (int i = 1; i < length; i++)
-                                        {
-                                            string ss = LC.Count > i
-                                                ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                                : $"║{"",-1}{"",-22}║";
-
-                                            string am = LA.Count > i
-                                                ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                                : $"║{"",-1}{"",-40}║";
-
-                                            Console.Write(
-                                                $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{ss}");
-                                        }
-
-                                        Console.WriteLine("");
-
-                                        string ia = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                        id = $"{readerBookInfo[0]}";
-                                        n = $"{readerBookInfo[1]}";
-                                        a = $"{readerBookInfo[4]}";
-                                        b = $"{readerBookInfo[5]}";
-                                        c = $"{readerBookInfo[3]}";
-                                        da = $"{readerBookInfo[6]}";
-                                        LA = new List<string> { $"{readerBookInfo[2]}" };
-                                        LC = new List<int> { Int32.Parse(ia) };
-
-                                        prevIDs = $"{readerBookInfo[0]}";
-                                        ch = true;
-                                    }
-
-                                    if (check)
-                                    {
-                                        if (!ch)
-                                        {
-                                            int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                            {
-                                                Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                            }
-
-                                            string status = LC.Count != 0 && LC[0] != 0
-                                                ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                                : $"║{"",-1}{"Empty",-22}║";
-
-                                            Console.Write(
-                                                $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{d,-22}║{status}");
-
-                                            for (int i = 1; i < length; i++)
-                                            {
-                                                string s = LC.Count > i
-                                                    ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                                    : $"║{"",-1}{"",-22}║";
-
-                                                string am = LA.Count > i
-                                                    ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                                    : $"║{"",-1}{"",-40}║";
-
-                                                Console.Write(
-                                                    $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{s}");
-                                            }
-
-                                            Console.WriteLine("");
-                                        }
-
-                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                        {
-                                            Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
-                                        }
-
-                                        Console.WriteLine("");
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("There was no BOOKs was added in the library.");
-                                    }
-                                }
-                            }
+                            DisplayTable(getAWeekBooks, "There was no BOOKs was added in the library...");
 
                             break;
                         case 5:
@@ -2171,172 +811,7 @@ namespace Library_Management_System
                                 "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0), Category, Author, BookAuthor " +
                                 $"where Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs and (datediff(day, Book.Date, '{to}') between 8 and 31)";
 
-                            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-                            {
-                                SqlCommand command = new SqlCommand(getMonthBooks, connection);
-
-                                connection.Open();
-
-                                using (SqlDataReader readerBookInfo = command.ExecuteReader())
-                                {
-                                    string prevIDs = "";
-
-                                    while (readerBookInfo.Read())
-                                    {
-                                        if (!check)
-                                        {
-                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                            {
-                                                Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
-                                            }
-
-                                            Console.WriteLine(
-                                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
-
-                                            check = true;
-                                        }
-
-                                        if (prevIDs == $"{readerBookInfo[0]}" || prevIDs == "")
-                                        {
-                                            string i = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                            if (id == "")
-                                            {
-                                                id = $"{readerBookInfo[0]}";
-                                            }
-
-                                            if (n == "")
-                                            {
-                                                n = $"{readerBookInfo[1]}";
-                                            }
-
-                                            if (a == "")
-                                            {
-                                                a = $"{readerBookInfo[4]}";
-                                            }
-
-                                            if (b == "")
-                                            {
-                                                b = $"{readerBookInfo[5]}";
-                                            }
-
-                                            if (c == "")
-                                            {
-                                                c = $"{readerBookInfo[3]}";
-                                            }
-
-                                            if (da == "")
-                                            {
-                                                da = $"{readerBookInfo[6]}";
-                                            }
-
-                                            if (!LA.Contains(readerBookInfo[2]))
-                                            {
-                                                LA.Add($"{readerBookInfo[2]}");
-                                            }
-
-                                            if (!LC.Contains(Int32.Parse(i)))
-                                            {
-                                                LC.Add(Int32.Parse(i));
-                                            }
-
-                                            prevIDs = $"{readerBookInfo[0]}";
-                                            continue;
-                                        }
-
-                                        int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                        {
-                                            Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                        }
-
-                                        string status = LC.Count != 0 && LC[0] != 0
-                                            ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                            : $"║{"",-1}{"Empty",-22}║";
-
-                                        Console.Write(
-                                            $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{da,-22}║{status}");
-
-                                        for (int i = 1; i < length; i++)
-                                        {
-                                            string ss = LC.Count > i
-                                                ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                                : $"║{"",-1}{"",-22}║";
-
-                                            string am = LA.Count > i
-                                                ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                                : $"║{"",-1}{"",-40}║";
-
-                                            Console.Write(
-                                                $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{ss}");
-                                        }
-
-                                        Console.WriteLine("");
-
-                                        string ia = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                        id = $"{readerBookInfo[0]}";
-                                        n = $"{readerBookInfo[1]}";
-                                        a = $"{readerBookInfo[4]}";
-                                        b = $"{readerBookInfo[5]}";
-                                        c = $"{readerBookInfo[3]}";
-                                        da = $"{readerBookInfo[6]}";
-                                        LA = new List<string> { $"{readerBookInfo[2]}" };
-                                        LC = new List<int> { Int32.Parse(ia) };
-
-                                        prevIDs = $"{readerBookInfo[0]}";
-                                        ch = true;
-                                    }
-
-                                    if (check)
-                                    {
-                                        if (!ch)
-                                        {
-                                            int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                            {
-                                                Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                            }
-
-                                            string status = LC.Count != 0 && LC[0] != 0
-                                                ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                                : $"║{"",-1}{"Empty",-22}║";
-
-                                            Console.Write(
-                                                $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{d,-22}║{status}");
-
-                                            for (int i = 1; i < length; i++)
-                                            {
-                                                string s = LC.Count > i
-                                                    ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                                    : $"║{"",-1}{"",-22}║";
-
-                                                string am = LA.Count > i
-                                                    ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                                    : $"║{"",-1}{"",-40}║";
-
-                                                Console.Write(
-                                                    $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{s}");
-                                            }
-
-                                            Console.WriteLine("");
-                                        }
-
-                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                        {
-                                            Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
-                                        }
-
-                                        Console.WriteLine("");
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("There was no BOOKs was added in the library.");
-                                    }
-                                }
-                            }
+                            DisplayTable(getMonthBooks, "There was no BOOKs was added in the library...");
 
                             break;
                         case 6:
@@ -2345,172 +820,7 @@ namespace Library_Management_System
                                 "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0), Category, Author, BookAuthor " +
                                 $"where Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs and (datediff(Month, Book.Date, '{to}') between 2 and 6)";
 
-                            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-                            {
-                                SqlCommand command = new SqlCommand(getSMonthBooks, connection);
-
-                                connection.Open();
-
-                                using (SqlDataReader readerBookInfo = command.ExecuteReader())
-                                {
-                                    string prevIDs = "";
-
-                                    while (readerBookInfo.Read())
-                                    {
-                                        if (!check)
-                                        {
-                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                            {
-                                                Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
-                                            }
-
-                                            Console.WriteLine(
-                                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
-
-                                            check = true;
-                                        }
-
-                                        if (prevIDs == $"{readerBookInfo[0]}" || prevIDs == "")
-                                        {
-                                            string i = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                            if (id == "")
-                                            {
-                                                id = $"{readerBookInfo[0]}";
-                                            }
-
-                                            if (n == "")
-                                            {
-                                                n = $"{readerBookInfo[1]}";
-                                            }
-
-                                            if (a == "")
-                                            {
-                                                a = $"{readerBookInfo[4]}";
-                                            }
-
-                                            if (b == "")
-                                            {
-                                                b = $"{readerBookInfo[5]}";
-                                            }
-
-                                            if (c == "")
-                                            {
-                                                c = $"{readerBookInfo[3]}";
-                                            }
-
-                                            if (da == "")
-                                            {
-                                                da = $"{readerBookInfo[6]}";
-                                            }
-
-                                            if (!LA.Contains(readerBookInfo[2]))
-                                            {
-                                                LA.Add($"{readerBookInfo[2]}");
-                                            }
-
-                                            if (!LC.Contains(Int32.Parse(i)))
-                                            {
-                                                LC.Add(Int32.Parse(i));
-                                            }
-
-                                            prevIDs = $"{readerBookInfo[0]}";
-                                            continue;
-                                        }
-
-                                        int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                        {
-                                            Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                        }
-
-                                        string status = LC.Count != 0 && LC[0] != 0
-                                            ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                            : $"║{"",-1}{"Empty",-22}║";
-
-                                        Console.Write(
-                                            $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{da,-22}║{status}");
-
-                                        for (int i = 1; i < length; i++)
-                                        {
-                                            string ss = LC.Count > i
-                                                ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                                : $"║{"",-1}{"",-22}║";
-
-                                            string am = LA.Count > i
-                                                ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                                : $"║{"",-1}{"",-40}║";
-
-                                            Console.Write(
-                                                $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{ss}");
-                                        }
-
-                                        Console.WriteLine("");
-
-                                        string ia = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                        id = $"{readerBookInfo[0]}";
-                                        n = $"{readerBookInfo[1]}";
-                                        a = $"{readerBookInfo[4]}";
-                                        b = $"{readerBookInfo[5]}";
-                                        c = $"{readerBookInfo[3]}";
-                                        da = $"{readerBookInfo[6]}";
-                                        LA = new List<string> { $"{readerBookInfo[2]}" };
-                                        LC = new List<int> { Int32.Parse(ia) };
-
-                                        prevIDs = $"{readerBookInfo[0]}";
-                                        ch = true;
-                                    }
-
-                                    if (check)
-                                    {
-                                        if (!ch)
-                                        {
-                                            int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                            {
-                                                Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                            }
-
-                                            string status = LC.Count != 0 && LC[0] != 0
-                                                ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                                : $"║{"",-1}{"Empty",-22}║";
-
-                                            Console.Write(
-                                                $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{d,-22}║{status}");
-
-                                            for (int i = 1; i < length; i++)
-                                            {
-                                                string s = LC.Count > i
-                                                    ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                                    : $"║{"",-1}{"",-22}║";
-
-                                                string am = LA.Count > i
-                                                    ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                                    : $"║{"",-1}{"",-40}║";
-
-                                                Console.Write(
-                                                    $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{s}");
-                                            }
-
-                                            Console.WriteLine("");
-                                        }
-
-                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                        {
-                                            Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
-                                        }
-
-                                        Console.WriteLine("");
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("There was no BOOKs was added in the library.");
-                                    }
-                                }
-                            }
+                            DisplayTable(getSMonthBooks, "There was no BOOKs was added in the library...");
 
                             break;
                         case 7:
@@ -2519,172 +829,7 @@ namespace Library_Management_System
                                 "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0), Category, Author, BookAuthor " +
                                 $"where Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs and (datediff(Month, Book.Date, '{to}') between 7 and 12)";
 
-                            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-                            {
-                                SqlCommand command = new SqlCommand(getAyBooks, connection);
-
-                                connection.Open();
-
-                                using (SqlDataReader readerBookInfo = command.ExecuteReader())
-                                {
-                                    string prevIDs = "";
-
-                                    while (readerBookInfo.Read())
-                                    {
-                                        if (!check)
-                                        {
-                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                            {
-                                                Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
-                                            }
-
-                                            Console.WriteLine(
-                                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
-
-                                            check = true;
-                                        }
-
-                                        if (prevIDs == $"{readerBookInfo[0]}" || prevIDs == "")
-                                        {
-                                            string i = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                            if (id == "")
-                                            {
-                                                id = $"{readerBookInfo[0]}";
-                                            }
-
-                                            if (n == "")
-                                            {
-                                                n = $"{readerBookInfo[1]}";
-                                            }
-
-                                            if (a == "")
-                                            {
-                                                a = $"{readerBookInfo[4]}";
-                                            }
-
-                                            if (b == "")
-                                            {
-                                                b = $"{readerBookInfo[5]}";
-                                            }
-
-                                            if (c == "")
-                                            {
-                                                c = $"{readerBookInfo[3]}";
-                                            }
-
-                                            if (da == "")
-                                            {
-                                                da = $"{readerBookInfo[6]}";
-                                            }
-
-                                            if (!LA.Contains(readerBookInfo[2]))
-                                            {
-                                                LA.Add($"{readerBookInfo[2]}");
-                                            }
-
-                                            if (!LC.Contains(Int32.Parse(i)))
-                                            {
-                                                LC.Add(Int32.Parse(i));
-                                            }
-
-                                            prevIDs = $"{readerBookInfo[0]}";
-                                            continue;
-                                        }
-
-                                        int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                        {
-                                            Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                        }
-
-                                        string status = LC.Count != 0 && LC[0] != 0
-                                            ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                            : $"║{"",-1}{"Empty",-22}║";
-
-                                        Console.Write(
-                                            $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{da,-22}║{status}");
-
-                                        for (int i = 1; i < length; i++)
-                                        {
-                                            string ss = LC.Count > i
-                                                ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                                : $"║{"",-1}{"",-22}║";
-
-                                            string am = LA.Count > i
-                                                ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                                : $"║{"",-1}{"",-40}║";
-
-                                            Console.Write(
-                                                $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{ss}");
-                                        }
-
-                                        Console.WriteLine("");
-
-                                        string ia = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                        id = $"{readerBookInfo[0]}";
-                                        n = $"{readerBookInfo[1]}";
-                                        a = $"{readerBookInfo[4]}";
-                                        b = $"{readerBookInfo[5]}";
-                                        c = $"{readerBookInfo[3]}";
-                                        da = $"{readerBookInfo[6]}";
-                                        LA = new List<string> { $"{readerBookInfo[2]}" };
-                                        LC = new List<int> { Int32.Parse(ia) };
-
-                                        prevIDs = $"{readerBookInfo[0]}";
-                                        ch = true;
-                                    }
-
-                                    if (check)
-                                    {
-                                        if (!ch)
-                                        {
-                                            int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                            {
-                                                Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                            }
-
-                                            string status = LC.Count != 0 && LC[0] != 0
-                                                ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                                : $"║{"",-1}{"Empty",-22}║";
-
-                                            Console.Write(
-                                                $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{d,-22}║{status}");
-
-                                            for (int i = 1; i < length; i++)
-                                            {
-                                                string s = LC.Count > i
-                                                    ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                                    : $"║{"",-1}{"",-22}║";
-
-                                                string am = LA.Count > i
-                                                    ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                                    : $"║{"",-1}{"",-40}║";
-
-                                                Console.Write(
-                                                    $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{s}");
-                                            }
-
-                                            Console.WriteLine("");
-                                        }
-
-                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                        {
-                                            Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
-                                        }
-
-                                        Console.WriteLine("");
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("There was no BOOKs was added in the library.");
-                                    }
-                                }
-                            }
+                            DisplayTable(getAyBooks, "There was no BOOKs was added in the library...");
 
                             break;
                         case 8:
@@ -2693,172 +838,7 @@ namespace Library_Management_System
                                 "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0), Category, Author, BookAuthor " +
                                 $"where Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs and (datediff(year, Book.Date, '{to}') between 1 and 2)";
 
-                            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-                            {
-                                SqlCommand command = new SqlCommand(getTyBooks, connection);
-
-                                connection.Open();
-
-                                using (SqlDataReader readerBookInfo = command.ExecuteReader())
-                                {
-                                    string prevIDs = "";
-
-                                    while (readerBookInfo.Read())
-                                    {
-                                        if (!check)
-                                        {
-                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                            {
-                                                Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
-                                            }
-
-                                            Console.WriteLine(
-                                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
-
-                                            check = true;
-                                        }
-
-                                        if (prevIDs == $"{readerBookInfo[0]}" || prevIDs == "")
-                                        {
-                                            string i = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                            if (id == "")
-                                            {
-                                                id = $"{readerBookInfo[0]}";
-                                            }
-
-                                            if (n == "")
-                                            {
-                                                n = $"{readerBookInfo[1]}";
-                                            }
-
-                                            if (a == "")
-                                            {
-                                                a = $"{readerBookInfo[4]}";
-                                            }
-
-                                            if (b == "")
-                                            {
-                                                b = $"{readerBookInfo[5]}";
-                                            }
-
-                                            if (c == "")
-                                            {
-                                                c = $"{readerBookInfo[3]}";
-                                            }
-
-                                            if (da == "")
-                                            {
-                                                da = $"{readerBookInfo[6]}";
-                                            }
-
-                                            if (!LA.Contains(readerBookInfo[2]))
-                                            {
-                                                LA.Add($"{readerBookInfo[2]}");
-                                            }
-
-                                            if (!LC.Contains(Int32.Parse(i)))
-                                            {
-                                                LC.Add(Int32.Parse(i));
-                                            }
-
-                                            prevIDs = $"{readerBookInfo[0]}";
-                                            continue;
-                                        }
-
-                                        int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                        {
-                                            Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                        }
-
-                                        string status = LC.Count != 0 && LC[0] != 0
-                                            ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                            : $"║{"",-1}{"Empty",-22}║";
-
-                                        Console.Write(
-                                            $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{da,-22}║{status}");
-
-                                        for (int i = 1; i < length; i++)
-                                        {
-                                            string ss = LC.Count > i
-                                                ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                                : $"║{"",-1}{"",-22}║";
-
-                                            string am = LA.Count > i
-                                                ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                                : $"║{"",-1}{"",-40}║";
-
-                                            Console.Write(
-                                                $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{ss}");
-                                        }
-
-                                        Console.WriteLine("");
-
-                                        string ia = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                        id = $"{readerBookInfo[0]}";
-                                        n = $"{readerBookInfo[1]}";
-                                        a = $"{readerBookInfo[4]}";
-                                        b = $"{readerBookInfo[5]}";
-                                        c = $"{readerBookInfo[3]}";
-                                        da = $"{readerBookInfo[6]}";
-                                        LA = new List<string> { $"{readerBookInfo[2]}" };
-                                        LC = new List<int> { Int32.Parse(ia) };
-
-                                        prevIDs = $"{readerBookInfo[0]}";
-                                        ch = true;
-                                    }
-
-                                    if (check)
-                                    {
-                                        if (!ch)
-                                        {
-                                            int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                            {
-                                                Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                            }
-
-                                            string status = LC.Count != 0 && LC[0] != 0
-                                                ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                                : $"║{"",-1}{"Empty",-22}║";
-
-                                            Console.Write(
-                                                $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{d,-22}║{status}");
-
-                                            for (int i = 1; i < length; i++)
-                                            {
-                                                string s = LC.Count > i
-                                                    ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                                    : $"║{"",-1}{"",-22}║";
-
-                                                string am = LA.Count > i
-                                                    ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                                    : $"║{"",-1}{"",-40}║";
-
-                                                Console.Write(
-                                                    $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{s}");
-                                            }
-
-                                            Console.WriteLine("");
-                                        }
-
-                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                        {
-                                            Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
-                                        }
-
-                                        Console.WriteLine("");
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("There was no BOOKs was added in the library.");
-                                    }
-                                }
-                            }
+                            DisplayTable(getTyBooks, "There was no BOOKs was added in the library...");
 
                             break;
                         case 9:
@@ -2867,172 +847,7 @@ namespace Library_Management_System
                                 "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0), Category, Author, BookAuthor " +
                                 $"where Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs and (datediff(year, Book.Date, '{to}') between 1 and 2)";
 
-                            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-                            {
-                                SqlCommand command = new SqlCommand(getFyBooks, connection);
-
-                                connection.Open();
-
-                                using (SqlDataReader readerBookInfo = command.ExecuteReader())
-                                {
-                                    string prevIDs = "";
-
-                                    while (readerBookInfo.Read())
-                                    {
-                                        if (!check)
-                                        {
-                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                            {
-                                                Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
-                                            }
-
-                                            Console.WriteLine(
-                                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
-
-                                            check = true;
-                                        }
-
-                                        if (prevIDs == $"{readerBookInfo[0]}" || prevIDs == "")
-                                        {
-                                            string i = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                            if (id == "")
-                                            {
-                                                id = $"{readerBookInfo[0]}";
-                                            }
-
-                                            if (n == "")
-                                            {
-                                                n = $"{readerBookInfo[1]}";
-                                            }
-
-                                            if (a == "")
-                                            {
-                                                a = $"{readerBookInfo[4]}";
-                                            }
-
-                                            if (b == "")
-                                            {
-                                                b = $"{readerBookInfo[5]}";
-                                            }
-
-                                            if (c == "")
-                                            {
-                                                c = $"{readerBookInfo[3]}";
-                                            }
-
-                                            if (da == "")
-                                            {
-                                                da = $"{readerBookInfo[6]}";
-                                            }
-
-                                            if (!LA.Contains(readerBookInfo[2]))
-                                            {
-                                                LA.Add($"{readerBookInfo[2]}");
-                                            }
-
-                                            if (!LC.Contains(Int32.Parse(i)))
-                                            {
-                                                LC.Add(Int32.Parse(i));
-                                            }
-
-                                            prevIDs = $"{readerBookInfo[0]}";
-                                            continue;
-                                        }
-
-                                        int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                        {
-                                            Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                        }
-
-                                        string status = LC.Count != 0 && LC[0] != 0
-                                            ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                            : $"║{"",-1}{"Empty",-22}║";
-
-                                        Console.Write(
-                                            $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{da,-22}║{status}");
-
-                                        for (int i = 1; i < length; i++)
-                                        {
-                                            string ss = LC.Count > i
-                                                ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                                : $"║{"",-1}{"",-22}║";
-
-                                            string am = LA.Count > i
-                                                ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                                : $"║{"",-1}{"",-40}║";
-
-                                            Console.Write(
-                                                $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{ss}");
-                                        }
-
-                                        Console.WriteLine("");
-
-                                        string ia = $"{readerBookInfo[7]}" == "" ? "0" : $"{readerBookInfo[7]}";
-
-                                        id = $"{readerBookInfo[0]}";
-                                        n = $"{readerBookInfo[1]}";
-                                        a = $"{readerBookInfo[4]}";
-                                        b = $"{readerBookInfo[5]}";
-                                        c = $"{readerBookInfo[3]}";
-                                        da = $"{readerBookInfo[6]}";
-                                        LA = new List<string> { $"{readerBookInfo[2]}" };
-                                        LC = new List<int> { Int32.Parse(ia) };
-
-                                        prevIDs = $"{readerBookInfo[0]}";
-                                        ch = true;
-                                    }
-
-                                    if (check)
-                                    {
-                                        if (!ch)
-                                        {
-                                            int length = LA.Count > LC.Count ? LA.Count : LC.Count;
-
-                                            for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                            {
-                                                Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                            }
-
-                                            string status = LC.Count != 0 && LC[0] != 0
-                                                ? $"║{"",-1}{$"Customer's IDs: {LC[0]}",-22}║"
-                                                : $"║{"",-1}{"Empty",-22}║";
-
-                                            Console.Write(
-                                                $"\n║{"",-1}{id,-4}║║{"",-1}{n,-60}║║{"",-1}{LA[0],-40}║║{"",-1}{c,-20}║║{"",-1}{a,-10}║║{"",-1}{b,-10}║║{"",-1}{d,-22}║{status}");
-
-                                            for (int i = 1; i < length; i++)
-                                            {
-                                                string s = LC.Count > i
-                                                    ? $"║{"",-1}{$"Customer's IDs: {LC[i]}",-22}║"
-                                                    : $"║{"",-1}{"",-22}║";
-
-                                                string am = LA.Count > i
-                                                    ? $"║{"",-1}{$"{LA[i]}",-40}║"
-                                                    : $"║{"",-1}{"",-40}║";
-
-                                                Console.Write(
-                                                    $"\n║{"",-5}║║{"",-61}║{am}║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║{s}");
-                                            }
-
-                                            Console.WriteLine("");
-                                        }
-
-                                        for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                        {
-                                            Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
-                                        }
-
-                                        Console.WriteLine("");
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("There was no BOOKs was added in the library.");
-                                    }
-                                }
-                            }
+                            DisplayTable(getFyBooks, "There was no BOOKs was added in the library...");
 
                             break;
                         default:
@@ -3089,107 +904,48 @@ namespace Library_Management_System
                     int ids = int.Parse(Console.ReadLine());
 
                     string getIDsQuery =
-                        "select Book.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Book.Date, CustomerIDs " +
-                        "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0) " +
-                        $"where Book.BookIDs = {ids} and Book.State = 0";
+                        "select Book.BookIDs, BookName, Author.Name, Category.Name, BookAmountAvailable, BookAmountBorrowed, Book.date, CustomerIDs " +
+                        "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0), Category, Author, BookAuthor " +
+                        $"where Book.BookIDs = {ids} and Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs";
 
-                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+                    if (DisplayTable(getIDsQuery, "Invalid IDs"))
                     {
-                        SqlCommand command = new SqlCommand(getIDsQuery, connection);
-
-                        connection.Open();
-
-                        using (SqlDataReader readerBookInfo = command.ExecuteReader())
+                        using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                         {
-                            bool check = false;
-                            string prevIDs = "";
+                            connection.Open();
 
-                            while (readerBookInfo.Read())
+                            Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
+                            Console.WriteLine("\t\t\t\t\t\t║ 1. Confirm                             ║\t\t\t\t\t");
+                            Console.WriteLine("\t\t\t\t\t\t║ 2. Reject                              ║\t\t\t\t\t");
+                            Console.WriteLine("\t\t\t\t\t\t║ 3. Exit                                ║\t\t\t\t\t");
+                            Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
+                            Console.Write("Confirm that this is the book you want to delete: ");
+                            int isConfirm = int.Parse(Console.ReadLine());
+
+                            switch (isConfirm)
                             {
-                                if (!check)
-                                {
-                                    for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                    {
-                                        Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
-                                    }
+                                case 1:
+                                    string delBookIDs = $"update Book set Book.State = 1 where BookIDs = '{ids}'";
+                                    string updateBookFromBookAmount =
+                                        $"update BookLog set State = 1 where BookIDs = '{ids}' ";
+
+                                    SqlCommand d = new SqlCommand(delBookIDs, connection);
+                                    d.ExecuteNonQuery();
+
+                                    SqlCommand u = new SqlCommand(updateBookFromBookAmount, connection);
+                                    u.ExecuteNonQuery();
 
                                     Console.WriteLine(
-                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
-
-                                    check = true;
-                                }
-
-                                if (prevIDs == $"{readerBookInfo[0]}")
-                                {
-                                    Console.WriteLine(
-                                        $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║║{"",-1}{$"Customer's IDs: {readerBookInfo[7]}",-22}║");
-
-                                    prevIDs = $"{readerBookInfo[0]}";
-
-                                    continue;
-                                }
-
-                                prevIDs = $"{readerBookInfo[0]}";
-
-                                for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                {
-                                    Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                }
-
-                                string status = $"{readerBookInfo[7]}" != ""
-                                    ? $"║{"",-1}{$"Customer's IDs: {readerBookInfo[7]}",-22}║\n"
-                                    : $"║{"",-1}{"Empty",-22}║\n";
-
-                                Console.Write(
-                                    $"\n║{"",-1}{readerBookInfo[0],-4}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-40}║║{"",-1}{readerBookInfo[3],-20}║║{"",-1}{readerBookInfo[4],-10}║║{"",-1}{readerBookInfo[5],-10}║║{"",-1}{readerBookInfo[6],-22}║{status}");
-                            }
-
-                            if (check)
-                            {
-                                for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                {
-                                    Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
-                                }
-
-                                Console.WriteLine("");
-
-                                Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
-                                Console.WriteLine("\t\t\t\t\t\t║ 1. Confirm                             ║\t\t\t\t\t");
-                                Console.WriteLine("\t\t\t\t\t\t║ 2. Reject                              ║\t\t\t\t\t");
-                                Console.WriteLine("\t\t\t\t\t\t║ 3. Exit                                ║\t\t\t\t\t");
-                                Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
-                                Console.Write("Confirm that this is the book you want to delete: ");
-                                int isConfirm = int.Parse(Console.ReadLine());
-
-                                switch (isConfirm)
-                                {
-                                    case 1:
-                                        string delBookIDs = $"update Book set Book.State = 1 where BookIDs = '{ids}'";
-                                        string updateBookFromBookAmount =
-                                            $"update BookLog set State = 1 where BookIDs = '{ids}' ";
-
-                                        SqlCommand d = new SqlCommand(delBookIDs, connection);
-                                        d.ExecuteNonQuery();
-
-                                        SqlCommand u = new SqlCommand(updateBookFromBookAmount, connection);
-                                        u.ExecuteNonQuery();
-
-                                        Console.WriteLine(
-                                            "\t\t\t\t\t\t═══════════ DELETE SUCCESSFULLY ═══════════\t\t\t\t\t");
-                                        break;
-                                    case 2:
-                                        Console.WriteLine("Cancelled Successfully.");
-                                        break;
-                                    case 3:
-                                        return;
-                                    default:
-                                        Console.WriteLine("Invalid confirmation.");
-                                        return;
-                                }
-                            }
-                            else
-                            {
-                                Console.WriteLine("Invalid ID");
+                                        "\t\t\t\t\t\t═══════════ DELETE SUCCESSFULLY ═══════════\t\t\t\t\t");
+                                    break;
+                                case 2:
+                                    Console.WriteLine("Cancelled Successfully.");
+                                    break;
+                                case 3:
+                                    return;
+                                default:
+                                    Console.WriteLine("Invalid confirmation.");
+                                    return;
                             }
                         }
                     }
@@ -3197,115 +953,54 @@ namespace Library_Management_System
                     break;
                 case 2:
                     Console.Write("Input Name to delete: ");
-                    string name = Console.ReadLine();
+                    string title = Console.ReadLine();
                     int i = 0;
 
-                    string getNameQuery =
-                        "select Book.BookIDs, BookName, BookAuthor, BookCategory, BookAmountAvailable, BookAmountBorrowed, Book.Date, CustomerIDs " +
-                        "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0) " +
-                        $"where BookName = '{name}' and Book.State = 0";
+                    string getTitlesQuery =
+                        "select Book.BookIDs, BookName, Author.Name, Category.Name, BookAmountAvailable, BookAmountBorrowed, Book.date, CustomerIDs " +
+                        "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0), Category, Author, BookAuthor " +
+                        $"where BookName = '{title}' and Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs";
 
-                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+                    if (DisplayTable(getTitlesQuery, "Invalid Name"))
                     {
-                        SqlCommand command = new SqlCommand(getNameQuery, connection);
-
-                        connection.Open();
-
-                        using (SqlDataReader readerBookInfo = command.ExecuteReader())
+                        using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                         {
-                            bool check = false;
-                            string prevIDs = "";
+                            connection.Open();
 
-                            while (readerBookInfo.Read())
+                            Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
+                            Console.WriteLine("\t\t\t\t\t\t║ 1. Confirm                             ║\t\t\t\t\t");
+                            Console.WriteLine("\t\t\t\t\t\t║ 2. Reject                              ║\t\t\t\t\t");
+                            Console.WriteLine("\t\t\t\t\t\t║ 3. Exit                                ║\t\t\t\t\t");
+                            Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
+                            Console.Write("Confirm that this is the book you want to delete: ");
+                            int isConfirm = int.Parse(Console.ReadLine());
+
+                            switch (isConfirm)
                             {
-                                if (!check)
-                                {
-                                    i = (int)readerBookInfo[0];
+                                case 1:
+                                    string delBookIDs =
+                                        $"update Book set Book.State = 1 where BookName = '{title}'";
 
-                                    for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                    {
-                                        Console.Write($"╔{Repeat("═", Program.StoreLengthBooks[k])}╗");
-                                    }
+                                    string updateBookFromBookAmount =
+                                        $"update BookLog set State = 1 where BookIDs = (select BookIDs from Book where BookName = '{title}') ";
+
+                                    SqlCommand d = new SqlCommand(delBookIDs, connection);
+                                    d.ExecuteNonQuery();
+
+                                    SqlCommand u = new SqlCommand(updateBookFromBookAmount, connection);
+                                    u.ExecuteNonQuery();
 
                                     Console.WriteLine(
-                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Author",-40}║║{"",-1}{"Category",-20}║║{"",-1}{"Available",-10}║║{"",-1}{"Borrowed",-10}║║{"",-1}{"Date",-22}║║{"",-1}{"Status",-22}║");
-
-                                    check = true;
-                                }
-
-                                if (prevIDs == $"{readerBookInfo[0]}")
-                                {
-                                    Console.WriteLine(
-                                        $"║{"",-5}║║{"",-61}║║{"",-41}║║{"",-21}║║{"",-11}║║{"",-11}║║{"",-23}║║{"",-1}{$"Customer's IDs: {readerBookInfo[7]}",-22}║");
-
-                                    prevIDs = $"{readerBookInfo[0]}";
-
-                                    continue;
-                                }
-
-                                prevIDs = $"{readerBookInfo[0]}";
-
-                                for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                {
-                                    Console.Write($" {Repeat("═", Program.StoreLengthBooks[k])} ");
-                                }
-
-                                string status = $"{readerBookInfo[7]}" != ""
-                                    ? $"║{"",-1}{$"Customer's IDs: {readerBookInfo[7]}",-22}║\n"
-                                    : $"║{"",-1}{"Empty",-22}║\n";
-
-                                Console.Write(
-                                    $"\n║{"",-1}{readerBookInfo[0],-4}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-40}║║{"",-1}{readerBookInfo[3],-20}║║{"",-1}{readerBookInfo[4],-10}║║{"",-1}{readerBookInfo[5],-10}║║{"",-1}{readerBookInfo[6],-22}║{status}");
-                            }
-
-                            if (check)
-                            {
-                                for (int k = 0; k < Program.StoreLengthBooks.Length; k++)
-                                {
-                                    Console.Write($"╚{Repeat("═", Program.StoreLengthBooks[k])}╝");
-                                }
-
-                                Console.WriteLine("");
-
-                                Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
-                                Console.WriteLine("\t\t\t\t\t\t║ 1. Confirm                             ║\t\t\t\t\t");
-                                Console.WriteLine("\t\t\t\t\t\t║ 2. Reject                              ║\t\t\t\t\t");
-                                Console.WriteLine("\t\t\t\t\t\t║ 3. Exit                                ║\t\t\t\t\t");
-                                Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
-                                Console.Write("Confirm that this is the book you want to delete: ");
-                                int isConfirm = int.Parse(Console.ReadLine());
-
-                                switch (isConfirm)
-                                {
-                                    case 1:
-                                        string delBookIDs =
-                                            $"update Book set Book.State = 1 where BookName = '{name}'";
-
-                                        string updateBookFromBookAmount =
-                                            $"update BookLog set State = 1 where BookIDs = '{i}' ";
-
-                                        SqlCommand d = new SqlCommand(delBookIDs, connection);
-                                        d.ExecuteNonQuery();
-
-                                        SqlCommand u = new SqlCommand(updateBookFromBookAmount, connection);
-                                        u.ExecuteNonQuery();
-
-                                        Console.WriteLine(
-                                            "\t\t\t\t\t\t═══════════ DELETE SUCCESSFULLY ═══════════\t\t\t\t\t");
-                                        break;
-                                    case 2:
-                                        Console.WriteLine("Cancelled Successfully.");
-                                        break;
-                                    case 3:
-                                        return;
-                                    default:
-                                        Console.WriteLine("Invalid confirmation.");
-                                        return;
-                                }
-                            }
-                            else
-                            {
-                                Console.WriteLine("Invalid Name");
+                                        "\t\t\t\t\t\t═══════════ DELETE SUCCESSFULLY ═══════════\t\t\t\t\t");
+                                    break;
+                                case 2:
+                                    Console.WriteLine("Cancelled Successfully.");
+                                    break;
+                                case 3:
+                                    return;
+                                default:
+                                    Console.WriteLine("Invalid confirmation.");
+                                    return;
                             }
                         }
                     }
@@ -3329,7 +1024,7 @@ namespace Library_Management_System
             string category = "";
 
             string checkIDsQuery =
-                $"select BookName, BookAuthor, BookCategory from Book where BookIDs = {ids} and Book.State = 0";
+                $"select BookName, Author.Name, Category.Name from Book, Author, BookAuthor, Category where Book.BookIDs = BookAuthor.BookIDs and Author.IDs = AuthorIDs and CategoryIDs = Category.IDs and Book.BookIDs = {ids} and Book.State = 0";
 
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
@@ -3405,30 +1100,10 @@ namespace Library_Management_System
                     Console.Write($"Changing from {author} to: ");
                     string newAuthor = Console.ReadLine();
 
-                    string[] aut = newAuthor.Split(' ');
-                    StringBuilder au = new StringBuilder();
+                    string[] listParameterA = { "@author_name", "@book_id" };
+                    string[] listParameterValueA = { newAuthor, $"{ids}" };
 
-                    for (int i = 0; i < aut.Length; i++)
-                    {
-                        string o = "";
-                        string nn = aut[i][0].ToString().ToUpper() + aut[i].Substring(1);
-
-                        if (i != aut.Length - 1)
-                        {
-                            o = " ";
-                        }
-
-                        au.Append(nn + o);
-                    }
-
-                    string updateAuthor = $"Update Book set BookAuthor = '{au}' where BookIDs = {ids}";
-
-                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-                    {
-                        connection.Open();
-                        SqlCommand command = new SqlCommand(updateAuthor, connection);
-                        command.ExecuteNonQuery();
-                    }
+                    HandleStoredProcedure("EditAuthor", listParameterA, listParameterValueA);
 
                     Console.WriteLine("\t\t\t\t\t\t═══════════ UPDATE SUCCESSFULLY ═══════════\t\t\t\t\t");
 
@@ -3437,14 +1112,10 @@ namespace Library_Management_System
                     Console.Write($"Changing from {category} to: ");
                     string newCategory = Console.ReadLine();
 
-                    string updateCategory = $"Update Book set BookCategory = '{newCategory}' where BookIDs = {ids}";
+                    string[] listParameterC = { "@category_name", "@book_id" };
+                    string[] listParameterValueC = { newCategory, $"{ids}" };
 
-                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-                    {
-                        connection.Open();
-                        SqlCommand command = new SqlCommand(updateCategory, connection);
-                        command.ExecuteNonQuery();
-                    }
+                    HandleStoredProcedure("EditCategory", listParameterC, listParameterValueC);
 
                     Console.WriteLine("\t\t\t\t\t\t═══════════ UPDATE SUCCESSFULLY ═══════════\t\t\t\t\t");
 
@@ -3701,7 +1372,7 @@ namespace Library_Management_System
 
                             insertCommand.Parameters.AddWithValue("@BookName", bn);
                             insertCommand.Parameters.AddWithValue("@CategoryIDs",
-                                HandleStoredProcedure(subject, "CheckCategory", "@category_name"));
+                                HandleStoredProcedureMessage(subject, "CheckCategory", "@category_name"));
                             insertCommand.Parameters.AddWithValue("@BookAmountAvailable", amount);
                             insertCommand.Parameters.AddWithValue("@BookAmountBorrowed", 0);
                             insertCommand.Parameters.AddWithValue("@Date", date.ToString("yyyy-MM-dd HH:mm:ss"));
@@ -3714,7 +1385,7 @@ namespace Library_Management_System
                                 "insert into BookAuthor (BookIDs, AuthorIDs) values ((select Count(BookIDs) from Book), @ai)";
                             SqlCommand ac = new SqlCommand(aaa, connection);
 
-                            ac.Parameters.AddWithValue("@ai", HandleStoredProcedure(au, "CheckAuthor", "@author_name"));
+                            ac.Parameters.AddWithValue("@ai", HandleStoredProcedureMessage(au, "CheckAuthor", "@author_name"));
                             ac.ExecuteNonQuery();
                         }
                     }
@@ -3750,7 +1421,7 @@ namespace Library_Management_System
 
                             insertCommand.Parameters.AddWithValue("@BookName", bn);
                             insertCommand.Parameters.AddWithValue("@CategoryIDs",
-                                HandleStoredProcedure(subject, "CheckCategory", "@category_name"));
+                                HandleStoredProcedureMessage(subject, "CheckCategory", "@category_name"));
                             insertCommand.Parameters.AddWithValue("@BookAmountAvailable", amount);
                             insertCommand.Parameters.AddWithValue("@BookAmountBorrowed", 0);
                             insertCommand.Parameters.AddWithValue("@Date", date.ToString("yyyy-MM-dd HH:mm:ss"));
@@ -3763,7 +1434,7 @@ namespace Library_Management_System
                                 "insert into BookAuthor (BookIDs, AuthorIDs) values ((select Count(BookIDs) from Book), @ai)";
                             SqlCommand ac = new SqlCommand(aaa, connection);
 
-                            ac.Parameters.AddWithValue("@ai", HandleStoredProcedure(au, "CheckAuthor", "@author_name"));
+                            ac.Parameters.AddWithValue("@ai", HandleStoredProcedureMessage(au, "CheckAuthor", "@author_name"));
                             ac.ExecuteNonQuery();
                         }
                     }

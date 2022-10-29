@@ -8,7 +8,7 @@ namespace Library_Management_System
     {
         BookList _book = new BookList();
         CustomerData _customer = new CustomerData();
-        LibrarianCalendar _LibrarianCalendar = new LibrarianCalendar();
+        LibrarianCalendar _librarianCalendar = new LibrarianCalendar();
 
         public Menu()
         {
@@ -94,19 +94,19 @@ namespace Library_Management_System
                         break;
                     case 13:
                         Console.WriteLine("\t\t\t\t\t\t═══════════ ADDING NEW LIBRARIAN ══════════\t\t\t\t\t");
-                        _LibrarianCalendar.AddLibrarian();
+                        _librarianCalendar.AddLibrarian();
                         Console.ReadKey();
                         break;
                     case 14:
-                        _LibrarianCalendar.ShowLibrarian();
+                        _librarianCalendar.ShowLibrarian();
                         Console.ReadKey();
                         break;
                     case 15:
-                        _LibrarianCalendar.AddCalendar();
+                        _librarianCalendar.AddCalendar();
                         Console.ReadKey();
                         break;
                     case 16:
-                        _LibrarianCalendar.ShowCalendar();
+                        _librarianCalendar.ShowCalendar();
                         Console.ReadKey();
                         break;
                     case 17:
@@ -116,6 +116,10 @@ namespace Library_Management_System
                         break;
                     case 18:
                         _customer.GenerateCustomerFakeData();
+                        Console.ReadKey();
+                        break;
+                    case 19:
+                        _librarianCalendar.GenerateLibrarianFakeData();
                         Console.ReadKey();
                         break;
                     default:

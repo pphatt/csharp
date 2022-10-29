@@ -4,11 +4,24 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Bogus;
 
 namespace Library_Management_System
 {
     public class LibrarianCalendar
     {
+        private enum Gender
+        {
+            Male,
+            Female
+        }
+
+        private class User
+        {
+            public Gender Gender { get; set; }
+            public string FullName { get; set; }
+        }
+
         public void AddLibrarian()
         {
             Console.Write("Enter Librarian's name: ");
@@ -124,7 +137,8 @@ namespace Library_Management_System
             DateTime d6 = d1.AddDays(5);
             DateTime d7 = d1.AddDays(6);
 
-            string[] time = { "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:30", "15:00", "17:00" };
+            string[] time =
+                { "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00","14:00", "15:00", "16:00", "17:00", "18:00" };
 
             for (int k = 0; k < Program.StoreLengthSchedule.Length; k++)
             {
@@ -297,6 +311,78 @@ namespace Library_Management_System
                     }
                 }
             }
+        }
+
+        public void GenerateLibrarianFakeData()
+        {
+            DateTime date = DateTime.Now;
+            for (var i = 0; i < 7; i++)
+            {
+                var phone = new Bogus.DataSets.PhoneNumbers("vi");
+                var testUsers = new Faker<User>()
+                    .RuleFor(u => u.Gender, f => f.PickRandom<Gender>())
+                    .RuleFor(u => u.FullName, (f, u) => f.Name.FullName());
+
+                var user = testUsers.Generate();
+                Random rnd = new Random();
+                int age = rnd.Next(22, 80);
+
+                string addDataQuery =
+                    "INSERT INTO Librarian (LibrarianName, LibrarianAge, LibrarianSex, LibrarianPhoneNumber, DateEnrol, DateRetire, State) VALUES (@LibrarianName, @LibrarianAge, @LibrarianSex, @LibrarianPhoneNumber, @DateEnrol, @DateRetire, @State)";
+
+                using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+                {
+                    connection.Open();
+
+                    SqlCommand insertCommand = new SqlCommand(addDataQuery, connection);
+
+                    insertCommand.Parameters.AddWithValue("@LibrarianName", user.FullName);
+                    insertCommand.Parameters.AddWithValue("@LibrarianAge", age);
+                    insertCommand.Parameters.AddWithValue("@LibrarianSex", user.Gender.ToString());
+                    insertCommand.Parameters.AddWithValue("@LibrarianPhoneNumber", phone.PhoneNumber());
+                    insertCommand.Parameters.AddWithValue("@DateEnrol", date.ToString("yyyy-MM-dd HH:mm:ss"));
+                    insertCommand.Parameters.AddWithValue("@DateRetire", "");
+                    insertCommand.Parameters.AddWithValue("@State", 0);
+                    insertCommand.ExecuteNonQuery();
+                }
+            }
+
+            string[] dayofweek = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+            string[] time =
+                { "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00" };
+
+            for (int i = 0; i < dayofweek.Length; i++)
+            {
+                Random rnd = new Random();
+
+                for (int j = 0; j < time.Length - 1; j++)
+                {
+                    if (time[j] == "12:00" && time[j + 1] == "13:00")
+                    {
+                        continue;
+                    }
+                    
+                    string addDataQuery =
+                        "insert into Scheduled (DateOfWeek, TimeStart, TimeEnd, LibrarianIDs) values (@DayOfWeek, @TimeStart, @TimeEnd, @LibrarianIDs)";
+
+                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+                    {
+                        connection.Open();
+
+                        SqlCommand insertCommand = new SqlCommand(addDataQuery, connection);
+
+                        int lid = rnd.Next(1, 8);
+
+                        insertCommand.Parameters.AddWithValue("@DayOfWeek", dayofweek[i]);
+                        insertCommand.Parameters.AddWithValue("@TimeStart", time[j]);
+                        insertCommand.Parameters.AddWithValue("@TimeEnd", time[j + 1]);
+                        insertCommand.Parameters.AddWithValue("@LibrarianIDs", lid);
+                        insertCommand.ExecuteNonQuery();
+                    }
+                }
+            }
+
+            Console.WriteLine("\t\t\t\t\t\t═══════════ ADDED SUCCESSFULLY ═══════════\t\t\t\t\t");
         }
     }
 }

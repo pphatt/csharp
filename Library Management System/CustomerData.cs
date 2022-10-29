@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using Bogus;
@@ -21,36 +21,135 @@ namespace Library_Management_System
             public string FullName { get; set; }
         }
 
-        public void AddCustomer()
+        public static bool DisplayTable(string queryString, string yieldErrorMessage)
         {
-            DateTime date = DateTime.Now;
-            int ln = 0;
+            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
 
-            string lq = "Select Librarian.LibrarianIDs " +
-                        "from (Scheduled left join Librarian on Scheduled.LibrarianIDs = Librarian.LibrarianIDs) " +
-                        $"where Scheduled.DateOfWeek = '{date.DayOfWeek}' and '{date.Hour}:{date.Minute}' between TimeStart and TimeEnd ";
+                connection.Open();
 
+                using (SqlDataReader readCustomerInfo = command.ExecuteReader())
+                {
+                    bool check = false;
+                    string prevIDs = "";
+
+                    while (readCustomerInfo.Read())
+                    {
+                        if (!check)
+                        {
+                            for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
+                            {
+                                Console.Write($"╔{BookList.Repeat("═", Program.StoreLengthCustomer[k])}╗");
+                            }
+
+                            Console.WriteLine(
+                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-7}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
+
+                            check = true;
+                        }
+
+                        if (prevIDs == $"{readCustomerInfo[0]}")
+                        {
+                            Console.WriteLine(
+                                $"║{"",-5}║║{"",-61}║║{"",-6}║║{"",-8}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
+
+                            prevIDs = $"{readCustomerInfo[0]}";
+
+                            continue;
+                        }
+
+                        prevIDs = $"{readCustomerInfo[0]}";
+
+                        for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
+                        {
+                            Console.Write($" {BookList.Repeat("═", Program.StoreLengthCustomer[k])} ");
+                        }
+
+                        string status = $"{readCustomerInfo[6]}" != ""
+                            ? $"║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║\n"
+                            : $"║{"",-1}{"Empty",-25}║\n";
+
+                        Console.Write(
+                            $"\n║{"",-1}{readCustomerInfo[0],-4}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-7}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
+                    }
+
+                    if (check)
+                    {
+                        for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
+                        {
+                            Console.Write($"╚{BookList.Repeat("═", Program.StoreLengthCustomer[k])}╝");
+                        }
+
+                        Console.WriteLine("");
+                        return true;
+                    }
+
+                    Console.WriteLine(yieldErrorMessage);
+                    return false;
+                }
+            }
+        }
+
+        private void HandleStoredProcedure(string functionName, string[] listFunctionParameter,
+            string[] listValueParameter)
+        {
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
                 connection.Open();
+                SqlCommand a = new SqlCommand(functionName, connection);
+                a.CommandType = CommandType.StoredProcedure;
 
-                SqlCommand q = new SqlCommand(lq, connection);
-
-                using (SqlDataReader r = q.ExecuteReader())
+                for (int i = 0; i < listValueParameter.Length; i++)
                 {
-                    bool c = false;
-                    while (r.Read())
-                    {
-                        ln = (int)r[0];
-                        c = true;
-                    }
-
-                    if (!c)
-                    {
-                        Console.WriteLine("There is no currently active librarian.");
-                        return;
-                    }
+                    a.Parameters.Add(new SqlParameter(listFunctionParameter[i], listValueParameter[i]));
                 }
+
+                a.ExecuteNonQuery();
+            }
+        }
+
+        private string HandleStoredProcedureMessage(string functionName, string[] listFunctionParameter,
+            string[] listValueParameter)
+        {
+            string i = "";
+            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+            {
+                connection.Open();
+                SqlCommand a = new SqlCommand(functionName, connection);
+                a.CommandType = CommandType.StoredProcedure;
+
+                for (int j = 0; j < listValueParameter.Length; j++)
+                {
+                    a.Parameters.Add(new SqlParameter(listFunctionParameter[j], listValueParameter[j]));
+                }
+
+                connection.InfoMessage += SqlInfoMessageEventHandler;
+
+                void SqlInfoMessageEventHandler(object sender, SqlInfoMessageEventArgs e)
+                {
+                    i = e.Message;
+                }
+
+                a.ExecuteNonQuery();
+            }
+
+            return i;
+        }
+
+        public void AddCustomer()
+        {
+            DateTime date = DateTime.Now;
+
+            string[] param = { };
+            string[] vparam = { };
+
+            string ln = HandleStoredProcedureMessage("GetLibrarian", param, vparam);
+
+            if (ln == "")
+            {
+                Console.WriteLine("There is no currently active librarian...");
+                return;
             }
 
             Console.Write("Enter customer's name: ");
@@ -129,72 +228,7 @@ namespace Library_Management_System
                 "from (Customer left join BookLog on Customer.CustomerIDs = BookLog.CustomerIDs and BookLog.State = 0) " +
                 "where Customer.State = 0";
 
-            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-            {
-                SqlCommand command = new SqlCommand(queryString, connection);
-
-                connection.Open();
-
-                using (SqlDataReader readCustomerInfo = command.ExecuteReader())
-                {
-                    bool check = false;
-                    string prevIDs = "";
-
-                    while (readCustomerInfo.Read())
-                    {
-                        if (!check)
-                        {
-                            for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
-                            {
-                                Console.Write($"╔{BookList.Repeat("═", Program.StoreLengthCustomer[k])}╗");
-                            }
-
-                            Console.WriteLine(
-                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-7}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
-
-                            check = true;
-                        }
-
-                        if (prevIDs == $"{readCustomerInfo[0]}")
-                        {
-                            Console.WriteLine(
-                                $"║{"",-5}║║{"",-61}║║{"",-6}║║{"",-8}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
-
-                            prevIDs = $"{readCustomerInfo[0]}";
-
-                            continue;
-                        }
-
-                        prevIDs = $"{readCustomerInfo[0]}";
-
-                        for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
-                        {
-                            Console.Write($" {BookList.Repeat("═", Program.StoreLengthCustomer[k])} ");
-                        }
-
-                        string status = $"{readCustomerInfo[6]}" != ""
-                            ? $"║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║\n"
-                            : $"║{"",-1}{"Empty",-25}║\n";
-
-                        Console.Write(
-                            $"\n║{"",-1}{readCustomerInfo[0],-4}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-7}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
-                    }
-
-                    if (check)
-                    {
-                        for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
-                        {
-                            Console.Write($"╚{BookList.Repeat("═", Program.StoreLengthCustomer[k])}╝");
-                        }
-
-                        Console.WriteLine("");
-                    }
-                    else
-                    {
-                        Console.WriteLine("There are no data currently");
-                    }
-                }
-            }
+            DisplayTable(queryString, "There are no data currently...");
         }
 
         public void SearchCustomer()
@@ -221,72 +255,7 @@ namespace Library_Management_System
                         "from (Customer left join BookLog on Customer.CustomerIDs = BookLog.CustomerIDs and BookLog.State = 0) " +
                         $"where Customer.State = 0 and Customer.CustomerIDs = {ids}";
 
-                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-                    {
-                        SqlCommand command = new SqlCommand(getCustomerInfoByIDs, connection);
-
-                        connection.Open();
-
-                        using (SqlDataReader readCustomerInfo = command.ExecuteReader())
-                        {
-                            bool check = false;
-                            string prevIDs = "";
-
-                            while (readCustomerInfo.Read())
-                            {
-                                if (!check)
-                                {
-                                    for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
-                                    {
-                                        Console.Write($"╔{BookList.Repeat("═", Program.StoreLengthCustomer[k])}╗");
-                                    }
-
-                                    Console.WriteLine(
-                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-7}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
-
-                                    check = true;
-                                }
-
-                                if (prevIDs == $"{readCustomerInfo[0]}")
-                                {
-                                    Console.WriteLine(
-                                        $"║{"",-5}║║{"",-61}║║{"",-6}║║{"",-8}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
-
-                                    prevIDs = $"{readCustomerInfo[0]}";
-
-                                    continue;
-                                }
-
-                                prevIDs = $"{readCustomerInfo[0]}";
-
-                                for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
-                                {
-                                    Console.Write($" {BookList.Repeat("═", Program.StoreLengthCustomer[k])} ");
-                                }
-
-                                string status = $"{readCustomerInfo[6]}" != ""
-                                    ? $"║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║\n"
-                                    : $"║{"",-1}{"Empty",-25}║\n";
-
-                                Console.Write(
-                                    $"\n║{"",-1}{readCustomerInfo[0],-4}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-7}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
-                            }
-
-                            if (check)
-                            {
-                                for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
-                                {
-                                    Console.Write($"╚{BookList.Repeat("═", Program.StoreLengthCustomer[k])}╝");
-                                }
-
-                                Console.WriteLine("");
-                            }
-                            else
-                            {
-                                Console.WriteLine("Invalid Customer's IDs or the IDs does not exist");
-                            }
-                        }
-                    }
+                    DisplayTable(getCustomerInfoByIDs, "Invalid Customer's IDs or the IDs does not exist");
 
                     break;
                 case 2:
@@ -298,72 +267,7 @@ namespace Library_Management_System
                         "from (Customer left join BookLog on Customer.CustomerIDs = BookLog.CustomerIDs and BookLog.State = 0) " +
                         $"where Customer.State = 0 and CustomerName like '%{name}%'";
 
-                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-                    {
-                        SqlCommand command = new SqlCommand(getCustomerInfoByName, connection);
-
-                        connection.Open();
-
-                        using (SqlDataReader readCustomerInfo = command.ExecuteReader())
-                        {
-                            bool check = false;
-                            string prevIDs = "";
-
-                            while (readCustomerInfo.Read())
-                            {
-                                if (!check)
-                                {
-                                    for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
-                                    {
-                                        Console.Write($"╔{BookList.Repeat("═", Program.StoreLengthCustomer[k])}╗");
-                                    }
-
-                                    Console.WriteLine(
-                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-7}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
-
-                                    check = true;
-                                }
-
-                                if (prevIDs == $"{readCustomerInfo[0]}")
-                                {
-                                    Console.WriteLine(
-                                        $"║{"",-5}║║{"",-61}║║{"",-6}║║{"",-8}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
-
-                                    prevIDs = $"{readCustomerInfo[0]}";
-
-                                    continue;
-                                }
-
-                                prevIDs = $"{readCustomerInfo[0]}";
-
-                                for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
-                                {
-                                    Console.Write($" {BookList.Repeat("═", Program.StoreLengthCustomer[k])} ");
-                                }
-
-                                string status = $"{readCustomerInfo[6]}" != ""
-                                    ? $"║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║\n"
-                                    : $"║{"",-1}{"Empty",-25}║\n";
-
-                                Console.Write(
-                                    $"\n║{"",-1}{readCustomerInfo[0],-4}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-7}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
-                            }
-
-                            if (check)
-                            {
-                                for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
-                                {
-                                    Console.Write($"╚{BookList.Repeat("═", Program.StoreLengthCustomer[k])}╝");
-                                }
-
-                                Console.WriteLine("");
-                            }
-                            else
-                            {
-                                Console.WriteLine("Invalid Customer's Name");
-                            }
-                        }
-                    }
+                    DisplayTable(getCustomerInfoByName, "Invalid Customer's Name");
 
                     break;
                 case 3:
@@ -375,72 +279,7 @@ namespace Library_Management_System
                         "from (Customer left join BookLog on Customer.CustomerIDs = BookLog.CustomerIDs and BookLog.State = 0) " +
                         $"where Customer.State = 0 and Customer.CustomerAge = '{age}'";
 
-                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-                    {
-                        SqlCommand command = new SqlCommand(getCustomerInfoByAge, connection);
-
-                        connection.Open();
-
-                        using (SqlDataReader readCustomerInfo = command.ExecuteReader())
-                        {
-                            bool check = false;
-                            string prevIDs = "";
-
-                            while (readCustomerInfo.Read())
-                            {
-                                if (!check)
-                                {
-                                    for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
-                                    {
-                                        Console.Write($"╔{BookList.Repeat("═", Program.StoreLengthCustomer[k])}╗");
-                                    }
-
-                                    Console.WriteLine(
-                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-7}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
-
-                                    check = true;
-                                }
-
-                                if (prevIDs == $"{readCustomerInfo[0]}")
-                                {
-                                    Console.WriteLine(
-                                        $"║{"",-5}║║{"",-61}║║{"",-6}║║{"",-8}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
-
-                                    prevIDs = $"{readCustomerInfo[0]}";
-
-                                    continue;
-                                }
-
-                                prevIDs = $"{readCustomerInfo[0]}";
-
-                                for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
-                                {
-                                    Console.Write($" {BookList.Repeat("═", Program.StoreLengthCustomer[k])} ");
-                                }
-
-                                string status = $"{readCustomerInfo[6]}" != ""
-                                    ? $"║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║\n"
-                                    : $"║{"",-1}{"Empty",-25}║\n";
-
-                                Console.Write(
-                                    $"\n║{"",-1}{readCustomerInfo[0],-4}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-7}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
-                            }
-
-                            if (check)
-                            {
-                                for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
-                                {
-                                    Console.Write($"╚{BookList.Repeat("═", Program.StoreLengthCustomer[k])}╝");
-                                }
-
-                                Console.WriteLine("");
-                            }
-                            else
-                            {
-                                Console.WriteLine("Invalid Customer's Age");
-                            }
-                        }
-                    }
+                    DisplayTable(getCustomerInfoByAge, "Invalid Customer's Age");
 
                     break;
                 case 4:
@@ -452,72 +291,7 @@ namespace Library_Management_System
                         "from (Customer left join BookLog on Customer.CustomerIDs = BookLog.CustomerIDs and BookLog.State = 0) " +
                         $"where Customer.State = 0 and Customer.CustomerSex = '{sex}'";
 
-                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-                    {
-                        SqlCommand command = new SqlCommand(getCustomerInfoBySex, connection);
-
-                        connection.Open();
-
-                        using (SqlDataReader readCustomerInfo = command.ExecuteReader())
-                        {
-                            bool check = false;
-                            string prevIDs = "";
-
-                            while (readCustomerInfo.Read())
-                            {
-                                if (!check)
-                                {
-                                    for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
-                                    {
-                                        Console.Write($"╔{BookList.Repeat("═", Program.StoreLengthCustomer[k])}╗");
-                                    }
-
-                                    Console.WriteLine(
-                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-7}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
-
-                                    check = true;
-                                }
-
-                                if (prevIDs == $"{readCustomerInfo[0]}")
-                                {
-                                    Console.WriteLine(
-                                        $"║{"",-5}║║{"",-61}║║{"",-6}║║{"",-8}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
-
-                                    prevIDs = $"{readCustomerInfo[0]}";
-
-                                    continue;
-                                }
-
-                                prevIDs = $"{readCustomerInfo[0]}";
-
-                                for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
-                                {
-                                    Console.Write($" {BookList.Repeat("═", Program.StoreLengthCustomer[k])} ");
-                                }
-
-                                string status = $"{readCustomerInfo[6]}" != ""
-                                    ? $"║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║\n"
-                                    : $"║{"",-1}{"Empty",-25}║\n";
-
-                                Console.Write(
-                                    $"\n║{"",-1}{readCustomerInfo[0],-4}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-7}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
-                            }
-
-                            if (check)
-                            {
-                                for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
-                                {
-                                    Console.Write($"╚{BookList.Repeat("═", Program.StoreLengthCustomer[k])}╝");
-                                }
-
-                                Console.WriteLine("");
-                            }
-                            else
-                            {
-                                Console.WriteLine("Invalid Customer's Sex");
-                            }
-                        }
-                    }
+                    DisplayTable(getCustomerInfoBySex, "Invalid Customer's Sex");
 
                     break;
                 case 5:
@@ -529,72 +303,7 @@ namespace Library_Management_System
                         "from (Customer left join BookLog on Customer.CustomerIDs = BookLog.CustomerIDs and BookLog.State = 0) " +
                         $"where Customer.State = 0 and Customer.CustomerPhoneNumber = '{pn}'";
 
-                    using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-                    {
-                        SqlCommand command = new SqlCommand(getCustomerInfoByPhoneNumber, connection);
-
-                        connection.Open();
-
-                        using (SqlDataReader readCustomerInfo = command.ExecuteReader())
-                        {
-                            bool check = false;
-                            string prevIDs = "";
-
-                            while (readCustomerInfo.Read())
-                            {
-                                if (!check)
-                                {
-                                    for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
-                                    {
-                                        Console.Write($"╔{BookList.Repeat("═", Program.StoreLengthCustomer[k])}╗");
-                                    }
-
-                                    Console.WriteLine(
-                                        $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-7}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
-
-                                    check = true;
-                                }
-
-                                if (prevIDs == $"{readCustomerInfo[0]}")
-                                {
-                                    Console.WriteLine(
-                                        $"║{"",-5}║║{"",-61}║║{"",-6}║║{"",-8}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
-
-                                    prevIDs = $"{readCustomerInfo[0]}";
-
-                                    continue;
-                                }
-
-                                prevIDs = $"{readCustomerInfo[0]}";
-
-                                for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
-                                {
-                                    Console.Write($" {BookList.Repeat("═", Program.StoreLengthCustomer[k])} ");
-                                }
-
-                                string status = $"{readCustomerInfo[6]}" != ""
-                                    ? $"║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║\n"
-                                    : $"║{"",-1}{"Empty",-25}║\n";
-
-                                Console.Write(
-                                    $"\n║{"",-1}{readCustomerInfo[0],-4}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-7}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
-                            }
-
-                            if (check)
-                            {
-                                for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
-                                {
-                                    Console.Write($"╚{BookList.Repeat("═", Program.StoreLengthCustomer[k])}╝");
-                                }
-
-                                Console.WriteLine("");
-                            }
-                            else
-                            {
-                                Console.WriteLine("Invalid Customer's Phone Number");
-                            }
-                        }
-                    }
+                    DisplayTable(getCustomerInfoByPhoneNumber, "Invalid Customer's Phone Number");
 
                     break;
                 case 6:
@@ -607,6 +316,19 @@ namespace Library_Management_System
 
         public void ReturnBook()
         {
+            DateTime date = DateTime.Now;
+
+            string[] param = { };
+            string[] vparam = { };
+
+            string ln = HandleStoredProcedureMessage("GetLibrarian", param, vparam);
+
+            if (ln == "")
+            {
+                Console.WriteLine("There is no currently active librarian...");
+                return;
+            }
+            
             Console.Write("Input Customer's IDs to return: ");
             int ids = int.Parse(Console.ReadLine());
 
@@ -615,194 +337,104 @@ namespace Library_Management_System
                 "from (Customer left join BookLog on Customer.CustomerIDs = BookLog.CustomerIDs and BookLog.State = 0) " +
                 $"where Customer.State = 0 and Customer.CustomerIDs = {ids}";
 
-            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+            if (DisplayTable(getCustomerInfoByIDs, "Invalid Customer's IDs"))
             {
-                SqlCommand command = new SqlCommand(getCustomerInfoByIDs, connection);
-
-                connection.Open();
-
-                using (SqlDataReader readCustomerInfo = command.ExecuteReader())
+                using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                 {
-                    bool check = false;
-                    string prevIDs = "";
+                    Console.WriteLine("");
 
-                    while (readCustomerInfo.Read())
+                    Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t║ 1. Confirm                             ║\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t║ 2. Reject                              ║\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t║ 3. Exit                                ║\t\t\t\t\t");
+                    Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
+                    Console.Write("Confirm this is you: ");
+                    int isConfirm = int.Parse(Console.ReadLine());
+
+                    switch (isConfirm)
                     {
-                        if ($"{readCustomerInfo[6]}" == "")
-                        {
-                            Console.WriteLine("This Customer does not borrow any books.");
-                            return;
-                        }
-
-                        if (!check)
-                        {
-                            for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
+                        case 1:
+                            while (true)
                             {
-                                Console.Write($"╔{BookList.Repeat("═", Program.StoreLengthCustomer[k])}╗");
-                            }
+                                Console.Write("Input IDs book to return: ");
+                                string idb = Console.ReadLine();
 
-                            Console.WriteLine(
-                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-7}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
+                                string s =
+                                    "Select BookAmountAvailable, BookAmountBorrowed " +
+                                    "from (BookLog left join Book on Book.BookIDs = BookLog.BookIDs) " +
+                                    $"where BookLog.BookIDs = '{idb}' and CustomerIDs = '{ids}' and BookLog.State = 0";
 
-                            check = true;
-                        }
+                                SqlCommand qu = new SqlCommand(s, connection);
 
-                        if (prevIDs == $"{readCustomerInfo[0]}")
-                        {
-                            Console.WriteLine(
-                                $"║{"",-5}║║{"",-61}║║{"",-6}║║{"",-8}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║");
-
-                            prevIDs = $"{readCustomerInfo[0]}";
-
-                            continue;
-                        }
-
-                        prevIDs = $"{readCustomerInfo[0]}";
-
-                        for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
-                        {
-                            Console.Write($" {BookList.Repeat("═", Program.StoreLengthCustomer[k])} ");
-                        }
-
-                        string status = $"{readCustomerInfo[6]}" != ""
-                            ? $"║{"",-1}{$"Borrowed Book's IDs: {readCustomerInfo[6]}",-25}║\n"
-                            : $"║{"",-1}{"Empty",-25}║\n";
-
-                        Console.Write(
-                            $"\n║{"",-1}{readCustomerInfo[0],-4}║║{"",-1}{readCustomerInfo[1],-60}║║{"",-1}{readCustomerInfo[2],-5}║║{"",-1}{readCustomerInfo[3],-7}║║{"",-1}{readCustomerInfo[4],-15}║║{"",-1}{readCustomerInfo[5],-23}║{status}");
-                    }
-
-                    if (check)
-                    {
-                        for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
-                        {
-                            Console.Write($"╚{BookList.Repeat("═", Program.StoreLengthCustomer[k])}╝");
-                        }
-
-                        Console.WriteLine("");
-
-                        Console.WriteLine("\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
-                        Console.WriteLine("\t\t\t\t\t\t║ 1. Confirm                             ║\t\t\t\t\t");
-                        Console.WriteLine("\t\t\t\t\t\t║ 2. Reject                              ║\t\t\t\t\t");
-                        Console.WriteLine("\t\t\t\t\t\t║ 3. Exit                                ║\t\t\t\t\t");
-                        Console.WriteLine("\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
-                        Console.Write("Confirm this is you: ");
-                        int isConfirm = int.Parse(Console.ReadLine());
-
-                        switch (isConfirm)
-                        {
-                            case 1:
-                                while (true)
+                                using (SqlDataReader t = qu.ExecuteReader())
                                 {
-                                    Console.Write("Input IDs book to return: ");
-                                    string idb = Console.ReadLine();
+                                    bool ch = false;
 
-                                    string s =
-                                        "Select BookAmountAvailable, BookAmountBorrowed " +
-                                        "from (BookLog left join Book on Book.BookIDs = BookLog.BookIDs) " +
-                                        $"where BookLog.BookIDs = '{idb}' and CustomerIDs = '{ids}' and BookLog.State = 0";
-
-                                    DateTime date = DateTime.Now;
-                                    int ln = 0;
-
-                                    string lq = "Select Librarian.LibrarianIDs " +
-                                                "from (Scheduled left join Librarian on Scheduled.LibrarianIDs = Librarian.LibrarianIDs) " +
-                                                $"where Scheduled.DateOfWeek = '{date.DayOfWeek}' and '{date.Hour}:{date.Minute}' between TimeStart and TimeEnd ";
-
-                                    SqlCommand q = new SqlCommand(lq, connection);
-
-                                    using (SqlDataReader r = q.ExecuteReader())
+                                    while (t.Read())
                                     {
-                                        bool c = false;
-                                        while (r.Read())
-                                        {
-                                            ln = (int)r[0];
-                                            c = true;
-                                        }
+                                        ch = true;
 
-                                        if (!c)
-                                        {
-                                            Console.WriteLine("There is no currently active librarian.");
-                                            return;
-                                        }
+                                        string ud =
+                                            $"update BookLog set State = 1, DateReturn = '{date:dd/MM/yyyy HH:mm:ss}', LIDsCheckOut = '{ln}' where CustomerIDs = '{ids}' and BookIDs = '{idb}'";
+
+                                        int ab = (int)t[0];
+                                        int bb = (int)t[1];
+
+                                        string a =
+                                            $"update Book set BookAmountAvailable = {ab + 1} where BookIDs = '{idb}'";
+                                        string b =
+                                            $"update Book set BookAmountBorrowed = {bb + 1} where BookIDs = '{idb}'";
+
+                                        SqlCommand u = new SqlCommand(ud, connection);
+                                        u.ExecuteNonQuery();
+
+                                        SqlCommand abq = new SqlCommand(a, connection);
+                                        abq.ExecuteNonQuery();
+
+                                        SqlCommand bbq = new SqlCommand(b, connection);
+                                        bbq.ExecuteNonQuery();
+
+                                        Console.WriteLine(
+                                            "\t\t\t\t\t\t═══════════ RETURN SUCCESSFULLY ═══════════\t\t\t\t\t");
+
+                                        Console.WriteLine("");
                                     }
 
-                                    SqlCommand qu = new SqlCommand(s, connection);
-
-                                    using (SqlDataReader t = qu.ExecuteReader())
+                                    if (!ch)
                                     {
-                                        bool ch = false;
+                                        Console.WriteLine("Invalid Books IDs.");
+                                        return;
+                                    }
 
-                                        while (t.Read())
-                                        {
-                                            ch = true;
+                                    Console.WriteLine(
+                                        "\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
+                                    Console.WriteLine(
+                                        "\t\t\t\t\t\t║ 1. Confirm                             ║\t\t\t\t\t");
+                                    Console.WriteLine(
+                                        "\t\t\t\t\t\t║ 2. Reject                              ║\t\t\t\t\t");
+                                    Console.WriteLine(
+                                        "\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
 
-                                            string ud =
-                                                $"update BookLog set State = 1, DateReturn = '{date:dd/MM/yyyy HH:mm:ss}', LIDsCheckOut = '{ln}' where CustomerIDs = '{ids}' and BookIDs = '{idb}'";
+                                    Console.Write("Do you want to continue returning: ");
+                                    int n = int.Parse(Console.ReadLine());
 
-                                            int ab = (int)t[0];
-                                            int bb = (int)t[1];
-
-                                            string a =
-                                                $"update Book set BookAmountAvailable = {ab + 1} where BookIDs = '{idb}'";
-                                            string b =
-                                                $"update Book set BookAmountBorrowed = {bb + 1} where BookIDs = '{idb}'";
-
-                                            SqlCommand u = new SqlCommand(ud, connection);
-                                            u.ExecuteNonQuery();
-
-                                            SqlCommand abq = new SqlCommand(a, connection);
-                                            abq.ExecuteNonQuery();
-
-                                            SqlCommand bbq = new SqlCommand(b, connection);
-                                            bbq.ExecuteNonQuery();
-
-                                            Console.WriteLine(
-                                                "\t\t\t\t\t\t═══════════ RETURN SUCCESSFULLY ═══════════\t\t\t\t\t");
-
-                                            Console.WriteLine("");
-                                        }
-
-                                        if (!ch)
-                                        {
-                                            Console.WriteLine("Invalid Books IDs.");
+                                    switch (n)
+                                    {
+                                        case 1:
+                                            break;
+                                        default:
                                             return;
-                                        }
-
-                                        Console.WriteLine(
-                                            "\t\t\t\t\t\t╔═════════════════ MENU ═════════════════╗\t\t\t\t\t");
-                                        Console.WriteLine(
-                                            "\t\t\t\t\t\t║ 1. Confirm                             ║\t\t\t\t\t");
-                                        Console.WriteLine(
-                                            "\t\t\t\t\t\t║ 2. Reject                              ║\t\t\t\t\t");
-                                        Console.WriteLine(
-                                            "\t\t\t\t\t\t╚════════════════════════════════════════╝\t\t\t\t\t");
-
-                                        Console.Write("Do you want to continue returning: ");
-                                        int n = int.Parse(Console.ReadLine());
-
-                                        switch (n)
-                                        {
-                                            case 1:
-                                                break;
-                                            default:
-                                                return;
-                                        }
                                     }
                                 }
-                            case 2:
-                                Console.WriteLine("Cancelled Successfully.");
-                                break;
-                            case 3:
-                                return;
-                            default:
-                                Console.WriteLine("Invalid confirmation.");
-                                return;
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid Customer's IDs or the IDs does not exist");
+                            }
+                        case 2:
+                            Console.WriteLine("Cancelled Successfully.");
+                            break;
+                        case 3:
+                            return;
+                        default:
+                            Console.WriteLine("Invalid confirmation.");
+                            return;
                     }
                 }
             }

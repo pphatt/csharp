@@ -19,32 +19,38 @@ namespace Library_Management_System
             return new StringBuilder(value.Length * count).Insert(0, value, count).ToString();
         }
 
-        private void HandleStoredProcedure(string functionName, string[] listFunctionParameter, string[] listValueParameter)
+        private void HandleStoredProcedure(string functionName, string[] listFunctionParameter,
+            string[] listValueParameter)
         {
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
                 connection.Open();
                 SqlCommand a = new SqlCommand(functionName, connection);
                 a.CommandType = CommandType.StoredProcedure;
-                
+
                 for (int i = 0; i < listValueParameter.Length; i++)
                 {
                     a.Parameters.Add(new SqlParameter(listFunctionParameter[i], listValueParameter[i]));
                 }
-                
+
                 a.ExecuteNonQuery();
             }
         }
 
-        private string HandleStoredProcedureMessage(string name, string checkName, string checkParameter)
+        private string HandleStoredProcedureMessage(string functionName, string[] listFunctionParameter,
+            string[] listValueParameter)
         {
             string i = "";
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
                 connection.Open();
-                SqlCommand a = new SqlCommand(checkName, connection);
+                SqlCommand a = new SqlCommand(functionName, connection);
                 a.CommandType = CommandType.StoredProcedure;
-                a.Parameters.Add(new SqlParameter(checkParameter, name));
+
+                for (int j = 0; j < listValueParameter.Length; j++)
+                {
+                    a.Parameters.Add(new SqlParameter(listFunctionParameter[j], listValueParameter[j]));
+                }
 
                 connection.InfoMessage += SqlInfoMessageEventHandler;
 
@@ -78,7 +84,7 @@ namespace Library_Management_System
             Console.ReadLine();
         }
 
-        private bool DisplayTable(string queryString, string yieldErrorMessage)
+        public static bool DisplayTable(string queryString, string yieldErrorMessage)
         {
             using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
             {
@@ -459,33 +465,16 @@ namespace Library_Management_System
         public void Add()
         {
             DateTime date = DateTime.Now;
-            int ln = 0;
 
-            string lq = "Select Librarian.LibrarianIDs " +
-                        "from (Scheduled left join Librarian on Scheduled.LibrarianIDs = Librarian.LibrarianIDs) " +
-                        $"where Scheduled.DateOfWeek = '{date.DayOfWeek}' and '{date.Hour}:{date.Minute}' between TimeStart and TimeEnd ";
+            string[] param = { };
+            string[] vparam = { };
 
-            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+            string ln = HandleStoredProcedureMessage("GetLibrarian", param, vparam);
+
+            if (ln == "")
             {
-                connection.Open();
-
-                SqlCommand q = new SqlCommand(lq, connection);
-
-                using (SqlDataReader r = q.ExecuteReader())
-                {
-                    bool c = false;
-                    while (r.Read())
-                    {
-                        ln = (int)r[0];
-                        c = true;
-                    }
-
-                    if (!c)
-                    {
-                        Console.WriteLine("There is no currently active librarian.");
-                        return;
-                    }
-                }
+                Console.WriteLine("There is no currently active librarian...");
+                return;
             }
 
             string addDataQuery =
@@ -559,8 +548,11 @@ namespace Library_Management_System
                         cas.Append(nn + o);
                     }
 
+                    string[] paramName = { "@category_name" };
+                    string[] paramValue = { cas.ToString() };
+
                     insertCommand.Parameters.AddWithValue("@CategoryIDs",
-                        HandleStoredProcedureMessage(cas.ToString(), "CheckCategory", "@category_name"));
+                        HandleStoredProcedureMessage("CheckCategory", paramName, paramValue));
 
                     Console.Write("Enter amount: ");
                     int amount = int.Parse(Console.ReadLine());
@@ -580,8 +572,11 @@ namespace Library_Management_System
                         "insert into BookAuthor (BookIDs, AuthorIDs) values ((select Count(BookIDs) from Book), @ai)";
                     SqlCommand ac = new SqlCommand(aaa, connection);
 
+                    string[] paramName1 = { "@author_name" };
+                    string[] paramValue1 = { au.ToString() };
+
                     ac.Parameters.AddWithValue("@ai",
-                        HandleStoredProcedureMessage(au.ToString(), "CheckAuthor", "@author_name"));
+                        HandleStoredProcedureMessage("CheckAuthor", paramName1, paramValue1));
                     ac.ExecuteNonQuery();
 
                     Console.WriteLine("\t\t\t\t\t\t═══════════ ADDED SUCCESSFULLY ═══════════\t\t\t\t\t");
@@ -1127,34 +1122,15 @@ namespace Library_Management_System
 
         public void Borrowed()
         {
-            DateTime date = DateTime.Now;
-            int ln = 0;
+            string[] param = { };
+            string[] vparam = { };
 
-            string lq = "Select Librarian.LibrarianIDs " +
-                        "from (Scheduled left join Librarian on Scheduled.LibrarianIDs = Librarian.LibrarianIDs) " +
-                        $"where Scheduled.DateOfWeek = '{date.DayOfWeek}' and '{date.Hour}:{date.Minute}' between TimeStart and TimeEnd ";
+            string ln = HandleStoredProcedureMessage("GetLibrarian", param, vparam);
 
-            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+            if (ln == "")
             {
-                connection.Open();
-
-                SqlCommand q = new SqlCommand(lq, connection);
-
-                using (SqlDataReader r = q.ExecuteReader())
-                {
-                    bool c = false;
-                    while (r.Read())
-                    {
-                        ln = (int)r[0];
-                        c = true;
-                    }
-
-                    if (!c)
-                    {
-                        Console.WriteLine("There is no currently active librarian.");
-                        return;
-                    }
-                }
+                Console.WriteLine("There is no currently active librarian...");
+                return;
             }
 
             Console.Write("Input Customer's IDs to search: ");
@@ -1165,73 +1141,7 @@ namespace Library_Management_System
                 "from (Customer left join BookLog on Customer.CustomerIDs = BookLog.CustomerIDs and BookLog.State = 0) " +
                 $"where Customer.State = 0 and Customer.CustomerIDs = {ids}";
 
-            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
-            {
-                SqlCommand command = new SqlCommand(getCustomerInfoByIDs, connection);
-
-                connection.Open();
-
-                using (SqlDataReader readerBookInfo = command.ExecuteReader())
-                {
-                    bool check = false;
-                    string prevIDs = "";
-
-                    while (readerBookInfo.Read())
-                    {
-                        if (!check)
-                        {
-                            for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
-                            {
-                                Console.Write($"╔{Repeat("═", Program.StoreLengthCustomer[k])}╗");
-                            }
-
-                            Console.WriteLine(
-                                $"\n║{"",-1}{"ID",-4}║║{"",-1}{"Name",-60}║║{"",-1}{"Age",-5}║║{"",-1}{"Sex",-7}║║{"",-1}{"Phone Number",-15}║║{"",-1}{"Date",-23}║║{"",-1}{"Status",-25}║");
-
-                            check = true;
-                        }
-
-                        if (prevIDs == $"{readerBookInfo[0]}")
-                        {
-                            Console.WriteLine(
-                                $"║{"",-5}║║{"",-61}║║{"",-6}║║{"",-8}║║{"",-16}║║{"",-24}║║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║");
-
-                            prevIDs = $"{readerBookInfo[0]}";
-
-                            continue;
-                        }
-
-                        prevIDs = $"{readerBookInfo[0]}";
-
-                        for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
-                        {
-                            Console.Write($" {Repeat("═", Program.StoreLengthCustomer[k])} ");
-                        }
-
-                        string status = $"{readerBookInfo[6]}" != ""
-                            ? $"║{"",-1}{$"Borrowed Book's IDs: {readerBookInfo[6]}",-25}║\n"
-                            : $"║{"",-1}{"Empty",-25}║\n";
-
-                        Console.Write(
-                            $"\n║{"",-1}{readerBookInfo[0],-4}║║{"",-1}{readerBookInfo[1],-60}║║{"",-1}{readerBookInfo[2],-5}║║{"",-1}{readerBookInfo[3],-7}║║{"",-1}{readerBookInfo[4],-15}║║{"",-1}{readerBookInfo[5],-23}║{status}");
-                    }
-
-                    if (check)
-                    {
-                        for (int k = 0; k < Program.StoreLengthCustomer.Length; k++)
-                        {
-                            Console.Write($"╚{Repeat("═", Program.StoreLengthCustomer[k])}╝");
-                        }
-
-                        Console.WriteLine("");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid Customer's IDs or the IDs does not exist");
-                        return;
-                    }
-                }
-            }
+            CustomerData.DisplayTable(getCustomerInfoByIDs, "Invalid Customer's IDs");
 
             Console.Write("Input ID book to borrow: ");
             int id = int.Parse(Console.ReadLine());
@@ -1252,10 +1162,6 @@ namespace Library_Management_System
                     {
                         if ((int)readerBookInfo[0] > 1)
                         {
-                            int newAmountAvailable = (int)readerBookInfo[0] - 1;
-                            int newAmountBorrowed = (int)readerBookInfo[1] + 1;
-                            check = true;
-
                             string borrowedBookQuery =
                                 $"Insert into BookLog (BookIDs, CustomerIDs, DateBorrow, LIDsCheckIn, DateReturn, LIDsCheckOut, State) values ({id}, {ids}, '{DateTime.Now}', {ln}, null, null, 0)";
 
@@ -1264,11 +1170,13 @@ namespace Library_Management_System
 
                             string updateBookAmount =
                                 "Update Book " +
-                                $"set BookAmountAvailable = {newAmountAvailable}, BookAmountBorrowed = {newAmountBorrowed} " +
+                                $"set BookAmountAvailable = {(int)readerBookInfo[0] - 1}, BookAmountBorrowed = {(int)readerBookInfo[1] + 1} " +
                                 $"where BookIDs = {id}";
 
                             SqlCommand u = new SqlCommand(updateBookAmount, connection);
                             u.ExecuteNonQuery();
+
+                            check = true;
                         }
                     }
 
@@ -1286,33 +1194,15 @@ namespace Library_Management_System
         public async Task FetchBookData()
         {
             DateTime date = DateTime.Now;
-            int ln = 0;
+            string[] param = { };
+            string[] vparam = { };
 
-            string lq = "Select Librarian.LibrarianIDs " +
-                        "from (Scheduled left join Librarian on Scheduled.LibrarianIDs = Librarian.LibrarianIDs) " +
-                        $"where Scheduled.DateOfWeek = '{date.DayOfWeek}' and '{date.Hour}:{date.Minute}' between TimeStart and TimeEnd ";
+            string ln = HandleStoredProcedureMessage("GetLibrarian", param, vparam);
 
-            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+            if (ln == "")
             {
-                connection.Open();
-
-                SqlCommand q = new SqlCommand(lq, connection);
-
-                using (SqlDataReader r = q.ExecuteReader())
-                {
-                    bool c = false;
-                    while (r.Read())
-                    {
-                        ln = (int)r[0];
-                        c = true;
-                    }
-
-                    if (!c)
-                    {
-                        Console.WriteLine("There is no currently active librarian.");
-                        return;
-                    }
-                }
+                Console.WriteLine("There is no currently active librarian...");
+                return;
             }
 
             Console.Write("Insert the amount of books you want to fetch (max is 35): ");
@@ -1371,8 +1261,12 @@ namespace Library_Management_System
                             SqlCommand insertCommand = new SqlCommand(addDataQuery, connection);
 
                             insertCommand.Parameters.AddWithValue("@BookName", bn);
+
+                            string[] paramName = { "@category_name" };
+                            string[] paramValue = { subject };
+
                             insertCommand.Parameters.AddWithValue("@CategoryIDs",
-                                HandleStoredProcedureMessage(subject, "CheckCategory", "@category_name"));
+                                HandleStoredProcedureMessage("CheckCategory", paramName, paramValue));
                             insertCommand.Parameters.AddWithValue("@BookAmountAvailable", amount);
                             insertCommand.Parameters.AddWithValue("@BookAmountBorrowed", 0);
                             insertCommand.Parameters.AddWithValue("@Date", date.ToString("yyyy-MM-dd HH:mm:ss"));
@@ -1385,7 +1279,11 @@ namespace Library_Management_System
                                 "insert into BookAuthor (BookIDs, AuthorIDs) values ((select Count(BookIDs) from Book), @ai)";
                             SqlCommand ac = new SqlCommand(aaa, connection);
 
-                            ac.Parameters.AddWithValue("@ai", HandleStoredProcedureMessage(au, "CheckAuthor", "@author_name"));
+                            string[] paramName1 = { "@author_name" };
+                            string[] paramValue1 = { au };
+                            
+                            ac.Parameters.AddWithValue("@ai",
+                                HandleStoredProcedureMessage("CheckAuthor", paramName1, paramValue1));
                             ac.ExecuteNonQuery();
                         }
                     }
@@ -1420,8 +1318,12 @@ namespace Library_Management_System
                             SqlCommand insertCommand = new SqlCommand(addDataQuery, connection);
 
                             insertCommand.Parameters.AddWithValue("@BookName", bn);
+                            
+                            string[] paramName = { "@category_name" };
+                            string[] paramValue = { subject };
+                            
                             insertCommand.Parameters.AddWithValue("@CategoryIDs",
-                                HandleStoredProcedureMessage(subject, "CheckCategory", "@category_name"));
+                                HandleStoredProcedureMessage("CheckCategory", paramName, paramValue));
                             insertCommand.Parameters.AddWithValue("@BookAmountAvailable", amount);
                             insertCommand.Parameters.AddWithValue("@BookAmountBorrowed", 0);
                             insertCommand.Parameters.AddWithValue("@Date", date.ToString("yyyy-MM-dd HH:mm:ss"));
@@ -1434,7 +1336,11 @@ namespace Library_Management_System
                                 "insert into BookAuthor (BookIDs, AuthorIDs) values ((select Count(BookIDs) from Book), @ai)";
                             SqlCommand ac = new SqlCommand(aaa, connection);
 
-                            ac.Parameters.AddWithValue("@ai", HandleStoredProcedureMessage(au, "CheckAuthor", "@author_name"));
+                            string[] paramName1 = { "@author_name" };
+                            string[] paramValue1 = { au };
+                            
+                            ac.Parameters.AddWithValue("@ai",
+                                HandleStoredProcedureMessage("CheckAuthor", paramName1, paramValue1));
                             ac.ExecuteNonQuery();
                         }
                     }

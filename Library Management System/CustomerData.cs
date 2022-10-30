@@ -146,7 +146,7 @@ namespace Library_Management_System
 
             string ln = HandleStoredProcedureMessage("GetLibrarian", param, vparam);
 
-            if (ln == "")
+            if (ln == " ")
             {
                 Console.WriteLine("There is no currently active librarian...");
                 return;
@@ -323,7 +323,7 @@ namespace Library_Management_System
 
             string ln = HandleStoredProcedureMessage("GetLibrarian", param, vparam);
 
-            if (ln == "")
+            if (ln == " ")
             {
                 Console.WriteLine("There is no currently active librarian...");
                 return;
@@ -761,7 +761,7 @@ namespace Library_Management_System
 
             string ln = HandleStoredProcedureMessage("GetLibrarian", param, vparam);
 
-            if (ln == "")
+            if (ln == " ")
             {
                 Console.WriteLine("There is no currently active librarian...");
                 return;

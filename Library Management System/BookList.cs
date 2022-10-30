@@ -471,7 +471,7 @@ namespace Library_Management_System
 
             string ln = HandleStoredProcedureMessage("GetLibrarian", param, vparam);
 
-            if (ln == "")
+            if (ln == " ")
             {
                 Console.WriteLine("There is no currently active librarian...");
                 return;
@@ -699,7 +699,7 @@ namespace Library_Management_System
                     string getCategoryQuery =
                         "select Book.BookIDs, BookName, Author.Name, Category.Name, BookAmountAvailable, BookAmountBorrowed, Book.date, CustomerIDs " +
                         "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0), Category, Author, BookAuthor " +
-                        $"where Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs and Category.Name = '%{category}%' " +
+                        $"where Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs and Category.Name = '{category}' " +
                         "order by BookIDs";
 
                     DisplayTable(getCategoryQuery, "Invalid Category");
@@ -1127,7 +1127,7 @@ namespace Library_Management_System
 
             string ln = HandleStoredProcedureMessage("GetLibrarian", param, vparam);
 
-            if (ln == "")
+            if (ln == " ")
             {
                 Console.WriteLine("There is no currently active librarian...");
                 return;
@@ -1145,50 +1145,26 @@ namespace Library_Management_System
 
             Console.Write("Input ID book to borrow: ");
             int id = int.Parse(Console.ReadLine());
+            
+            string getIDsQuery =
+                "select Book.BookIDs, BookName, Author.Name, Category.Name, BookAmountAvailable, BookAmountBorrowed, Book.date, CustomerIDs " +
+                "from (Book left join BookLog on BookLog.BookIDs = Book.BookIDs and BookLog.State = 0), Category, Author, BookAuthor " +
+                $"where Book.BookIDs = {id} and Book.State = 0 and Category.IDs = Book.CategoryIDs and Author.IDs = BookAuthor.AuthorIDs and BookAuthor.BookIDs = Book.BookIDs";
 
-            string checkIDsQuery =
-                $"select BookAmountAvailable, BookAmountBorrowed from Book where BookIDs = {id} and Book.State = 0";
-
-            using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
+            if (DisplayTable(getIDsQuery, "Invalid IDs"))
             {
-                bool check = false;
-                SqlCommand command = new SqlCommand(checkIDsQuery, connection);
-
-                connection.Open();
-
-                using (SqlDataReader readerBookInfo = command.ExecuteReader())
+                using (SqlConnection connection = new SqlConnection(Program.ConnectionString))
                 {
-                    while (readerBookInfo.Read())
-                    {
-                        if ((int)readerBookInfo[0] > 1)
-                        {
-                            string borrowedBookQuery =
-                                $"Insert into BookLog (BookIDs, CustomerIDs, DateBorrow, LIDsCheckIn, DateReturn, LIDsCheckOut, State) values ({id}, {ids}, '{DateTime.Now}', {ln}, null, null, 0)";
+                    connection.Open();
+                    string borrowedBookQuery =
+                        $"Insert into BookLog (BookIDs, CustomerIDs, DateBorrow, LIDsCheckIn, DateReturn, LIDsCheckOut, State) values ({id}, {ids}, '{DateTime.Now}', {ln}, null, null, 0)";
 
-                            SqlCommand b = new SqlCommand(borrowedBookQuery, connection);
-                            b.ExecuteNonQuery();
-
-                            string updateBookAmount =
-                                "Update Book " +
-                                $"set BookAmountAvailable = {(int)readerBookInfo[0] - 1}, BookAmountBorrowed = {(int)readerBookInfo[1] + 1} " +
-                                $"where BookIDs = {id}";
-
-                            SqlCommand u = new SqlCommand(updateBookAmount, connection);
-                            u.ExecuteNonQuery();
-
-                            check = true;
-                        }
-                    }
-
-                    if (!check)
-                    {
-                        Console.WriteLine("Invalid ID");
-                        return;
-                    }
+                    SqlCommand b = new SqlCommand(borrowedBookQuery, connection);
+                    b.ExecuteNonQuery();
+                    
+                    Console.WriteLine("\t\t\t\t\t\t═════════ BORROWED SUCCESSFULLY ═════════\t\t\t\t\t");
                 }
             }
-
-            Console.WriteLine("\t\t\t\t\t\t═════════ BORROWED SUCCESSFULLY ═════════\t\t\t\t\t");
         }
 
         public async Task FetchBookData()
@@ -1199,7 +1175,7 @@ namespace Library_Management_System
 
             string ln = HandleStoredProcedureMessage("GetLibrarian", param, vparam);
 
-            if (ln == "")
+            if (ln == " ")
             {
                 Console.WriteLine("There is no currently active librarian...");
                 return;
